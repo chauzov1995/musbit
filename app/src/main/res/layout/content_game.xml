@@ -10,25 +10,33 @@
     tools:layout_editor_absoluteY="73dp"
     tools:showIn="@layout/activity_game">
 
+
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
+        android:id="@+id/sample"
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic[1]" />
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="187dp"
         app:layout_constraintBottom_toTopOf="@+id/ln4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:layout_constraintVertical_bias="0.912" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
 
-        app:layout_constraintBottom_toTopOf="@+id/banner"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -88,17 +96,6 @@
 
     </LinearLayout>
 
-    <com.google.android.gms.ads.AdView xmlns:ads='http://schemas.android.com/apk/res-auto'
-        android:id="@+id/banner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/baner_botoom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
-
     <RelativeLayout
         android:id="@+id/ln4"
         android:layout_width="0dp"
@@ -114,27 +111,10 @@
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:drawableLeft="@drawable/light"
-            android:drawableRight="@drawable/light"
+            android:drawableStart="@drawable/light"
+            android:drawableEnd="@drawable/light"
             android:text="Подсказки"
             android:textColor="#fff" />
     </RelativeLayout>
 
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/ln4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/ln4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/videoView">
 </android.support.constraint.ConstraintLayout>

@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -26,15 +27,21 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageButton;
+import pl.droidsonroids.gif.GifImageView;
 
-public class game extends AppCompatActivity {
+
+public class game extends YouTubeFailureRecoveryActivity {
 
     //настройки
-    int pokaz_rekl_kajd_n_otv=8;
+    int pokaz_rekl_kajd_n_otv = 5;
 
     //Переменная для работы с БД
     // FrameLayout contin;
@@ -43,7 +50,8 @@ public class game extends AppCompatActivity {
     Button otv1, otv2, otv3, otv4, button3, button6;
     ArrayList<class_spis_vsego> spisokvsego;
     int lengtht;
-    ImageView imageView;
+    ImageView sample;
+
     TextView textView, textView2;
     game tekactiviti;
     LinearLayout linearLayout;
@@ -51,8 +59,19 @@ public class game extends AppCompatActivity {
     int money, score, level;
     boolean[] btn_enabl = {true, true, true, true};
     private InterstitialAd mInterstitialAd;
-    int rekl_n_otv=0;
-    VideoView videoView;
+    int rekl_n_otv = 0;
+
+
+    private YouTubePlayerView youTubePlayerView;
+    private YouTubePlayer player;
+
+
+    private String currentlySelectedId;
+
+    private MyPlaylistEventListener playlistEventListener;
+    private MyPlayerStateChangeListener playerStateChangeListener;
+    private MyPlaybackEventListener playbackEventListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +92,10 @@ public class game extends AppCompatActivity {
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
 
-        AdView mAdView = (AdView) findViewById(R.id.banner);
-        AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
-        mAdView.loadAd(adRequest);
 
 
 
-
-
-        videoView = (VideoView) findViewById(R.id.videoView);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         otv1 = (Button) findViewById(R.id.otv1);
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
@@ -92,17 +105,19 @@ public class game extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        sample = (ImageView) findViewById(R.id.sample);
 
 
 
-         videoView =(VideoView)findViewById(R.id.videoView);
+    //    sample.setVisibility(View.GONE);
+  //  youTubePlayerView.setVisibility(View.GONE);
 
-        Uri myVideoUri= Uri.parse( "android.resource://" + getPackageName() + "/" + R.raw.videoplayback);
-        videoView.setVideoURI(myVideoUri);
+        youTubePlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
 
-        MediaController mediaController = new MediaController(this);
-        videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(videoView);
+        playlistEventListener = new MyPlaylistEventListener();
+        playerStateChangeListener = new MyPlayerStateChangeListener();
+        playbackEventListener = new MyPlaybackEventListener();
+
 
         otv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -156,26 +171,6 @@ public class game extends AppCompatActivity {
 
 
 
-
-        //Создаем таймер обратного отсчета на 20 секунд с шагом отсчета
-        //в 1 секунду (задаем значения в миллисекундах):
-        new CountDownTimer(10000, 1000) {
-
-            //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-            public void onTick(long millisUntilFinished) {
-             Log.d("asdsad","Осталось: "
-                        + millisUntilFinished / 1000);
-            }
-            //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-            public void onFinish() {
-                Log.d("asd", "Бабах!");
-            }
-        }.start();
-
-
-
-
-
         // get_money();
 
         spisokvsego = new ArrayList<class_spis_vsego>();
@@ -208,20 +203,18 @@ public class game extends AppCompatActivity {
         level = (cursor.getInt(cursor.getColumnIndex("level")));
         //  textView.setText(score);
         textView2.setText(money + "");
-        textView.setText("Уровень "+(level+1));
+        textView.setText("Уровень " + (level + 1));
         cursor.close();
 
     }
 
     void minus_monetka(int value) {
 
-           mDb.execSQL("UPDATE `records` SET money=money-" + value);
-            get_money();
-
+        mDb.execSQL("UPDATE `records` SET money=money-" + value);
+        get_money();
 
 
     }
-
 
 
     void load_new_vopr() {
@@ -277,7 +270,7 @@ public class game extends AppCompatActivity {
             options.inTempStorage = new byte[1024 * 32];
 
             Bitmap bm = BitmapFactory.decodeByteArray(bitmap1, 0, bitmap1.length, options);
-            imageView.setImageBitmap(bm);
+            //   imageView.setImageBitmap(bm);
 
 
             cursor.moveToNext();
@@ -288,7 +281,7 @@ public class game extends AppCompatActivity {
     }
 
     void otvnvibor(int nombtn, View r) {
-        if (money-10 >= 0) {
+        if (money - 10 >= 0) {
 
             boolean prav = false;
             switch (nombtn) {
@@ -322,29 +315,29 @@ public class game extends AppCompatActivity {
 
 
             if (prav) {
-if(level+1==lengtht){
-    //+100000
-    int Plus_pobeda=lengtht*10+10;
-    mDb.execSQL("UPDATE `records` SET score=score+"+Plus_pobeda+", level=0");
-    AlertDialog.Builder builder = new AlertDialog.Builder(game.this);
-    builder.setTitle("Поздравляем!")
-            .setMessage("Вы отгадали все картинки, вы получаете "+Plus_pobeda+" бонусных очков")
-            .setCancelable(false)
-            .setNegativeButton("Спасибо",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-    AlertDialog alert = builder.create();
-    alert.show();
-}else {
-    mDb.execSQL("UPDATE `records` SET score=score+10, level=level+1");
-}
+                if (level + 1 == lengtht) {
+                    //+100000
+                    int Plus_pobeda = lengtht * 10 + 10;
+                    mDb.execSQL("UPDATE `records` SET score=score+" + Plus_pobeda + ", level=0");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(game.this);
+                    builder.setTitle("Поздравляем!")
+                            .setMessage("Вы отгадали все картинки, вы получаете " + Plus_pobeda + " бонусных очков")
+                            .setCancelable(false)
+                            .setNegativeButton("Спасибо",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    mDb.execSQL("UPDATE `records` SET score=score+10, level=level+1");
+                }
                 load_new_vopr();
 
 
-                if(rekl_n_otv>=pokaz_rekl_kajd_n_otv) {
+                if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
                     if (mInterstitialAd.isLoaded()) {
                         mInterstitialAd.show();
                         mInterstitialAd = new InterstitialAd(this);
@@ -353,7 +346,7 @@ if(level+1==lengtht){
                     } else {
                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                     }
-                    rekl_n_otv=-1;
+                    rekl_n_otv = -1;
                 }
                 rekl_n_otv++;
 
@@ -362,7 +355,7 @@ if(level+1==lengtht){
                 minus_monetka(10);
 
             }
-        }else{
+        } else {
 
             CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
             customDialog2.show();
@@ -375,10 +368,10 @@ if(level+1==lengtht){
 
     void enabled_btn_otv(int nomen) {
         btn_enabl[nomen] = false;
-        switch (nomen){
-        case 0:
-        otv1.setVisibility(View.INVISIBLE);
-        break;
+        switch (nomen) {
+            case 0:
+                otv1.setVisibility(View.INVISIBLE);
+                break;
             case 1:
                 otv2.setVisibility(View.INVISIBLE);
                 break;
@@ -388,7 +381,7 @@ if(level+1==lengtht){
             case 3:
                 otv4.setVisibility(View.INVISIBLE);
                 break;
-    }
+        }
 
 
 /*
@@ -409,10 +402,10 @@ if(level+1==lengtht){
         btn_enabl[2] = true;
         btn_enabl[3] = true;
 
-     //   otv1.setEnabled(btn_enabl[0]);
-    //    otv2.setEnabled(btn_enabl[1]);
-     //   otv3.setEnabled(btn_enabl[2]);
-     //   otv4.setEnabled(btn_enabl[3]);
+        //   otv1.setEnabled(btn_enabl[0]);
+        //    otv2.setEnabled(btn_enabl[1]);
+        //   otv3.setEnabled(btn_enabl[2]);
+        //   otv4.setEnabled(btn_enabl[3]);
         otv1.setVisibility(View.VISIBLE);
         otv2.setVisibility(View.VISIBLE);
         otv3.setVisibility(View.VISIBLE);
@@ -420,25 +413,25 @@ if(level+1==lengtht){
     }
 
     public void ubratb_1nepr() {
-        if (money-5 >= 0) {
-        boolean stop = true;
-        while (stop) {
-            int randomn = (int) (Math.random() * 4);
+        if (money - 5 >= 0) {
+            boolean stop = true;
+            while (stop) {
+                int randomn = (int) (Math.random() * 4);
 
-            if (randomn != random_vopt_btn && btn_enabl[randomn] == true) {
-                enabled_btn_otv(randomn);
-                stop = false;
-                minus_monetka(5);
+                if (randomn != random_vopt_btn && btn_enabl[randomn] == true) {
+                    enabled_btn_otv(randomn);
+                    stop = false;
+                    minus_monetka(5);
+                }
+                if ((0 == random_vopt_btn || btn_enabl[0] == false) &&
+                        (1 == random_vopt_btn || btn_enabl[1] == false) &&
+                        (2 == random_vopt_btn || btn_enabl[2] == false) &&
+                        (3 == random_vopt_btn || btn_enabl[3] == false)
+                ) stop = false;
+
+
             }
-            if ((0 == random_vopt_btn || btn_enabl[0] == false) &&
-                    (1 == random_vopt_btn || btn_enabl[1] == false) &&
-                    (2 == random_vopt_btn || btn_enabl[2] == false) &&
-                    (3 == random_vopt_btn || btn_enabl[3] == false)
-                    ) stop = false;
-
-
-        }
-        }else{
+        } else {
 
             CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
             customDialog2.show();
@@ -446,4 +439,167 @@ if(level+1==lengtht){
         }
     }
 
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+                                        boolean wasRestored) {
+        this.player = player;
+        player.setPlaylistEventListener(playlistEventListener);
+        player.setPlayerStateChangeListener(playerStateChangeListener);
+        player.setPlaybackEventListener(playbackEventListener);
+        player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
+
+        if (!wasRestored) {
+            playVideoAtSelection();
+        }
+
+    }
+
+    @Override
+    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
+        return youTubePlayerView;
+    }
+
+    private void playVideoAtSelection() {
+
+              //  player.cuePlaylist("-crnMdcXSEg");
+
+                player.cueVideo(video);
+
+
+    }
+String video="-crnMdcXSEg";
+
+    private final class MyPlaylistEventListener implements YouTubePlayer.PlaylistEventListener {
+        @Override
+        public void onNext() {
+        }
+
+        @Override
+        public void onPrevious() {
+        }
+
+        @Override
+        public void onPlaylistEnded() {
+        }
+    }
+
+    private void log(String message) {
+        Log.d("asdasdas",message);
+    }
+
+    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
+        String playbackState = "NOT_PLAYING";
+        String bufferingState = "";
+        @Override
+        public void onPlaying() {
+            playbackState = "PLAYING";
+
+            log("\tPLAYING "  );
+
+
+            sample.setVisibility(View.VISIBLE);
+
+            //Создаем таймер обратного отсчета на 20 секунд с шагом отсчета
+            //в 1 секунду (задаем значения в миллисекундах):
+            new CountDownTimer(10000, 1000) {
+
+                //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
+                public void onTick(long millisUntilFinished) {
+                    Log.d("asdsad", "Осталось: "
+                            + (millisUntilFinished / 1000+1));
+                }
+
+                //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
+                public void onFinish() {
+                    Log.d("asd", "Бабах!");
+
+                    sample.setVisibility(View.GONE);
+                    youTubePlayerView.setVisibility(View.VISIBLE);
+                }
+            }.start();
+
+
+        }
+
+        @Override
+        public void onBuffering(boolean isBuffering) {
+            bufferingState = isBuffering ? "(BUFFERING)" : "";
+
+            log("\t\t" + (isBuffering ? "BUFFERING " : "NOT BUFFERING ") );
+        }
+
+        @Override
+        public void onStopped() {
+            playbackState = "STOPPED";
+
+            log("\tSTOPPED");
+        }
+
+        @Override
+        public void onPaused() {
+            playbackState = "PAUSED";
+
+            log("\tPAUSED " );
+        }
+
+        @Override
+        public void onSeekTo(int endPositionMillis) {
+
+        }
+    }
+
+    private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+        String playerState = "UNINITIALIZED";
+
+        @Override
+        public void onLoading() {
+            playerState = "LOADING";
+
+            log(playerState);
+        }
+
+        @Override
+        public void onLoaded(String videoId) {
+            playerState = String.format("LOADED %s", videoId);
+
+            log(playerState);
+
+            player.play();//плей
+        }
+
+        @Override
+        public void onAdStarted() {
+            playerState = "AD_STARTED";
+
+            log(playerState);
+        }
+
+        @Override
+        public void onVideoStarted() {
+            playerState = "VIDEO_STARTED";
+
+            log(playerState);
+        }
+
+        @Override
+        public void onVideoEnded() {
+            playerState = "VIDEO_ENDED";
+
+            log(playerState);
+        }
+
+        @Override
+        public void onError(YouTubePlayer.ErrorReason reason) {
+            playerState = "ERROR (" + reason + ")";
+            if (reason == YouTubePlayer.ErrorReason.UNEXPECTED_SERVICE_DISCONNECTION) {
+                // When this error occurs the player is released and can no longer be used.
+                player = null;
+
+            }
+
+            log(playerState);
+        }
+
+    }
 }
