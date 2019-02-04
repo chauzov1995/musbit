@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".game_over">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="19dp"
+                android:text="Лидеры"
+                android:textColor="#fff"
+                android:textSize="30sp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/button3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintEnd_toStartOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="@+id/textView2"
+                app:srcCompat="@drawable/money" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="#b44"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="Уровень 103"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/button3"
+                style="@android:style/Widget.Material.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Меню"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Игра окончена"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="117dp"
+            tools:layout_editor_absoluteY="37dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Счёт"
+            android:textSize="36sp"
+            tools:layout_editor_absoluteX="165dp"
+            tools:layout_editor_absoluteY="97dp" />
+
+        <TextView
+            android:id="@+id/total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="60sp"
+            tools:layout_editor_absoluteX="193dp"
+            tools:layout_editor_absoluteY="146dp" />
+
+        <Button
+            android:id="@+id/btn_star"
+            android:layout_width="111dp"
+            android:layout_height="72dp"
+            android:text="star"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="383dp" />
+
+        <Button
+            android:id="@+id/btn_vk"
+            android:layout_width="99dp"
+            android:layout_height="71dp"
+            android:text="vk"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="383dp" />
+
+        <Button
+            android:id="@+id/btn_fb"
+            android:layout_width="179dp"
+            android:layout_height="69dp"
+            android:text="facebook"
+            tools:layout_editor_absoluteX="227dp"
+            tools:layout_editor_absoluteY="383dp" />
+
+        <Button
+            android:id="@+id/btn_menu"
+            android:layout_width="175dp"
+            android:layout_height="52dp"
+            android:text="Меню"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="526dp" />
+
+        <Button
+            android:id="@+id/btn_restart"
+            android:layout_width="200dp"
+            android:layout_height="53dp"
+            android:text="Рестарт"
+            tools:layout_editor_absoluteX="187dp"
+            tools:layout_editor_absoluteY="526dp" />
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
