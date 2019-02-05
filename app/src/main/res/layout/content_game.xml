@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="#000"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".game"
     tools:layout_editor_absoluteY="73dp"
@@ -12,23 +12,22 @@
 
 
     <ImageView
-        android:id="@+id/sample"
-        android:layout_width="match_parent"
-        android:layout_height="241dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[1]" />
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="390dp"
+        android:translationZ="666dp"
+        tools:srcCompat="@tools:sample/backgrounds/scenic[0]" />
 
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:id="@+id/youtube_view"
-        android:layout_width="match_parent"
-        android:layout_height="187dp"
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/ln4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.912" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"

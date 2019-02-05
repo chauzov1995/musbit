@@ -1,44 +1,54 @@
 package com.univigame.multiki;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
-import android.opengl.Visibility;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageButton;
-import pl.droidsonroids.gif.GifImageView;
 
-
-public class game extends YouTubeFailureRecoveryActivity {
+public class game extends AppCompatActivity {
 
     //настройки
     int pokaz_rekl_kajd_n_otv = 5;
@@ -50,7 +60,7 @@ public class game extends YouTubeFailureRecoveryActivity {
     Button otv1, otv2, otv3, otv4, button3, button6;
     ArrayList<class_spis_vsego> spisokvsego;
     int lengtht;
-    ImageView sample;
+    VideoView   videoView;
 
     TextView textView, textView2;
     game tekactiviti;
@@ -62,16 +72,9 @@ public class game extends YouTubeFailureRecoveryActivity {
     int rekl_n_otv = 0;
 
 
-    private YouTubePlayerView youTubePlayerView;
-    private YouTubePlayer player;
 
-
-    private String currentlySelectedId;
-
-    private MyPlaylistEventListener playlistEventListener;
-    private MyPlayerStateChangeListener playerStateChangeListener;
-    private MyPlaybackEventListener playbackEventListener;
-
+    private int position = 0;
+    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,7 @@ public class game extends YouTubeFailureRecoveryActivity {
 
 
 
-        youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+        //youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         otv1 = (Button) findViewById(R.id.otv1);
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
@@ -105,33 +108,58 @@ public class game extends YouTubeFailureRecoveryActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        sample = (ImageView) findViewById(R.id.sample);
+       // sample = (ImageView) findViewById(R.id.sample);
+           videoView = (VideoView) findViewById(R.id.videoView);
 
 
 
-    //    sample.setVisibility(View.GONE);
-  //  youTubePlayerView.setVisibility(View.GONE);
 
-        youTubePlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
 
-        playlistEventListener = new MyPlaylistEventListener();
-        playerStateChangeListener = new MyPlayerStateChangeListener();
-        playbackEventListener = new MyPlaybackEventListener();
+
+      //  Uri myVideoUri= Uri.parse( "android.resource://" + getPackageName() + "/" + R.raw.videoplayback);
+
+
+        // When the video file ready for playback.
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            public void onPrepared(MediaPlayer mediaPlayer) {
+
+
+                videoView.seekTo(position);
+                if (position == 0) {
+                 //   videoView.start();
+                }
+
+
+            }
+        });
+
+
+
+
+
+
+        //   sample.setVisibility(View.GONE);
+     //   sample.setZ(1000);
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                otvnvibor(1, r);
+                videoView.start();
+               // otvnvibor(1, r);
             }
         });
         otv2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                otvnvibor(2, r);
+             //   otvnvibor(2, r);
+           new     downloadvideo().execute();
             }
         });
         otv3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                otvnvibor(3, r);
+              //  otvnvibor(3, r);
+                Uri myVideoUri= Uri.parse("http://theserg43.beget.tech/2.mp4");
+                videoView.setVideoURI(myVideoUri);
             }
         });
         otv4.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +214,38 @@ public class game extends YouTubeFailureRecoveryActivity {
 
         load_new_vopr();
     }
+
+    private class downloadvideo extends AsyncTask<String, Void, String> {
+
+
+
+        @Override
+        protected String doInBackground(String... path) {
+
+
+                try {
+
+                    Uri myVideoUri= Uri.parse("http://theserg43.beget.tech/2.mp4");
+                    videoView.setVideoURI(myVideoUri);
+
+
+                } catch (Exception e) {
+                    Log.e("Error: ", e.getMessage());
+                }
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String content) {
+
+            Log.e("asdasdsad: ", "ГОТОВО");
+
+        }
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -440,166 +500,5 @@ public class game extends YouTubeFailureRecoveryActivity {
     }
 
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
-                                        boolean wasRestored) {
-        this.player = player;
-        player.setPlaylistEventListener(playlistEventListener);
-        player.setPlayerStateChangeListener(playerStateChangeListener);
-        player.setPlaybackEventListener(playbackEventListener);
-        player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
 
-        if (!wasRestored) {
-            playVideoAtSelection();
-        }
-
-    }
-
-    @Override
-    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return youTubePlayerView;
-    }
-
-    private void playVideoAtSelection() {
-
-              //  player.cuePlaylist("-crnMdcXSEg");
-
-                player.cueVideo(video);
-
-
-    }
-String video="-crnMdcXSEg";
-
-    private final class MyPlaylistEventListener implements YouTubePlayer.PlaylistEventListener {
-        @Override
-        public void onNext() {
-        }
-
-        @Override
-        public void onPrevious() {
-        }
-
-        @Override
-        public void onPlaylistEnded() {
-        }
-    }
-
-    private void log(String message) {
-        Log.d("asdasdas",message);
-    }
-
-    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
-        String playbackState = "NOT_PLAYING";
-        String bufferingState = "";
-        @Override
-        public void onPlaying() {
-            playbackState = "PLAYING";
-
-            log("\tPLAYING "  );
-
-
-            sample.setVisibility(View.VISIBLE);
-
-            //Создаем таймер обратного отсчета на 20 секунд с шагом отсчета
-            //в 1 секунду (задаем значения в миллисекундах):
-            new CountDownTimer(10000, 1000) {
-
-                //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                public void onTick(long millisUntilFinished) {
-                    Log.d("asdsad", "Осталось: "
-                            + (millisUntilFinished / 1000+1));
-                }
-
-                //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                public void onFinish() {
-                    Log.d("asd", "Бабах!");
-
-                    sample.setVisibility(View.GONE);
-                    youTubePlayerView.setVisibility(View.VISIBLE);
-                }
-            }.start();
-
-
-        }
-
-        @Override
-        public void onBuffering(boolean isBuffering) {
-            bufferingState = isBuffering ? "(BUFFERING)" : "";
-
-            log("\t\t" + (isBuffering ? "BUFFERING " : "NOT BUFFERING ") );
-        }
-
-        @Override
-        public void onStopped() {
-            playbackState = "STOPPED";
-
-            log("\tSTOPPED");
-        }
-
-        @Override
-        public void onPaused() {
-            playbackState = "PAUSED";
-
-            log("\tPAUSED " );
-        }
-
-        @Override
-        public void onSeekTo(int endPositionMillis) {
-
-        }
-    }
-
-    private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
-        String playerState = "UNINITIALIZED";
-
-        @Override
-        public void onLoading() {
-            playerState = "LOADING";
-
-            log(playerState);
-        }
-
-        @Override
-        public void onLoaded(String videoId) {
-            playerState = String.format("LOADED %s", videoId);
-
-            log(playerState);
-
-            player.play();//плей
-        }
-
-        @Override
-        public void onAdStarted() {
-            playerState = "AD_STARTED";
-
-            log(playerState);
-        }
-
-        @Override
-        public void onVideoStarted() {
-            playerState = "VIDEO_STARTED";
-
-            log(playerState);
-        }
-
-        @Override
-        public void onVideoEnded() {
-            playerState = "VIDEO_ENDED";
-
-            log(playerState);
-        }
-
-        @Override
-        public void onError(YouTubePlayer.ErrorReason reason) {
-            playerState = "ERROR (" + reason + ")";
-            if (reason == YouTubePlayer.ErrorReason.UNEXPECTED_SERVICE_DISCONNECTION) {
-                // When this error occurs the player is released and can no longer be used.
-                player = null;
-
-            }
-
-            log(playerState);
-        }
-
-    }
 }
