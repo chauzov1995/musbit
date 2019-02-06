@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -73,6 +75,11 @@ public class game extends AppCompatActivity {
 
 
 
+
+    ImageView imageView;
+
+
+
     private int position = 0;
     private MediaController mediaController;
 
@@ -108,27 +115,25 @@ public class game extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-       // sample = (ImageView) findViewById(R.id.sample);
-           videoView = (VideoView) findViewById(R.id.videoView);
 
 
 
 
 
 
-      //  Uri myVideoUri= Uri.parse( "android.resource://" + getPackageName() + "/" + R.raw.videoplayback);
+
+        imageView = (ImageView)findViewById(R.id.imageView);
+               videoView = (VideoView)findViewById(R.id.videoView);
 
 
-        // When the video file ready for playback.
+
+
+
+        String videoSource ="http://theserg43.beget.tech/2.mp4";
+        videoView.setVideoURI(Uri.parse(videoSource));
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            public void onPrepared(MediaPlayer mediaPlayer) {
-
-
-                videoView.seekTo(position);
-                if (position == 0) {
-                 //   videoView.start();
-                }
+            @Override
+            public void onPrepared(MediaPlayer mp) {
 
 
             }
@@ -139,27 +144,41 @@ public class game extends AppCompatActivity {
 
 
 
-        //   sample.setVisibility(View.GONE);
-     //   sample.setZ(1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                videoView.start();
+                start_ugadka();
                // otvnvibor(1, r);
             }
         });
         otv2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-             //   otvnvibor(2, r);
-           new     downloadvideo().execute();
+                otvnvibor(2, r);
+
             }
         });
         otv3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-              //  otvnvibor(3, r);
-                Uri myVideoUri= Uri.parse("http://theserg43.beget.tech/2.mp4");
-                videoView.setVideoURI(myVideoUri);
+                otvnvibor(3, r);
+
             }
         });
         otv4.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +233,44 @@ public class game extends AppCompatActivity {
 
         load_new_vopr();
     }
+
+
+
+
+    void start_ugadka() {
+        videoView.start();
+        new CountDownTimer(10000, 1000) {
+
+            //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
+            public void onTick(long millisUntilFinished) {
+                Log.d("осталось ", millisUntilFinished/1000+"");
+            }
+            //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
+            public void onFinish() {
+
+                imageView.setVisibility(View.GONE);
+
+
+
+                new CountDownTimer(8000, 1000) {
+
+                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
+                    public void onTick(long millisUntilFinished) {
+                        Log.d("осталось ", millisUntilFinished/1000+"");
+                    }
+                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
+                    public void onFinish() {
+
+                        videoView.stopPlayback();
+                    }
+                } .start();
+            }
+        } .start();
+
+
+    }
+
+
 
     private class downloadvideo extends AsyncTask<String, Void, String> {
 
