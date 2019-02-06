@@ -1,9 +1,6 @@
 package com.univigame.multiki;
 
-import android.Manifest;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,8 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,22 +26,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
 
@@ -59,7 +39,7 @@ public class game extends AppCompatActivity {
     // FrameLayout contin;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
-    Button otv1, otv2, otv3, otv4, button3, button6;
+    Button otv1, otv2, otv3, otv4, button3, button5, button;
     ArrayList<class_spis_vsego> spisokvsego;
     int lengtht;
     VideoView   videoView;
@@ -110,7 +90,8 @@ public class game extends AppCompatActivity {
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
         otv4 = (Button) findViewById(R.id.otv4);
-        button6 = (Button) findViewById(R.id.button6);
+        button = (Button) findViewById(R.id.button);
+        button5 = (Button) findViewById(R.id.button5);
         button3 = (Button) findViewById(R.id.button3);
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
@@ -193,7 +174,7 @@ public class game extends AppCompatActivity {
         });
 
 
-        button6.setOnClickListener(new View.OnClickListener() {
+        button5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 CustomDialog1 customDialog1 = new CustomDialog1(tekactiviti);
                 customDialog1.show();
