@@ -1,104 +1,58 @@
 package com.example.test;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Movie;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.AttributeSet;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-    VideoView videoView;
-
-    Button button;
-    ImageView imageView;
+    private ImageView mImageView;
+    private String mImageAddress =
+            "https://s1.funon.cc/img/orig/201803/04/5a9b7b05a681c.gif";
+    RequestBuilder<Drawable> asdasd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mImageView = findViewById(R.id.imageView);
 
-        imageView = (ImageView)findViewById(R.id.imageView);
-         button = (Button)findViewById(R.id.button);
-        videoView = (VideoView)findViewById(R.id.videoView);
+       asdasd=  Glide
+                .with(this)
+                .load(mImageAddress)
+                .listener(new RequestListener<Drawable>() {
 
-
-        button.setVisibility(View.GONE);
-
-
-
-        String videoSource ="http://theserg43.beget.tech/2.mp4";
-        videoView.setVideoURI(Uri.parse(videoSource));
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-
-                button.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                videoView.start();
-                new CountDownTimer(10000, 1000) {
-
-                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("осталось ", millisUntilFinished/1000+"");
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
                     }
-                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                    public void onFinish() {
 
-                        imageView.setVisibility(View.GONE);
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 
-
-
-                        new CountDownTimer(8000, 1000) {
-
-                            //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                            public void onTick(long millisUntilFinished) {
-                                Log.d("осталось ", millisUntilFinished/1000+"");
-                            }
-                            //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                            public void onFinish() {
-
-                                videoView.stopPlayback();
-                            }
-                        } .start();
+                        return false;
                     }
-                } .start();
-
-
-            }
-        });
-
-
-
-
+                });
     }
 
-
-
-
-
+    public void onClick(View view) {
+        // Загружаем картинку
+        asdasd.into(mImageView);
+              //  .into(mImageView);
+    }
 }
