@@ -19,7 +19,7 @@
         android:layout_marginTop="32dp"
         android:text="50/50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button5"
@@ -28,20 +28,26 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:text="другая"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -61,21 +67,19 @@
 
             <Button
                 android:id="@+id/otv1"
-                style="@android:style/Widget.Material.Button.Borderless"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_red_light"
                 android:text="Button"
                 android:textColor="#fff" />
 
             <Button
                 android:id="@+id/otv2"
-                style="@android:style/Widget.Material.Button.Borderless"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_purple"
                 android:text="Button"
                 android:textColor="#fff" />
         </LinearLayout>
@@ -88,21 +92,19 @@
 
             <Button
                 android:id="@+id/otv3"
-                style="@android:style/Widget.Material.Button.Borderless"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_blue_light"
                 android:text="Button"
                 android:textColor="#fff" />
 
             <Button
                 android:id="@+id/otv4"
-                style="@android:style/Widget.Material.Button.Borderless"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:background="@android:color/holo_green_light"
                 android:text="Button"
                 android:textColor="#fff" />
         </LinearLayout>

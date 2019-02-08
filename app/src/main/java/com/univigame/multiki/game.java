@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -19,14 +22,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -47,7 +49,7 @@ public class game extends AppCompatActivity {
     Button otv1, otv2, otv3, otv4, button3, button5, button;
     ArrayList<class_spis_vsego> spisokvsego;
     int lengtht;
-
+    VideoView videoView;
 
     TextView textView, textView2;
     game tekactiviti;
@@ -58,12 +60,8 @@ public class game extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     int rekl_n_otv = 0;
 
-    private String mImageAddress =
-            "https://s1.funon.cc/img/orig/201803/04/5a9b7b05a681c.gif";
 
-
-    ImageView mImageView;
-
+  //  ImageView imageView;
 
 
     private int position = 0;
@@ -89,8 +87,6 @@ public class game extends AppCompatActivity {
         extras.putString("max_ad_content_rating", "G");
 
 
-
-
         //youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         otv1 = (Button) findViewById(R.id.otv1);
         otv2 = (Button) findViewById(R.id.otv2);
@@ -102,52 +98,35 @@ public class game extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        mImageView = findViewById(R.id.imageView);
 
 
-
-
-        Glide.with(fragment)
-                .load(myUrl)
-                .into(imageView);
-        GlideApp.with(fragment)
-                .load(url)
-                .placeholder(R.drawable.placeholder)
-                .into(view);
-
-
-        // Загружаем картинку
-    Glide.with(game.this)
-                .load(mImageAddress)
-            .placeholder(R.drawable.placeholder)
-                        .into(mImageView);
-        //
+      //  imageView = (ImageView) findViewById(R.id.imageView);
+        videoView = (VideoView) findViewById(R.id.videoView);
 
 
 
 
 
+        String videoSource = "http://theserg43.beget.tech/2.mp4";
+        videoView.setVideoURI(Uri.parse(videoSource));
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
 
-
-
-
-
-
-
-
-
+                start_ugadka();
+            }
+        });
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                start_ugadka();
-               // otvnvibor(1, r);
+
+                // otvnvibor(1, r);
             }
         });
         otv2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
- otvnvibor(2, r);
+                otvnvibor(2, r);
 
             }
         });
@@ -192,8 +171,6 @@ public class game extends AppCompatActivity {
         }
 
 
-
-
         // get_money();
 
         spisokvsego = new ArrayList<class_spis_vsego>();
@@ -211,16 +188,22 @@ public class game extends AppCompatActivity {
     }
 
 
-
-
     void start_ugadka() {
 
+
+
+
+
+
+        videoView.start();
+     //   videoView.start();
         new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
             public void onTick(long millisUntilFinished) {
-                Log.d("осталось ", millisUntilFinished/1000+"");
+                Log.d("осталось ", millisUntilFinished / 1000 + "");
             }
+
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
 
@@ -230,16 +213,17 @@ public class game extends AppCompatActivity {
 
                     //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
                     public void onTick(long millisUntilFinished) {
-                        Log.d("осталось ", millisUntilFinished/1000+"");
+                        Log.d("осталось ", millisUntilFinished / 1000 + "");
                     }
+
                     //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
                     public void onFinish() {
 
-
+                        videoView.stopPlayback();
                     }
-                } .start();
+                }.start();
             }
-        } .start();
+        }.start();
 
 
     }
@@ -498,7 +482,6 @@ public class game extends AppCompatActivity {
 
         }
     }
-
 
 
 }
