@@ -93,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         db.execSQL(" CREATE TABLE `records` (\n" +
+                "  `energy` int NOT NULL DEFAULT '0',\n" +
                 "  `score` int NOT NULL DEFAULT '0',\n" +
                 "  `money` int NOT NULL DEFAULT '0',\n" +
                 "  `level` int NOT NULL DEFAULT '0'\n" +
@@ -105,8 +106,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long startTime = calendar.getTimeInMillis()/1000;
       //  Log.d("asdad", "asdasdasd");
         db.execSQL("INSERT INTO `records`" +
-                "( `money`,`level`) VALUES" +
-                " (100,0)");
+                "( `money`) VALUES" +
+                " (100)");
     }
 
     @Override

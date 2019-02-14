@@ -6,30 +6,19 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -49,7 +38,7 @@ public class game extends AppCompatActivity {
     // FrameLayout contin;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
-    Button otv1, otv2, otv3, otv4, button3, button5, button;
+    Button otv1, otv2, otv3, otv4, button3, button5, fiftyfifty;
     ArrayList<class_spis_vsego> spisokvsego;
     int lengtht;
     VideoView videoView;
@@ -64,11 +53,6 @@ public class game extends AppCompatActivity {
     int rekl_n_otv = 0;
     Timer timer = new Timer();
 
-    //  ImageView imageView;
-
-
-    private int position = 0;
-    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +61,8 @@ public class game extends AppCompatActivity {
 
         tekactiviti = this;
 
+        Bundle extras = new Bundle();
+        extras.putString("max_ad_content_rating", "G");
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
@@ -86,29 +72,30 @@ public class game extends AppCompatActivity {
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
         //всплывающяя реклама
 
-        Bundle extras = new Bundle();
-        extras.putString("max_ad_content_rating", "G");
 
-
-        //youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         otv1 = (Button) findViewById(R.id.otv1);
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
         otv4 = (Button) findViewById(R.id.otv4);
-        button = (Button) findViewById(R.id.button);
+        fiftyfifty = (Button) findViewById(R.id.fiftyfifty);
         button5 = (Button) findViewById(R.id.button5);
         button3 = (Button) findViewById(R.id.button3);
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
- videoView = (VideoView) findViewById(R.id.videoView);
+        videoView = (VideoView) findViewById(R.id.videoView);
 
 
-        String videoSource = "http://theserg43.beget.tech/2.mp4";
+
+
+
+
+        String videoSource = "http://theserg43.beget.tech/Untitled.mp4";
         videoView.setVideoURI(Uri.parse(videoSource));
-
-
         timer.schedule(new MyTimerTask(), 500, 500);
+
+
+
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
@@ -136,12 +123,14 @@ public class game extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-
         button5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                CustomDialog1 customDialog1 = new CustomDialog1(tekactiviti);
-                customDialog1.show();
+
+            }
+        });
+        fiftyfifty.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+
             }
         });
 
@@ -403,8 +392,8 @@ public class game extends AppCompatActivity {
             }
         } else {
 
-            CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
-            customDialog2.show();
+            //  CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
+            // customDialog2.show();
 
         }
 
@@ -479,8 +468,8 @@ public class game extends AppCompatActivity {
             }
         } else {
 
-            CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
-            customDialog2.show();
+            //  CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
+            // customDialog2.show();
 
         }
     }
