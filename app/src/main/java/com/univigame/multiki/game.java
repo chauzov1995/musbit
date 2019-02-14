@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +36,8 @@ import com.google.android.gms.ads.MobileAds;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class game extends AppCompatActivity {
@@ -59,9 +62,9 @@ public class game extends AppCompatActivity {
     boolean[] btn_enabl = {true, true, true, true};
     private InterstitialAd mInterstitialAd;
     int rekl_n_otv = 0;
+    Timer timer = new Timer();
 
-
-  //  ImageView imageView;
+    //  ImageView imageView;
 
 
     private int position = 0;
@@ -98,42 +101,29 @@ public class game extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-
-
-      //  imageView = (ImageView) findViewById(R.id.imageView);
-        videoView = (VideoView) findViewById(R.id.videoView);
-
-
-
+ videoView = (VideoView) findViewById(R.id.videoView);
 
 
         String videoSource = "http://theserg43.beget.tech/2.mp4";
         videoView.setVideoURI(Uri.parse(videoSource));
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
 
-                start_ugadka();
-            }
-        });
+
+        timer.schedule(new MyTimerTask(), 500, 500);
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
-                // otvnvibor(1, r);
+                otvnvibor(1, r);
             }
         });
         otv2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 otvnvibor(2, r);
-
             }
         });
         otv3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 otvnvibor(3, r);
-
             }
         });
         otv4.setOnClickListener(new View.OnClickListener() {
@@ -188,15 +178,30 @@ public class game extends AppCompatActivity {
     }
 
 
+    private class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (videoView.getBufferPercentage() == 100) {
+                        // this.cancel();+
+                        timer.cancel();
+                        start_ugadka();
+
+                    }
+                }
+            });
+        }
+    }
+
+
     void start_ugadka() {
 
 
-
-
-
-
         videoView.start();
-     //   videoView.start();
+        //   videoView.start();
         new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
@@ -206,7 +211,6 @@ public class game extends AppCompatActivity {
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-
 
 
                 new CountDownTimer(8000, 1000) {
@@ -227,8 +231,6 @@ public class game extends AppCompatActivity {
 
 
     }
-
-
 
 
     @Override
