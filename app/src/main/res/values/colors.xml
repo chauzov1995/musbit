@@ -4,9 +4,13 @@
     <color name="colorPrimaryDark">#e9c13c3c</color>
     <color name="colorAccent">#e9e24747</color>
 
-    <color name="colorVerno">#e731c23d</color>
+    <color name="colorVerno">#E731C23D</color>
     <color name="colorNEVerno">#e07b0303</color>
 
     <color name="Black0Percent">#92000000</color>
     <color name="black_overlay">#66000000</color>
+
+    <color name="preotvet">#FF9800</color>
+    <color name="otvetprav">#4CAF50</color>
+    <color name="otvetpnerav">#F44336</color>
 </resources>

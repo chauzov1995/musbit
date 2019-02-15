@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToFirst();
 
                 int energy = (cursor.getInt(cursor.getColumnIndex("energy")));
+                cursor.close();
                 long unixTime = System.currentTimeMillis() / 1000L;
                 if (energy >= unixTime)
                     mDb.execSQL("UPDATE `records` SET energy=energy+" + 600);

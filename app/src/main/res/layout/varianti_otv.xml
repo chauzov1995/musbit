@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+android:id="@+id/linearLayout"
+android:layout_width="match_parent"
+android:layout_height="140dp"
+android:orientation="vertical"
+>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:weightSum="2">
+
+    <Button
+        android:id="@+id/otv1"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:text="Button"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/otv2"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:text="Button"
+        android:textColor="#fff" />
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:weightSum="2">
+
+    <Button
+        android:id="@+id/otv3"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:text="Button"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/otv4"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:text="Button"
+        android:textColor="#fff" />
+</LinearLayout>
+
+</LinearLayout>
