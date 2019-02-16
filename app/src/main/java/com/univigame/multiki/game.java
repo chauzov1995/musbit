@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -55,13 +57,20 @@ public class game extends AppCompatActivity {
     game tekactiviti;
 
     int random_vopt_btn;
-    int money, score, level, score_pergame = 0;
+    int money, level;
     boolean[] btn_enabl = {true, true, true, true};
     private InterstitialAd mInterstitialAd;
     int rekl_n_otv = 0;
     Timer timer;
     public class_spis_vsego varotv1, varotv2, varotv3, varotv4;
-
+    Button selectedotv;
+    boolean prav = false;
+    public MyFragment2 fragment2;
+    int gameover_money = 0;
+    int gameover_schore = 0;
+    CountDownTimer timer1, timer2;
+    ProgressBar progressBar2;
+    ConstraintLayout body;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class game extends AppCompatActivity {
         //всплывающяя реклама
 
 
+        body = (ConstraintLayout) findViewById(R.id.body);
+        progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
         fiftyfifty = (Button) findViewById(R.id.fiftyfifty);
         button5 = (Button) findViewById(R.id.button5);
         button3 = (Button) findViewById(R.id.button3);
@@ -93,7 +104,7 @@ public class game extends AppCompatActivity {
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                onBackPressed();
+                finish();
             }
         });
         button5.setOnClickListener(new View.OnClickListener() {
@@ -142,206 +153,21 @@ public class game extends AppCompatActivity {
 
     }
 
-    Button selectedotv;
-    boolean prav = false;
-  public  MyFragment2 fragment2;
-
-    void otvnvibor(View r, class_spis_vsego tag) {
-
-
-        selectedotv = (Button) r;
-        prav = false;
-        if (tag.id == spisokvsego.get(level).id) {
-            prav = true;
-        }
-
-        fragment2.otv1.setEnabled(false);
-        fragment2.otv2.setEnabled(false);
-        fragment2.otv3.setEnabled(false);
-        fragment2.otv4.setEnabled(false);
-
-        selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
-
-        //   enabled_btn_otv(nombtn - 1);
-
-
-        if (prav) {
-            if (level + 1 == lengtht) {
-                //+100000
-                int Plus_pobeda = lengtht * 10 + 10;
-                mDb.execSQL("UPDATE `records` SET score=score+" + Plus_pobeda + ", level=0, money=money+10");
-                AlertDialog.Builder builder = new AlertDialog.Builder(game.this);
-                builder.setTitle("Поздравляем!")
-                        .setMessage("Вы отгадали все картинки, вы получаете " + Plus_pobeda + " бонусных очков")
-                        .setCancelable(false)
-                        .setNegativeButton("Спасибо",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            } else {
-                mDb.execSQL("UPDATE `records` SET score=score+10, level=level+1, money=money+10");
-            }
-
-           /*
-            load_new_vopr();
-
-            //межстраничная реклма
-            if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    mInterstitialAd = new InterstitialAd(this);
-                    mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }
-                rekl_n_otv = -1;
-            }
-            rekl_n_otv++;
-            //межстраничная реклма
-*/
-        } else {
-
-        }
-
-    }
-
-
-
-
-
-    private class MyTimerTask extends TimerTask {
-
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (videoView.getBufferPercentage() == 100) {
-                        // this.cancel();+
-                        timer.cancel();
-                        start_ugadka();
-                    }
-                }
-            });
-        }
-    }
-
-
-    void start_ugadka() {
-
-
-        videoView.start();
-        //   videoView.start();
-        new CountDownTimer(10000, 1000) {
-
-            //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-            public void onTick(long millisUntilFinished) {
-                Log.d("осталось ", millisUntilFinished / 1000 + "");
-            }
-
-            //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-            public void onFinish() {
-
-                fragment2.otv1.setEnabled(false);
-                fragment2.otv2.setEnabled(false);
-                fragment2.otv3.setEnabled(false);
-                fragment2.otv4.setEnabled(false);
-
-                if (!prav  && selectedotv!=null) {
-                    selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetpnerav), PorterDuff.Mode.MULTIPLY);
-                }
-                Button pravotv;
-                switch (random_vopt_btn) {
-                    case 0:
-                        pravotv = fragment2.otv1;
-                        break;
-                    case 1:
-                        pravotv = fragment2.otv2;
-                        break;
-                    case 2:
-                        pravotv = fragment2.otv3;
-                        break;
-                    default:
-                        pravotv = fragment2.otv4;
-                        break;
-                }
-                pravotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetprav), PorterDuff.Mode.MULTIPLY);
-
-
-
-                new CountDownTimer(8000, 1000) {
-
-                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("осталось ", millisUntilFinished / 1000 + "");
-                    }
-
-                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                    public void onFinish() {
-
-                        videoView.stopPlayback();
-
-                        if (prav) {
-                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.linearLayout, new MyFragment1());
-                            ft.commit();
-                        }else{
-
-                            finish();
-                            Intent intent = new Intent(tekactiviti, game_over.class);
-                            startActivity(intent);
-                        }
-
-                        //   load_new_vopr();
-                    }
-                }.start();
-            }
-        }.start();
-
-
-    }
-
-
     @Override
-    protected void onResume() {
-        super.onResume();
-        // get_money();
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (timer1 != null) timer1.cancel();
+        if (timer2 != null) timer2.cancel();
+        if (timer != null) timer.cancel();
     }
-
-
-    void minus_monetka(int value) {
-
-        mDb.execSQL("UPDATE `records` SET money=money-" + value);
-        get_money();
-
-
-    }
-
-
-    void get_money() {
-        Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
-        cursor.moveToFirst();
-
-
-        money = (cursor.getInt(cursor.getColumnIndex("money")));
-        score = (cursor.getInt(cursor.getColumnIndex("score")));
-        level = (cursor.getInt(cursor.getColumnIndex("level")));
-        //  textView.setText(score);
-        textView2.setText(money + "");
-        textView.setText("Счёт: " + (score_pergame));
-        cursor.close();
-
-    }
-
 
     void load_new_vopr() {
 
         get_money();//обновим  монеты
+
+        body.setVisibility(View.INVISIBLE);
+        progressBar2.setVisibility(View.VISIBLE);
 
         // enabled_btn_new();//очистим кнопочки
 
@@ -385,6 +211,169 @@ public class game extends AppCompatActivity {
         videoView.setVideoURI(Uri.parse(videoSource));
         timer = new Timer();
         timer.schedule(new MyTimerTask(), 500, 500);
+
+
+    }
+
+    private class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (videoView.getBufferPercentage() == 100) {
+                        // this.cancel();+
+                        timer.cancel();
+                        start_ugadka();
+                    }
+                }
+            });
+        }
+    }
+
+
+
+    void start_ugadka() {
+
+        body.setVisibility(View.VISIBLE);
+        progressBar2.setVisibility(View.INVISIBLE);
+
+
+        videoView.start();
+        timer1 = new CountDownTimer(10000, 1000) {
+
+            //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
+            public void onTick(long millisUntilFinished) {
+                Log.d("осталось тимер1", millisUntilFinished / 1000 + "");
+            }
+
+            //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
+            public void onFinish() {
+
+
+
+
+                fragment2.otv1.setEnabled(false);
+                fragment2.otv2.setEnabled(false);
+                fragment2.otv3.setEnabled(false);
+                fragment2.otv4.setEnabled(false);
+
+
+                if (prav) {
+                    if (level + 1 == lengtht) {
+                        //сли угадал все то с нуля начать, напиши ещё код для перемешки
+                        mDb.execSQL("UPDATE `records` SET level=0, money=money+10");
+                    } else {
+                        mDb.execSQL("UPDATE `records` SET level=level+1, money=money+10");
+                    }
+
+
+                    gameover_money += 10;
+                    gameover_schore += 100;
+                    mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
+                    get_money();
+
+           /*
+            load_new_vopr();
+
+            //межстраничная реклма
+            if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                    mInterstitialAd = new InterstitialAd(this);
+                    mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
+                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
+                rekl_n_otv = -1;
+            }
+            rekl_n_otv++;
+            //межстраничная реклма
+*/
+                } else {
+                    if (selectedotv != null) {
+                        selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetpnerav), PorterDuff.Mode.MULTIPLY);
+                    }
+                }
+
+
+                Button pravotv;
+                switch (random_vopt_btn) {
+                    case 0:
+                        pravotv = fragment2.otv1;
+                        break;
+                    case 1:
+                        pravotv = fragment2.otv2;
+                        break;
+                    case 2:
+                        pravotv = fragment2.otv3;
+                        break;
+                    default:
+                        pravotv = fragment2.otv4;
+                        break;
+                }
+                pravotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetprav), PorterDuff.Mode.MULTIPLY);
+
+
+                timer2 = new CountDownTimer(6000, 1000) {
+
+
+
+                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
+                    public void onTick(long millisUntilFinished) {
+                        Log.d("осталось ", millisUntilFinished / 1000 + "");
+                    }
+
+                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
+                    public void onFinish() {
+
+
+
+                        videoView.stopPlayback();
+
+                        if (prav) {
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.linearLayout, new MyFragment1());
+                            ft.commit();
+                        } else {
+
+                            finish();
+                            Intent intent = new Intent(tekactiviti, game_over.class);
+                            intent.putExtra("gameover_money", gameover_money);
+                            intent.putExtra("gameover_schore", gameover_schore);
+                            startActivity(intent);
+                        }
+
+
+                    }
+                }.start();
+            }
+        }.start();
+
+
+    }
+
+
+    void otvnvibor(View r, class_spis_vsego tag) {
+
+
+        selectedotv = (Button) r;
+        prav = false;
+        if (tag.id == spisokvsego.get(level).id) {
+            prav = true;
+        }
+
+
+        selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
+
+
+        // videoView.SEE
+        videoView.seekTo(10000);
+        timer1.cancel();
+        timer1.onFinish();
+        //   enabled_btn_otv(nombtn - 1);
 
 
     }
@@ -461,6 +450,29 @@ public class game extends AppCompatActivity {
             // customDialog2.show();
 
         }
+    }
+
+    void minus_monetka(int value) {
+
+        mDb.execSQL("UPDATE `records` SET money=money-" + value);
+        get_money();
+
+
+    }
+
+
+    void get_money() {
+        Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
+        cursor.moveToFirst();
+
+
+        money = (cursor.getInt(cursor.getColumnIndex("money")));
+        level = (cursor.getInt(cursor.getColumnIndex("level")));
+        //  textView.setText(score);
+        textView2.setText(money + "");
+        textView.setText("Счёт: " + (gameover_schore));
+        cursor.close();
+
     }
 
 

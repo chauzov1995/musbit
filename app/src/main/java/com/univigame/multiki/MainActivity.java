@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         byn_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
+                if(tek_energy>0){
 
 //вычтем энергию за игру
                 Cursor cursor = mDb.rawQuery("SELECT energy FROM records ", null);
@@ -66,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(tekactiviti, game.class);
                 startActivity(intent);
+                }else{
+                    CustomDialog_energy customDialog1 = new CustomDialog_energy(tekactiviti, tek_energy);
+                    customDialog1.show();
+                }
             }
         });
         btn_energ.setOnClickListener(new View.OnClickListener() {
