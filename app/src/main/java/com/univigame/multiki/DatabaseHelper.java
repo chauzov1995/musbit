@@ -12,84 +12,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-    private static String DB_NAME = "3CadBase.sqlite";
-    private static String DB_PATH = "";
-    private static final int DB_VERSION = 1;
 
-    private SQLiteDatabase mDataBase;
-    private final Context mContext;
-    private boolean mNeedUpdate = false;
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
-        if (android.os.Build.VERSION.SDK_INT >= 17)
-            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
-        else
-            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
-        this.mContext = context;
-
-        copyDataBase();
-
-        this.getReadableDatabase();
-    }
-
-    public void updateDataBase() throws IOException {
-        if (mNeedUpdate) {
-            File dbFile = new File(DB_PATH + DB_NAME);
-            if (dbFile.exists())
-                dbFile.delete();
-
-            copyDataBase();
-
-            mNeedUpdate = false;
-        }
-    }
-
-    private boolean checkDataBase() {
-        File dbFile = new File(DB_PATH + DB_NAME);
-        return dbFile.exists();
-    }
-
-    private void copyDataBase() {
-        if (!checkDataBase()) {
-            this.getReadableDatabase();
-            this.close();
-            try {
-                copyDBFile();
-            } catch (IOException mIOException) {
-                throw new Error("ErrorCopyingDataBase");
-            }
-        }
-    }
-
-    private void copyDBFile() throws IOException {
-        InputStream mInput = mContext.getAssets().open(DB_NAME);
-        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
-        OutputStream mOutput = new FileOutputStream(DB_PATH + DB_NAME);
-        byte[] mBuffer = new byte[1024];
-        int mLength;
-        while ((mLength = mInput.read(mBuffer)) > 0)
-            mOutput.write(mBuffer, 0, mLength);
-        mOutput.flush();
-        mOutput.close();
-        mInput.close();
-    }
-
-    public boolean openDataBase() throws SQLException {
-        mDataBase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.CREATE_IF_NECESSARY);
-        return mDataBase != null;
-    }
-
-    @Override
-    public synchronized void close() {
-        if (mDataBase != null)
-            mDataBase.close();
-        super.close();
+        // конструктор суперкласса
+        super(context, "myDB", null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+
 
 
         db.execSQL(" CREATE TABLE `records` (\n" +
@@ -100,6 +36,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
                 ");"
+
+        );
+
+        db.execSQL(" CREATE TABLE `musbit` (\n" +
+                "  `id` int NOT NULL DEFAULT 0,\n" +
+                "  `name` varchar NOT NULL DEFAULT '',\n" +
+                "  `url` varchar NOT NULL DEFAULT '',\n" +
+                "  `sort` int NOT NULL DEFAULT 0\n" +
+
+
+                ");"
+
         );
 
         Calendar calendar = Calendar.getInstance();
@@ -112,7 +60,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion)
-            mNeedUpdate = true;
+
+
+
+        switch (oldVersion) {
+         //   case 2:
+        }
     }
 }

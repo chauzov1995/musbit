@@ -120,27 +120,15 @@ public class game extends AppCompatActivity {
 
 
         mDBHelper = new DatabaseHelper(this);
-
-        try {
-            mDBHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-
-        try {
-            mDb = mDBHelper.getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
-
+        mDb = mDBHelper.getWritableDatabase();
 
         // get_money();
 
         spisokvsego = new ArrayList<class_spis_vsego>();
-        Cursor c = mDb.rawQuery("SELECT id, nazv FROM t ", null);
+        Cursor c = mDb.rawQuery("SELECT id, name FROM musbit ", null);
         if (c.moveToFirst()) {
             int id = c.getColumnIndex("id");
-            int nazv = c.getColumnIndex("nazv");
+            int nazv = c.getColumnIndex("name");
             do {
                 spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv)));
             } while (c.moveToNext());
@@ -201,9 +189,9 @@ public class game extends AppCompatActivity {
 
 
         //получим ссылку на видео
-        Cursor cursor = mDb.rawQuery("SELECT * FROM t where id =" + spisokvsego.get(level).id, null);
+        Cursor cursor = mDb.rawQuery("SELECT * FROM musbit where id =" + spisokvsego.get(level).id, null);
         cursor.moveToFirst();
-        String video_url = (cursor.getString(cursor.getColumnIndex("image_url")));
+        String video_url = (cursor.getString(cursor.getColumnIndex("url")));
         cursor.close();
 
         //старт видео
