@@ -23,7 +23,7 @@ public class MyFragment1 extends Fragment {
             public void onClick(View r) {
 
                 ctx = (game) getActivity();
-                ctx.load_new_vopr();
+                ctx.load_new_vopr(false);
 
             }
         });

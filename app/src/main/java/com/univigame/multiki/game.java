@@ -122,7 +122,7 @@ public class game extends AppCompatActivity {
         mDBHelper = new DatabaseHelper(this);
         mDb = mDBHelper.getWritableDatabase();
 
-        // get_money();
+
 
         spisokvsego = new ArrayList<class_spis_vsego>();
         Cursor c = mDb.rawQuery("SELECT id, name FROM musbit ", null);
@@ -136,7 +136,7 @@ public class game extends AppCompatActivity {
         lengtht = spisokvsego.size();
 
 
-        load_new_vopr();//новый вопрос при старте
+        load_new_vopr(true);//новый вопрос при старте
 
 
     }
@@ -150,12 +150,23 @@ public class game extends AppCompatActivity {
         if (timer != null) timer.cancel();
     }
 
-    void load_new_vopr() {
+    void load_new_vopr(boolean first) {
 
         get_money();//обновим  монеты
+        prav = false;
 
         body.setVisibility(View.INVISIBLE);
         progressBar2.setVisibility(View.VISIBLE);
+
+
+
+
+        Cursor cursor2 = mDb.rawQuery("SELECT * FROM records ", null);
+        cursor2.moveToFirst();
+        level = (cursor2.getInt(cursor2.getColumnIndex("level")));
+        cursor2.close();
+
+
 
         // enabled_btn_new();//очистим кнопочки
 
@@ -193,6 +204,15 @@ public class game extends AppCompatActivity {
         cursor.moveToFirst();
         String video_url = (cursor.getString(cursor.getColumnIndex("url")));
         cursor.close();
+
+
+        if (level + 1 == lengtht) {
+            //сли угадал все то с нуля начать, напиши ещё код для перемешки
+            mDb.execSQL("UPDATE `records` SET level=0");
+        } else {
+            mDb.execSQL("UPDATE `records` SET level=level+1");
+        }
+
 
         //старт видео
         String videoSource = video_url;
@@ -248,14 +268,11 @@ public class game extends AppCompatActivity {
                 fragment2.otv4.setEnabled(false);
 
 
-                if (prav) {
-                    if (level + 1 == lengtht) {
-                        //сли угадал все то с нуля начать, напиши ещё код для перемешки
-                        mDb.execSQL("UPDATE `records` SET level=0, money=money+10");
-                    } else {
-                        mDb.execSQL("UPDATE `records` SET level=level+1, money=money+10");
-                    }
 
+
+                if (prav) {
+
+                    mDb.execSQL("UPDATE `records` SET money=money+10");
 
                     gameover_money += 10;
                     gameover_schore += 100;
@@ -284,6 +301,7 @@ public class game extends AppCompatActivity {
                     if (selectedotv != null) {
                         selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetpnerav), PorterDuff.Mode.MULTIPLY);
                     }
+
                 }
 
 
@@ -305,7 +323,7 @@ public class game extends AppCompatActivity {
                 pravotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetprav), PorterDuff.Mode.MULTIPLY);
 
 
-                timer2 = new CountDownTimer(6000, 1000) {
+                timer2 = new CountDownTimer(8000, 1000) {
 
 
 
@@ -358,7 +376,9 @@ public class game extends AppCompatActivity {
 
 
         // videoView.SEE
+        videoView.pause();
         videoView.seekTo(10000);
+        videoView.start();
         timer1.cancel();
         timer1.onFinish();
         //   enabled_btn_otv(nombtn - 1);
@@ -422,7 +442,7 @@ public class game extends AppCompatActivity {
                 if (randomn != random_vopt_btn && btn_enabl[randomn] == true) {
                     enabled_btn_otv(randomn);
                     stop = false;
-                    minus_monetka(5);
+                  //  minus_monetka(5);
                 }
                 if ((0 == random_vopt_btn || btn_enabl[0] == false) &&
                         (1 == random_vopt_btn || btn_enabl[1] == false) &&
@@ -455,7 +475,7 @@ public class game extends AppCompatActivity {
 
 
         money = (cursor.getInt(cursor.getColumnIndex("money")));
-        level = (cursor.getInt(cursor.getColumnIndex("level")));
+      //  level = (cursor.getInt(cursor.getColumnIndex("level")));
         //  textView.setText(score);
         textView2.setText(money + "");
         textView.setText("Счёт: " + (gameover_schore));
