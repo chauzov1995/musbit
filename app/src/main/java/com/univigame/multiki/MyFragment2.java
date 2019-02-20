@@ -49,7 +49,7 @@ public class MyFragment2 extends Fragment {
         otv3.setText(ctx.varotv3.nazv);
         otv4.setText(ctx.varotv4.nazv);
 
-        ctx.fragment2 = MyFragment2.this;
+      //  ctx.fragment2 = MyFragment2.this;
 
 
         otv1.setOnClickListener(new View.OnClickListener() {
