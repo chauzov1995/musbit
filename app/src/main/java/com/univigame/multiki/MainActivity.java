@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -107,6 +108,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        byn_start2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
+
+
+
+
         mDBHelper = new DatabaseHelper(this);
         mDb = mDBHelper.getWritableDatabase();
 
@@ -142,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
             tek_energy = 11 - ((energy - unixTime) / 600);
 
 
-        textView10.setText("Рекорд: " + score + "");
-        btn_energ.setText("Энергия: " + tek_energy + "/12");
-        btn_money.setText("Монеты: " + money + "");
+        textView10.setText( score + "");
+        btn_energ.setText("Энергия " + tek_energy + "/12");
+        btn_money.setText("Монеты " + money + "");
 
     }
 
