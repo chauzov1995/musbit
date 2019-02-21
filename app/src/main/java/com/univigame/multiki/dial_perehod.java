@@ -41,7 +41,7 @@ public class dial_perehod {
             public void onClick(View r) {
 
                 dialog.dismiss();
-                activity.load_new_vopr(false);
+               // activity.load_new_vopr(false);
 
             }
         });
