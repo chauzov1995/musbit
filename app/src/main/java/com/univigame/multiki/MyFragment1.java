@@ -59,7 +59,7 @@ public class MyFragment1 extends Fragment {
     public MyFragment1 newInstance(int someInt) {
         MyFragment1 myFragment = new MyFragment1();
         tekactiviti = (game) getActivity();
-        tekactiviti.asdasdasd=myFragment;
+//        tekactiviti.asdasdasd=myFragment;
         Bundle args = new Bundle();
      //   args.putInt("someInt", someInt);
         myFragment.setArguments(args);
