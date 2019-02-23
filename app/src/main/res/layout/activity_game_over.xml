@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/group"
     android:orientation="vertical"
     android:padding="16dp"
     android:weightSum="10"
@@ -15,8 +16,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="Игра окончена"
+        android:textColor="#fff"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="117dp"
         tools:layout_editor_absoluteY="37dp" />
@@ -26,8 +29,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="0"
+        android:textColor="#fff"
         android:textSize="60sp"
         tools:layout_editor_absoluteX="193dp"
         tools:layout_editor_absoluteY="146dp" />
@@ -37,8 +42,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="+10 (монет)"
+        android:textColor="#fff"
         android:textSize="24sp" />
 
     <LinearLayout

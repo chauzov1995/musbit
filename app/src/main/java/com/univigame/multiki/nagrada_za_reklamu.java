@@ -97,11 +97,11 @@ public class nagrada_za_reklamu extends AppCompatActivity implements RewardedVid
                 break;
             case 2:
                 //150 монет
-                mDb.execSQL("UPDATE `records` SET money=money+" + reward.getAmount());
+                mDb.execSQL("UPDATE `records` SET money=money+" +  reward.getAmount());
                 break;
             case 3:
                 //2 энергии
-                mDb.execSQL("UPDATE `records` SET money=energy+" + reward.getAmount());
+                mDb.execSQL("UPDATE `records` SET energy=energy-" + (600*reward.getAmount()));
                 break;
 
         }

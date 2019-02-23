@@ -16,7 +16,6 @@
 
         android:layout_width="351dp"
         android:layout_height="68dp"
-        android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:background="@drawable/rate_design"
         android:drawableStart="@drawable/star_design"

@@ -3,6 +3,7 @@ package com.univigame.multiki;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -138,6 +140,7 @@ public class game extends AppCompatActivity {
         body.setVisibility(View.INVISIBLE);
         progressBar2.setVisibility(View.VISIBLE);
 
+        get_money();//обновим  монеты
         load_new_vopr(level);//новый вопрос при старте
 
 
@@ -151,14 +154,14 @@ public class game extends AppCompatActivity {
         if (timer1 != null) timer1.cancel();
         if (timer2 != null) timer2.cancel();
         if (timer != null) timer.cancel();
+        if (timer3 != null) timer3.cancel();
     }
 
     void load_new_vopr(int level) {
 
-        get_money();//обновим  монеты
+
         prav = false;
 
-        // enabled_btn_new();//очистим кнопочки
 
         varianti1 = gener_otv_btn(level);
 
@@ -194,7 +197,7 @@ public class game extends AppCompatActivity {
     public boolean start_sled = true;
 
     void start_ugadka() {
-
+        get_money();//обновим  монеты
 //оставим для первого старта
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
@@ -222,8 +225,14 @@ public class game extends AppCompatActivity {
         }
         load_new_vopr2(sled_level);
 
-        videoView.bringToFront();
+
+
+
         videoView.start();
+        videoView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        videoView2.getLayoutParams().height = 0;
+        videoView.requestLayout();
+
         timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
@@ -276,7 +285,7 @@ public class game extends AppCompatActivity {
 */
                 } else {
                     if (selectedotv != null) {
-                        selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetpnerav), PorterDuff.Mode.MULTIPLY);
+                        selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
                     }
 
                 }
@@ -297,8 +306,8 @@ public class game extends AppCompatActivity {
                         pravotv = otv4;
                         break;
                 }
-                pravotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetprav), PorterDuff.Mode.MULTIPLY);
-
+                pravotv.setBackground(getResources().getDrawable(R.drawable.otvet_prav_design));
+                pravotv.setTextColor(Color.BLACK);
 
                 timer2 = new CountDownTimer(8000, 1000) {
 
@@ -356,13 +365,13 @@ public class game extends AppCompatActivity {
             selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
 
 
-            // videoView.SEE
+
             videoView.pause();
             videoView.seekTo(10000);
             videoView.start();
             timer1.cancel();
             timer1.onFinish();
-            //   enabled_btn_otv(nombtn - 1);
+
 
         } else {
             selectedotv = (Button) r;
@@ -381,7 +390,7 @@ public class game extends AppCompatActivity {
             videoView2.start();
             timer1.cancel();
             timer1.onFinish();
-            //   enabled_btn_otv(nombtn - 1);
+
 
         }
     }
@@ -418,7 +427,6 @@ public class game extends AppCompatActivity {
 
     void btn_visualization_otv(int[] varianti) {
 
-
         final class_spis_vsego varotv1 = spisokvsego.get(varianti[0]);
         final class_spis_vsego varotv2 = spisokvsego.get(varianti[1]);
         final class_spis_vsego varotv3 = spisokvsego.get(varianti[2]);
@@ -429,11 +437,15 @@ public class game extends AppCompatActivity {
         otv3.setEnabled(true);
         otv4.setEnabled(true);
 
-        otv1.getBackground().setColorFilter(null);
-        otv2.getBackground().setColorFilter(null);
-        otv3.getBackground().setColorFilter(null);
-        otv4.getBackground().setColorFilter(null);
+        otv1.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv2.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv3.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv4.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
 
+        otv1.setTextColor(Color.WHITE);
+        otv2.setTextColor(Color.WHITE);
+        otv3.setTextColor(Color.WHITE);
+        otv4.setTextColor(Color.WHITE);
 
         otv1.setText(varotv1.nazv);
         otv2.setText(varotv2.nazv);
@@ -461,28 +473,24 @@ public class game extends AppCompatActivity {
             }
         });
 
-
     }
 
     void load_new_vopr2(int level) {
 
-        //     get_money();//обновим  монеты
-        //   prav = false;
 
-        //  body.setVisibility(View.INVISIBLE);
-        //    progressBar2.setVisibility(View.VISIBLE);
+           prav = false;
+
+
 
         varianti2 = gener_otv_btn(level);
 
         //старт видео
         String videoSource = spisokvsego.get(level).url;
-        ;
 
 
         videoView2.setVideoURI(Uri.parse(videoSource));
         timer3 = new Timer();
         timer3.schedule(new MyTimerTask2(), 500, 500);
-
 
     }
 
@@ -509,7 +517,7 @@ public class game extends AppCompatActivity {
 
     void start_ugadka2() {
         first_video = false;
-
+        get_money();//обновим  монеты
 
         if (level + 1 == lengtht) {
             //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
@@ -521,8 +529,12 @@ public class game extends AppCompatActivity {
 
         btn_visualization_otv(varianti2);
 
-        videoView2.bringToFront();
+
+
         videoView2.start();
+        videoView2.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        videoView.getLayoutParams().height = 0;
+        videoView2.requestLayout();
 
 
         int sled_level;
@@ -586,7 +598,7 @@ public class game extends AppCompatActivity {
 */
                 } else {
                     if (selectedotv != null) {
-                        selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetpnerav), PorterDuff.Mode.MULTIPLY);
+                        selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
                     }
 
                 }
@@ -607,8 +619,8 @@ public class game extends AppCompatActivity {
                         pravotv = otv4;
                         break;
                 }
-                pravotv.getBackground().setColorFilter(getResources().getColor(R.color.otvetprav), PorterDuff.Mode.MULTIPLY);
-
+                pravotv.setBackground(getResources().getDrawable(R.drawable.otvet_prav_design));
+                pravotv.setTextColor(Color.BLACK);
 
                 timer2 = new CountDownTimer(8000, 1000) {
 
@@ -653,51 +665,10 @@ public class game extends AppCompatActivity {
     }
 
 
-    void enabled_btn_otv(int nomen) {
-        btn_enabl[nomen] = false;
-        switch (nomen) {
-            case 0:
-                otv1.setVisibility(View.INVISIBLE);
-                break;
-            case 1:
-                otv2.setVisibility(View.INVISIBLE);
-                break;
-            case 2:
-                otv3.setVisibility(View.INVISIBLE);
-                break;
-            case 3:
-                otv4.setVisibility(View.INVISIBLE);
-                break;
-        }
 
 
-/*
-        otv1.setEnabled(btn_enabl[0]);
-        otv2.setEnabled(btn_enabl[1]);
-        otv3.setEnabled(btn_enabl[2]);
-        otv4.setEnabled(btn_enabl[3]);
-        otv1.setVisibility(View.INVISIBLE);
-        otv2.setBackground(getDrawable(android.R.color.holo_orange_light));;
-        otv3.setEnabled(btn_enabl[2]);
-        otv4.setEnabled(btn_enabl[3]);
-*/
-    }
 
-    void enabled_btn_new() {
-        btn_enabl[0] = true;
-        btn_enabl[1] = true;
-        btn_enabl[2] = true;
-        btn_enabl[3] = true;
 
-        //   otv1.setEnabled(btn_enabl[0]);
-        //    otv2.setEnabled(btn_enabl[1]);
-        //   otv3.setEnabled(btn_enabl[2]);
-        //   otv4.setEnabled(btn_enabl[3]);
-        otv1.setVisibility(View.VISIBLE);
-        otv2.setVisibility(View.VISIBLE);
-        otv3.setVisibility(View.VISIBLE);
-        otv4.setVisibility(View.VISIBLE);
-    }
 
     public void ubratb_1nepr() {
         /*

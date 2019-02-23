@@ -79,10 +79,10 @@
 
             <Button
                 android:id="@+id/otv1"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1"
+                android:background="@drawable/otvet_do_design"
                 android:text="Button"
                 android:textColor="#fff" />
 
