@@ -41,7 +41,7 @@ public class game extends AppCompatActivity {
     ArrayList<class_spis_vsego> spisokvsego;
     static int lengtht;
     VideoView videoView, videoView2;
-
+    public boolean start_sled = true;
     TextView textView, textView2;
     game tekactiviti;
 
@@ -60,7 +60,8 @@ public class game extends AppCompatActivity {
     CountDownTimer timer1, timer2;
     ProgressBar progressBar2;
     ConstraintLayout body;
-
+    static int random_vopt_btn2, random_vopt_btn1;
+    int[] varianti1, varianti2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,20 +161,13 @@ public class game extends AppCompatActivity {
     void load_new_vopr(int level) {
 
 
-        prav = false;
-
-
         varianti1 = gener_otv_btn(level);
 
         //старт видео
         String videoSource = spisokvsego.get(level).url;
-
-
         videoView.setVideoURI(Uri.parse(videoSource));
         timer = new Timer();
         timer.schedule(new MyTimerTask(), 500, 500);
-
-
     }
 
     private class MyTimerTask extends TimerTask {
@@ -194,7 +188,6 @@ public class game extends AppCompatActivity {
         }
     }
 
-    public boolean start_sled = true;
 
     void start_ugadka() {
         get_money();//обновим  монеты
@@ -202,30 +195,22 @@ public class game extends AppCompatActivity {
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
 
-
+        prav = false;
         first_video = true;
 
 
         btn_visualization_otv(varianti1);
 
-
+        int sled_level;
         if (level + 1 == lengtht) {
             //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
             mDb.execSQL("UPDATE `records` SET level=0");
-        } else {
-            mDb.execSQL("UPDATE `records` SET level=level+1");
-        }
-
-
-        int sled_level;
-        if (level + 1 == lengtht) {
             sled_level = 0;
         } else {
+            mDb.execSQL("UPDATE `records` SET level=level+1");
             sled_level = level + 1;
         }
         load_new_vopr2(sled_level);
-
-
 
 
         videoView.start();
@@ -286,6 +271,7 @@ public class game extends AppCompatActivity {
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
+                        selectedotv=null;
                     }
 
                 }
@@ -323,8 +309,6 @@ public class game extends AppCompatActivity {
 
                         videoView.stopPlayback();
 
-                        // load_new_vopr(false);
-
 
                         if (prav) {
 
@@ -352,148 +336,17 @@ public class game extends AppCompatActivity {
     }
 
 
-    void otvnvibor(View r, class_spis_vsego otv_sel_btn_elem) {
-
-        if (first_video) {
-            selectedotv = (Button) r;
-            prav = false;
-            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
-                prav = true;
-            }
-
-
-            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
-
-
-
-            videoView.pause();
-            videoView.seekTo(10000);
-            videoView.start();
-            timer1.cancel();
-            timer1.onFinish();
-
-
-        } else {
-            selectedotv = (Button) r;
-            prav = false;
-            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
-                prav = true;
-            }
-
-
-            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
-
-
-            // videoView.SEE
-            videoView2.pause();
-            videoView2.seekTo(10000);
-            videoView2.start();
-            timer1.cancel();
-            timer1.onFinish();
-
-
-        }
-    }
-
-    static int random_vopt_btn2, random_vopt_btn1;
-
-
-    static int[] gener_otv_btn(int level) {
-        //рисвоим кнопкам ид правильного ответа
-        int random_vopt_btn = (int) (Math.random() * 4);
-        int[] varianti = {-1, -1, -1, -1};
-        varianti[random_vopt_btn] = level;
-        for (int i = 0; i < varianti.length; i++) {
-            if (varianti[i] == -1) {
-                boolean zikl = true;
-                while (zikl) {
-                    int rand = (int) (Math.random() * lengtht); // Генерация 1-го чис
-                    if (rand != varianti[0] && rand != varianti[1] && rand != varianti[2] && rand != varianti[3]) {
-                        varianti[i] = rand;
-                        zikl = false;
-                    }
-                }
-            }
-        }
-        if (!first_video) {//специально наоборот,т к ещё не присвоен стату новой песни
-            random_vopt_btn1 = random_vopt_btn;
-        } else {
-            random_vopt_btn2 = random_vopt_btn;
-        }
-        return varianti;
-    }
-
-    int[] varianti1, varianti2;
-
-    void btn_visualization_otv(int[] varianti) {
-
-        final class_spis_vsego varotv1 = spisokvsego.get(varianti[0]);
-        final class_spis_vsego varotv2 = spisokvsego.get(varianti[1]);
-        final class_spis_vsego varotv3 = spisokvsego.get(varianti[2]);
-        final class_spis_vsego varotv4 = spisokvsego.get(varianti[3]);
-
-        otv1.setEnabled(true);
-        otv2.setEnabled(true);
-        otv3.setEnabled(true);
-        otv4.setEnabled(true);
-
-        otv1.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
-        otv2.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
-        otv3.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
-        otv4.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
-
-        otv1.setTextColor(Color.WHITE);
-        otv2.setTextColor(Color.WHITE);
-        otv3.setTextColor(Color.WHITE);
-        otv4.setTextColor(Color.WHITE);
-
-        otv1.setText(varotv1.nazv);
-        otv2.setText(varotv2.nazv);
-        otv3.setText(varotv3.nazv);
-        otv4.setText(varotv4.nazv);
-
-        otv1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                otvnvibor(r, varotv1);
-            }
-        });
-        otv2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                otvnvibor(r, varotv2);
-            }
-        });
-        otv3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                otvnvibor(r, varotv3);
-            }
-        });
-        otv4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                otvnvibor(r, varotv4);
-            }
-        });
-
-    }
-
     void load_new_vopr2(int level) {
-
-
-           prav = false;
-
 
 
         varianti2 = gener_otv_btn(level);
 
         //старт видео
         String videoSource = spisokvsego.get(level).url;
-
-
         videoView2.setVideoURI(Uri.parse(videoSource));
         timer3 = new Timer();
         timer3.schedule(new MyTimerTask2(), 500, 500);
-
     }
-
     private class MyTimerTask2 extends TimerTask {
 
         @Override
@@ -514,9 +367,9 @@ public class game extends AppCompatActivity {
         }
     }
 
-
     void start_ugadka2() {
         first_video = false;
+        prav = false;
         get_money();//обновим  монеты
 
         if (level + 1 == lengtht) {
@@ -528,7 +381,6 @@ public class game extends AppCompatActivity {
 
 
         btn_visualization_otv(varianti2);
-
 
 
         videoView2.start();
@@ -543,7 +395,7 @@ public class game extends AppCompatActivity {
         } else {
             sled_level = level + 1;
         }
-         load_new_vopr(sled_level);
+        load_new_vopr(sled_level);
 
 
         timer1 = new CountDownTimer(10000, 1000) {
@@ -599,6 +451,7 @@ public class game extends AppCompatActivity {
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
+                        selectedotv=null;
                     }
 
                 }
@@ -636,8 +489,6 @@ public class game extends AppCompatActivity {
 
                         videoView2.stopPlayback();
 
-                        // load_new_vopr(false);
-
 
                         if (prav) {
 
@@ -661,6 +512,133 @@ public class game extends AppCompatActivity {
             }
         }.start();
 
+
+    }
+
+
+
+
+
+
+
+    void otvnvibor(View r, class_spis_vsego otv_sel_btn_elem) {
+
+        if (first_video) {
+            selectedotv = (Button) r;
+            prav = false;
+            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
+                prav = true;
+            }
+
+
+            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
+
+
+            videoView.pause();
+            videoView.seekTo(10000);
+            videoView.start();
+            timer1.cancel();
+            timer1.onFinish();
+
+
+        } else {
+            selectedotv = (Button) r;
+            prav = false;
+            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
+                prav = true;
+            }
+
+
+            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
+
+
+            // videoView.SEE
+            videoView2.pause();
+            videoView2.seekTo(10000);
+            videoView2.start();
+            timer1.cancel();
+            timer1.onFinish();
+
+
+        }
+    }
+
+
+
+    static int[] gener_otv_btn(int level) {
+        //рисвоим кнопкам ид правильного ответа
+        int random_vopt_btn = (int) (Math.random() * 4);
+        int[] varianti = {-1, -1, -1, -1};
+        varianti[random_vopt_btn] = level;
+        for (int i = 0; i < varianti.length; i++) {
+            if (varianti[i] == -1) {
+                boolean zikl = true;
+                while (zikl) {
+                    int rand = (int) (Math.random() * lengtht); // Генерация 1-го чис
+                    if (rand != varianti[0] && rand != varianti[1] && rand != varianti[2] && rand != varianti[3]) {
+                        varianti[i] = rand;
+                        zikl = false;
+                    }
+                }
+            }
+        }
+        if (!first_video) {//специально наоборот,т к ещё не присвоен стату новой песни
+            random_vopt_btn1 = random_vopt_btn;
+        } else {
+            random_vopt_btn2 = random_vopt_btn;
+        }
+        return varianti;
+    }
+
+
+
+    void btn_visualization_otv(int[] varianti) {
+
+        final class_spis_vsego varotv1 = spisokvsego.get(varianti[0]);
+        final class_spis_vsego varotv2 = spisokvsego.get(varianti[1]);
+        final class_spis_vsego varotv3 = spisokvsego.get(varianti[2]);
+        final class_spis_vsego varotv4 = spisokvsego.get(varianti[3]);
+
+        otv1.setEnabled(true);
+        otv2.setEnabled(true);
+        otv3.setEnabled(true);
+        otv4.setEnabled(true);
+
+        otv1.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv2.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv3.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+        otv4.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
+
+        otv1.setTextColor(Color.WHITE);
+        otv2.setTextColor(Color.WHITE);
+        otv3.setTextColor(Color.WHITE);
+        otv4.setTextColor(Color.WHITE);
+
+        otv1.setText(varotv1.nazv);
+        otv2.setText(varotv2.nazv);
+        otv3.setText(varotv3.nazv);
+        otv4.setText(varotv4.nazv);
+
+        otv1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                otvnvibor(r, varotv1);
+            }
+        });
+        otv2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                otvnvibor(r, varotv2);
+            }
+        });
+        otv3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                otvnvibor(r, varotv3);
+            }
+        });
+        otv4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                otvnvibor(r, varotv4);
+            }
+        });
 
     }
 
