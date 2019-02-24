@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">223687751945</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.univigame.musbit</string>
+    <!-- leaderboard Top 100 -->
+    <string name="leaderboard_top_100" translatable="false">CgkIifLQpsEGEAIQAQ</string>
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "223687751945",
+    "firebase_url": "https://musbit.firebaseio.com",
+    "project_id": "musbit",
+    "storage_bucket": "musbit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223687751945:android:d42dd58015d5b4db",
+        "android_client_info": {
+          "package_name": "com.univigame.musbit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223687751945-391hjsngt3188aavu8hcpvjqb5fus6kh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.univigame.musbit",
+            "certificate_hash": "046f44e8a027e0f575e0f1fe4a7eac8b517c52a9"
+          }
+        },
+        {
+          "client_id": "223687751945-n2t1ntth8mlchkoal9ljomhivt09rh78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqItO8lJqTqHedLSdFgvIY4A-6Ru5HJvY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223687751945-n2t1ntth8mlchkoal9ljomhivt09rh78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

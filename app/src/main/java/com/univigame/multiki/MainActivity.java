@@ -17,6 +17,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     Button byn_start, byn_start2, btn_energ, btn_money, btn_videomodey;
     int money;
     long tek_energy;
+    TextView textView9;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,24 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         tekactiviti = this;
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(FirebaseAnalytics.Param.SCORE, 6000);
+        bundle.putString("leaderboard_id", "CgkIifLQpsEGEAIQAQ");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle);
+
+
+
+        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
+                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        Intent intent = signInClient.getSignInIntent();
+        startActivityForResult(intent, 1);
+
+
+
 
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
@@ -58,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         btn_energ = (Button) findViewById(R.id.btn_energ);
         btn_money = (Button) findViewById(R.id.btn_money);
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
+        textView9 = (TextView) findViewById(R.id.textView9);
+
 
         byn_start.setEnabled(false);
 
@@ -119,7 +148,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        textView9.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
 
+            }
+        });
 
 
         mDBHelper = new DatabaseHelper(this);
@@ -134,6 +167,11 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
         }
+    }
+
+
+    private boolean isSignedIn() {
+        return GoogleSignIn.getLastSignedInAccount(this) != null;
     }
 
     @Override

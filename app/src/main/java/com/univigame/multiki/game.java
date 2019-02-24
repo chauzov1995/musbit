@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +52,7 @@ public class game extends AppCompatActivity {
     Timer timer, timer3;
     // public class_spis_vsego varotv1, varotv2, varotv3, varotv4;
     Button selectedotv;
-    boolean prav = false;
+    boolean prav1 = false, prav2 = false;
     // public MyFragment2 fragment2;
     int gameover_money = 0;
     int gameover_schore = 0;
@@ -195,7 +194,7 @@ public class game extends AppCompatActivity {
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
 
-        prav = false;
+        prav1 = false;
         first_video = true;
 
 
@@ -242,7 +241,7 @@ public class game extends AppCompatActivity {
                 }
 
 
-                if (prav) {
+                if (prav1) {
 
                     mDb.execSQL("UPDATE `records` SET money=money+10");
 
@@ -271,11 +270,11 @@ public class game extends AppCompatActivity {
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
-                        selectedotv=null;
+
                     }
 
                 }
-
+                selectedotv=null;
 
                 Button pravotv;
                 switch (random_vopt_btn1) {
@@ -310,7 +309,7 @@ public class game extends AppCompatActivity {
                         videoView.stopPlayback();
 
 
-                        if (prav) {
+                        if (prav1) {
 
 
                             dial_perehod customDialog1 = new dial_perehod(game.this, money);
@@ -369,7 +368,7 @@ public class game extends AppCompatActivity {
 
     void start_ugadka2() {
         first_video = false;
-        prav = false;
+        prav2 = false;
         get_money();//обновим  монеты
 
         if (level + 1 == lengtht) {
@@ -422,7 +421,7 @@ public class game extends AppCompatActivity {
                 }
 
 
-                if (prav) {
+                if (prav2) {
 
                     mDb.execSQL("UPDATE `records` SET money=money+10");
 
@@ -451,11 +450,11 @@ public class game extends AppCompatActivity {
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
-                        selectedotv=null;
+
                     }
 
                 }
-
+                selectedotv=null;
 
                 Button pravotv;
                 switch (random_vopt_btn2) {
@@ -490,7 +489,7 @@ public class game extends AppCompatActivity {
                         videoView2.stopPlayback();
 
 
-                        if (prav) {
+                        if (prav2) {
 
 
                             dial_perehod customDialog1 = new dial_perehod(game.this, money);
@@ -525,13 +524,11 @@ public class game extends AppCompatActivity {
 
         if (first_video) {
             selectedotv = (Button) r;
-            prav = false;
+            prav1 = false;
             if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
-                prav = true;
+                prav1 = true;
             }
 
-
-            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
 
 
             videoView.pause();
@@ -543,13 +540,11 @@ public class game extends AppCompatActivity {
 
         } else {
             selectedotv = (Button) r;
-            prav = false;
+            prav2 = false;
             if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
-                prav = true;
+                prav2 = true;
             }
 
-
-            selectedotv.getBackground().setColorFilter(getResources().getColor(R.color.preotvet), PorterDuff.Mode.MULTIPLY);
 
 
             // videoView.SEE
