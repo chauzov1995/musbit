@@ -1,5 +1,6 @@
 package com.univigame.multiki;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.view.View;
@@ -13,10 +14,10 @@ public class CustomDialog_energy {
     private TextView dialogInfo;
     private Button dialogButton,button4;
     private Dialog dialog;
-    private MainActivity activity;
+    private Activity activity;
     long tek_energy;
 
-    public CustomDialog_energy(MainActivity activity, long tek_energy ){
+    public CustomDialog_energy(Activity activity, long tek_energy ){
         this.activity = activity;
         this.tek_energy=tek_energy;
         init();

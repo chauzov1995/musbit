@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,80 +14,104 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="32dp"
         android:layout_weight="1"
-        android:fontFamily="@font/sfprodisplay_regular"
+        android:fontFamily="@font/sfprodisplay_semibold"
         android:gravity="center"
         android:text="Игра окончена"
         android:textColor="#fff"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="37dp" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/total_score"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_weight="2"
         android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="0"
         android:textColor="#fff"
         android:textSize="60sp"
-        tools:layout_editor_absoluteX="193dp"
-        tools:layout_editor_absoluteY="146dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvplmoney" />
 
     <TextView
         android:id="@+id/tvplmoney"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_weight="1"
         android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="+10 (монет)"
         android:textColor="#fff"
-        android:textSize="24sp" />
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <Button
-            android:id="@+id/btn_share"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Поделиться"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="383dp" />
-
-        <Button
-            android:id="@+id/btn_vmenu"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="В меню"
-            tools:layout_editor_absoluteX="128dp"
-            tools:layout_editor_absoluteY="383dp" />
-
-        <Button
-            android:id="@+id/btn_restart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Повторить"
-            tools:layout_editor_absoluteX="227dp"
-            tools:layout_editor_absoluteY="383dp" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[1]" />
+    <Button
+        android:id="@+id/btn_vmenu"
+        android:layout_width="167dp"
 
 
-</LinearLayout>
+        android:layout_height="68dp"
+        android:layout_marginEnd="16dp"
+
+
+        android:background="@drawable/otvet_do_design"
+        android:fontFamily="@font/sfprodisplay_regular"
+        android:text="В меню"
+        android:textAllCaps="false"
+
+        android:textColor="#269BFF"
+        android:textSize="20sp"
+
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_restart"
+        app:layout_constraintEnd_toStartOf="@+id/btn_restart"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="65dp"
+        android:background="@drawable/share_design"
+        app:layout_constraintBottom_toTopOf="@+id/btn_restart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_restart"
+        android:layout_width="167dp"
+
+
+        android:layout_height="68dp"
+
+
+        android:layout_gravity="center"
+
+
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/zanovo_design"
+        android:fontFamily="@font/sfprodisplay_regular"
+        android:text="Повторить"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_vmenu"
+        app:layout_constraintTop_toBottomOf="@+id/tvplmoney"
+        app:layout_constraintVertical_bias="0.64" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,14 +1,18 @@
 package com.univigame.multiki;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,9 +21,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     MainActivity tekactiviti;
@@ -59,21 +71,6 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 
-        Bundle bundle = new Bundle();
-        bundle.putLong(FirebaseAnalytics.Param.SCORE, 6000);
-        bundle.putString("leaderboard_id", "CgkIifLQpsEGEAIQAQ");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle);
-
-
-
-        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
-                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-        Intent intent = signInClient.getSignInIntent();
-        startActivityForResult(intent, 1);
-
-
-
-
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
         //инит рекл
@@ -87,8 +84,32 @@ public class MainActivity extends AppCompatActivity {
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
         textView9 = (TextView) findViewById(R.id.textView9);
 
+        Button  button6 = (Button) findViewById(R.id.button6);
+        Button   button7 = (Button) findViewById(R.id.button7);
+        Button  button8 = (Button) findViewById(R.id.button8);
+
 
         byn_start.setEnabled(false);
+
+
+        button6.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                //инста
+              //  openLink(this, "http://vk.com/id1");
+            }
+        });
+        button7.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                //вк
+                openLink(MainActivity.this, "https://vk.com/musbitgame");
+            }
+        });
+        button8.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                //facebook
+                openLink(MainActivity.this, "https://www.facebook.com/MusBit-угадай-музыку-по-биту-1116667585187816");
+            }
+        });
 
         byn_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -150,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
         textView9.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
+                showLeaderboard();
             }
         });
 
@@ -159,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
         mDb = mDBHelper.getWritableDatabase();
 
 
-        new load_spis_valut().execute();;//загрузим песни с сайта
+        new load_spis_valut().execute();
+        ;//загрузим песни с сайта
 
 
         if (ContextCompat.checkSelfPermission(this,
@@ -170,13 +192,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean isSignedIn() {
-        return GoogleSignIn.getLastSignedInAccount(this) != null;
+    private static final int RC_LEADERBOARD_UI = 9004;
+
+    private void showLeaderboard() {
+        Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .getLeaderboardIntent(getString(R.string.leaderboard_id))
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_LEADERBOARD_UI);
+                    }
+                });
     }
+
+
+    private void signInSilently() {
+        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
+                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        signInClient.silentSignIn().addOnCompleteListener(this,
+                new OnCompleteListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                        if (task.isSuccessful()) {
+                            // The signed in account is stored in the task's result.
+                            GoogleSignInAccount signedInAccount = task.getResult();
+                        } else {
+                            // Player will need to sign-in explicitly using via UI
+                            Log.d("pfkegf", "asdasd");
+                        }
+                    }
+                });
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        signInSilently();
 
         TextView textView10 = (TextView) findViewById(R.id.textView9);
         Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
@@ -195,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             tek_energy = 11 - ((energy - unixTime) / 600);
 
 
-        textView10.setText( score + "");
+        textView10.setText(score + "");
         btn_energ.setText("Энергия " + tek_energy + "/12");
         btn_money.setText("Монеты " + money + "");
 
@@ -215,8 +268,8 @@ public class MainActivity extends AppCompatActivity {
                 c.setReadTimeout(10000);
                 c.connect();
 
-                 reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
-                 StringBuilder buf = new StringBuilder();
+                reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                StringBuilder buf = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     buf.append(line + "\n");
@@ -233,26 +286,24 @@ public class MainActivity extends AppCompatActivity {
                 Cursor curs = mDb.rawQuery("SELECT id FROM `musbit` ", null);
 
 
-
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject zakaz = jsonArray.getJSONObject(i);
-                    Log.d("json", ""+zakaz.getString("name"));
+                    Log.d("json", "" + zakaz.getString("name"));
                     String name = zakaz.getString("name");
                     String imageurl = zakaz.getString("url");
 
                     Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`)" +
-                            " VALUES ('" + (i+1) + "', '" + name + "', '" + imageurl + "', '" + (i+1) + "')");
+                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "')");
 
                     mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`)" +
-                            " VALUES ('" + (i+1) + "', '" + name + "', '" + imageurl + "', '" + (i+1) + "')");
+                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "')");
 
                 }
 
 
                 content = "";
             } catch (Exception e) {
-                content=  e.getMessage();
+                content = e.getMessage();
 
             }
 
@@ -267,5 +318,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    private static final String VK_APP_PACKAGE_ID = "com.vkontakte.android";
+    private static final String FACEBOOK_APP_PACKAGE_ID = "com.facebook.katana";
+
+    public static void openLink(Activity activity, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        List<ResolveInfo> resInfo = activity.getPackageManager().queryIntentActivities(intent, 0);
+
+        if (resInfo.isEmpty()) return;
+
+        for (ResolveInfo info : resInfo) {
+            if (info.activityInfo == null) continue;
+            if (VK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
+                    || FACEBOOK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
+            ) {
+                intent.setPackage(info.activityInfo.packageName);
+                break;
+            }
+        }
+        activity.startActivity(intent);
     }
 }

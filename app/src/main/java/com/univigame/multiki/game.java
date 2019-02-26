@@ -638,7 +638,12 @@ public class game extends AppCompatActivity {
     }
 
 
+void fiftyfifty(){
 
+
+
+
+}
 
 
 
