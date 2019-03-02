@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
         textView9 = (TextView) findViewById(R.id.textView9);
 
-        Button  button6 = (Button) findViewById(R.id.button6);
-        Button   button7 = (Button) findViewById(R.id.button7);
-        Button  button8 = (Button) findViewById(R.id.button8);
+        Button button6 = (Button) findViewById(R.id.button6);
+        Button button7 = (Button) findViewById(R.id.button7);
+        Button button8 = (Button) findViewById(R.id.button8);
 
 
         byn_start.setEnabled(false);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 //инста
-              //  openLink(this, "http://vk.com/id1");
+                //  openLink(this, "http://vk.com/id1");
             }
         });
         button7.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 //вычтем энергию за игру
 
                     Intent intent = new Intent(tekactiviti, game.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 } else {
                     CustomDialog_energy customDialog1 = new CustomDialog_energy(tekactiviti, tek_energy);
                     customDialog1.show();
@@ -189,6 +189,14 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      //  if (data == null) {return;}
+        //String name = data.getStringExtra("name");
+       Log.d("asas","Your name is " + requestCode);
     }
 
 

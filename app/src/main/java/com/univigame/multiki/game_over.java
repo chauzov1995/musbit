@@ -21,7 +21,7 @@ public class game_over extends AppCompatActivity {
     private TextView total_score, tvplmoney;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
-
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class game_over extends AppCompatActivity {
         setContentView(R.layout.activity_game_over);
         getSupportActionBar().hide();
 
-        Intent intent = getIntent();
+        intent = getIntent();
         int gameover_money = intent.getIntExtra("gameover_money",0);
         int gameover_schore = intent.getIntExtra("gameover_schore",0);
 
@@ -56,7 +56,10 @@ public class game_over extends AppCompatActivity {
         btn_restart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
 
+              //  onBackPressed();
 
+                setResult(555, intent);
+                finish();
 
 
 
