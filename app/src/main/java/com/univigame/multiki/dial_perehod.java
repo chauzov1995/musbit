@@ -3,10 +3,13 @@ package com.univigame.multiki;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class dial_perehod {
@@ -31,6 +34,11 @@ public class dial_perehod {
         dialog.setContentView(R.layout.dial_perehod);
         dialog.setCancelable(false);
 
+
+
+
+        dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
         perehod_btn = (Button) dialog.findViewById(R.id.perehod_btn);

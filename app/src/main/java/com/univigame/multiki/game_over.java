@@ -58,8 +58,8 @@ public class game_over extends AppCompatActivity {
 
               //  onBackPressed();
 
-                setResult(555, intent);
-                finish();
+
+                onBackPressed();
 
 
 

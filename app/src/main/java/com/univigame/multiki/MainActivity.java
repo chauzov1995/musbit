@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 //вычтем энергию за игру
 
                     Intent intent = new Intent(tekactiviti, game.class);
-                    startActivityForResult(intent, 1);
+                    startActivity(intent);
                 } else {
                     CustomDialog_energy customDialog1 = new CustomDialog_energy(tekactiviti, tek_energy);
                     customDialog1.show();
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View r) {
                 Intent intent = new Intent(MainActivity.this, nagrada_za_reklamu.class);
                 intent.putExtra("type_nagr", 1);
-                MainActivity.this.startActivity(intent);
+                startActivity(intent);
             }
         });
 
@@ -192,12 +192,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //  if (data == null) {return;}
-        //String name = data.getStringExtra("name");
-       Log.d("asas","Your name is " + requestCode);
-    }
 
 
     private static final int RC_LEADERBOARD_UI = 9004;

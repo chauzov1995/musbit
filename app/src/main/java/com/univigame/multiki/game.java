@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -31,14 +30,14 @@ public class game extends AppCompatActivity {
 
     //настройки
     int pokaz_rekl_kajd_n_otv = 5;
-    static boolean first_video = false;//важно, для первого определения прав ответа
+    boolean first_video = false;//важно, для первого определения прав ответа
 
 
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
-    Button otv1, otv2, otv3, otv4, button3, button5, fiftyfifty;
+    Button otv1, otv2, otv3, otv4, button3, muz_zanogo, fiftyfifty;
     ArrayList<class_spis_vsego> spisokvsego;
-    static int lengtht;
+    int lengtht;
     VideoView videoView, videoView2;
     public boolean start_sled = true;
     TextView textView, textView2;
@@ -59,14 +58,16 @@ public class game extends AppCompatActivity {
     CountDownTimer timer1, timer2;
     ProgressBar progressBar2;
     ConstraintLayout body;
-    static int random_vopt_btn2, random_vopt_btn1;
+    int random_vopt_btn2, random_vopt_btn1;
     int[] varianti1, varianti2;
+    boolean first_fifty = true, first_zanogo = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
+        Log.d("oncreate", "sadad");
         tekactiviti = this;
 
         Bundle extras = new Bundle();
@@ -84,7 +85,7 @@ public class game extends AppCompatActivity {
         body = (ConstraintLayout) findViewById(R.id.body);
         progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
         fiftyfifty = (Button) findViewById(R.id.fiftyfifty);
-        button5 = (Button) findViewById(R.id.button5);
+        muz_zanogo = (Button) findViewById(R.id.button5);
         button3 = (Button) findViewById(R.id.button3);
         textView = (TextView) findViewById(R.id.textView);
         textView2 = (TextView) findViewById(R.id.textView2);
@@ -99,17 +100,17 @@ public class game extends AppCompatActivity {
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                finish();
+                onBackPressed();
             }
         });
-        button5.setOnClickListener(new View.OnClickListener() {
+        muz_zanogo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
+                muz_zanogo();
             }
         });
         fiftyfifty.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
+                fiftyfifty();
             }
         });
 
@@ -189,20 +190,19 @@ public class game extends AppCompatActivity {
 
 
     void start_ugadka() {
+        first_video = true;
+        prav1 = false;
         get_money();//обновим  монеты
 //оставим для первого старта
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
-
-        prav1 = false;
-        first_video = true;
 
 
         btn_visualization_otv(varianti1);
 
         int sled_level;
         if (level + 1 == lengtht) {
-            //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
+//если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
             mDb.execSQL("UPDATE `records` SET level=0");
             sled_level = 0;
         } else {
@@ -226,12 +226,7 @@ public class game extends AppCompatActivity {
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-
-
-                otv1.setEnabled(false);
-                otv2.setEnabled(false);
-                otv3.setEnabled(false);
-                otv4.setEnabled(false);
+                visualization_vremyaisteklo();
 
 
                 if (level + 1 == lengtht) {
@@ -249,7 +244,6 @@ public class game extends AppCompatActivity {
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     get_money();
-
            /*
             load_new_vopr();
             //межстраничная реклма
@@ -274,7 +268,7 @@ public class game extends AppCompatActivity {
                     }
 
                 }
-                selectedotv=null;
+                selectedotv = null;
 
                 Button pravotv;
                 switch (random_vopt_btn1) {
@@ -318,7 +312,7 @@ public class game extends AppCompatActivity {
 
                         } else {
 
-                            finish();
+                            onBackPressed();
                             Intent intent = new Intent(tekactiviti, game_over.class);
                             intent.putExtra("gameover_money", gameover_money);
                             intent.putExtra("gameover_schore", gameover_schore);
@@ -346,6 +340,7 @@ public class game extends AppCompatActivity {
         timer3 = new Timer();
         timer3.schedule(new MyTimerTask2(), 500, 500);
     }
+
     private class MyTimerTask2 extends TimerTask {
 
         @Override
@@ -366,36 +361,31 @@ public class game extends AppCompatActivity {
         }
     }
 
+
     void start_ugadka2() {
         first_video = false;
         prav2 = false;
         get_money();//обновим  монеты
 
-        if (level + 1 == lengtht) {
-            //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
-            mDb.execSQL("UPDATE `records` SET level=0");
-        } else {
-            mDb.execSQL("UPDATE `records` SET level=level+1");
-        }
-
 
         btn_visualization_otv(varianti2);
+
+        int sled_level;
+        if (level + 1 == lengtht) {
+//если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
+            mDb.execSQL("UPDATE `records` SET level=0");
+            sled_level = 0;
+        } else {
+            mDb.execSQL("UPDATE `records` SET level=level+1");
+            sled_level = level + 1;
+        }
+        load_new_vopr(sled_level);
 
 
         videoView2.start();
         videoView2.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         videoView.getLayoutParams().height = 0;
         videoView2.requestLayout();
-
-
-        int sled_level;
-        if (level + 1 == lengtht) {
-            sled_level = 0;
-        } else {
-            sled_level = level + 1;
-        }
-        load_new_vopr(sled_level);
-
 
         timer1 = new CountDownTimer(10000, 1000) {
 
@@ -406,12 +396,7 @@ public class game extends AppCompatActivity {
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-
-
-                otv1.setEnabled(false);
-                otv2.setEnabled(false);
-                otv3.setEnabled(false);
-                otv4.setEnabled(false);
+                visualization_vremyaisteklo();
 
 
                 if (level + 1 == lengtht) {
@@ -429,7 +414,6 @@ public class game extends AppCompatActivity {
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     get_money();
-
            /*
             load_new_vopr();
             //межстраничная реклма
@@ -454,7 +438,7 @@ public class game extends AppCompatActivity {
                     }
 
                 }
-                selectedotv=null;
+                selectedotv = null;
 
                 Button pravotv;
                 switch (random_vopt_btn2) {
@@ -498,7 +482,7 @@ public class game extends AppCompatActivity {
 
                         } else {
 
-                            finish();
+                            onBackPressed();
                             Intent intent = new Intent(tekactiviti, game_over.class);
                             intent.putExtra("gameover_money", gameover_money);
                             intent.putExtra("gameover_schore", gameover_schore);
@@ -515,11 +499,6 @@ public class game extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     void otvnvibor(View r, class_spis_vsego otv_sel_btn_elem) {
 
         if (first_video) {
@@ -528,7 +507,6 @@ public class game extends AppCompatActivity {
             if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
                 prav1 = true;
             }
-
 
 
             videoView.pause();
@@ -546,7 +524,6 @@ public class game extends AppCompatActivity {
             }
 
 
-
             // videoView.SEE
             videoView2.pause();
             videoView2.seekTo(10000);
@@ -559,8 +536,7 @@ public class game extends AppCompatActivity {
     }
 
 
-
-    static int[] gener_otv_btn(int level) {
+    int[] gener_otv_btn(int level) {
         //рисвоим кнопкам ид правильного ответа
         int random_vopt_btn = (int) (Math.random() * 4);
         int[] varianti = {-1, -1, -1, -1};
@@ -586,9 +562,8 @@ public class game extends AppCompatActivity {
     }
 
 
-
     void btn_visualization_otv(int[] varianti) {
-
+        Log.d("virt", "virtualizzaasd");
         final class_spis_vsego varotv1 = spisokvsego.get(varianti[0]);
         final class_spis_vsego varotv2 = spisokvsego.get(varianti[1]);
         final class_spis_vsego varotv3 = spisokvsego.get(varianti[2]);
@@ -598,6 +573,11 @@ public class game extends AppCompatActivity {
         otv2.setEnabled(true);
         otv3.setEnabled(true);
         otv4.setEnabled(true);
+
+        otv1.setVisibility(View.VISIBLE);
+        otv2.setVisibility(View.VISIBLE);
+        otv3.setVisibility(View.VISIBLE);
+        otv4.setVisibility(View.VISIBLE);
 
         otv1.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
         otv2.setBackground(getResources().getDrawable(R.drawable.otvet_do_design));
@@ -635,54 +615,107 @@ public class game extends AppCompatActivity {
             }
         });
 
+        fiftyfifty.setEnabled(true);
+        muz_zanogo.setEnabled(true);
+    }
+
+    void visualization_vremyaisteklo() {
+        otv1.setEnabled(false);
+        otv2.setEnabled(false);
+        otv3.setEnabled(false);
+        otv4.setEnabled(false);
+
+        fiftyfifty.setEnabled(false);
+        muz_zanogo.setEnabled(false);
     }
 
 
-void fiftyfifty(){
+    void fiftyfifty() {
 
 
+        if (first_fifty) {
+            first_fifty = false;
+        } else {
+            if (money >= 100) {
+                mDb.execSQL("UPDATE `records` SET money=money-100");
+                get_money();
+            } else {
+                return;
+            }
+        }
 
 
-}
+        int vtoropravotv = 0;
+        boolean stop = true;
+        fiftyfifty.setEnabled(false);
+        if (first_video) {
 
 
-
-
-    public void ubratb_1nepr() {
-        /*
-        if (money - 5 >= 0) {
-            boolean stop = true;
             while (stop) {
                 int randomn = (int) (Math.random() * 4);
 
-                if (randomn != random_vopt_btn && btn_enabl[randomn] == true) {
-                    enabled_btn_otv(randomn);
+                if (randomn != random_vopt_btn1) {
+                    vtoropravotv = randomn;
                     stop = false;
-                    //  minus_monetka(5);
                 }
-                if ((0 == random_vopt_btn || btn_enabl[0] == false) &&
-                        (1 == random_vopt_btn || btn_enabl[1] == false) &&
-                        (2 == random_vopt_btn || btn_enabl[2] == false) &&
-                        (3 == random_vopt_btn || btn_enabl[3] == false)
-                ) stop = false;
-
-
             }
+
+            if (vtoropravotv != 0 && random_vopt_btn1 != 0)
+                otv1.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 1 && random_vopt_btn1 != 1)
+                otv2.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 2 && random_vopt_btn1 != 2)
+                otv3.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 3 && random_vopt_btn1 != 3)
+                otv4.setVisibility(View.INVISIBLE);
         } else {
 
-            //  CustomDialog2 customDialog2 = new CustomDialog2(tekactiviti);
-            // customDialog2.show();
 
+            while (stop) {
+                int randomn = (int) (Math.random() * 4);
+
+                if (randomn != random_vopt_btn2) {
+                    vtoropravotv = randomn;
+                    stop = false;
+                }
+            }
+
+            if (vtoropravotv != 0 && random_vopt_btn2 != 0)
+                otv1.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 1 && random_vopt_btn2 != 1)
+                otv2.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 2 && random_vopt_btn2 != 2)
+                otv3.setVisibility(View.INVISIBLE);
+            if (vtoropravotv != 3 && random_vopt_btn2 != 3)
+                otv4.setVisibility(View.INVISIBLE);
         }
-        */
+
     }
 
-    void minus_monetka(int value) {
+    void muz_zanogo() {
 
-        mDb.execSQL("UPDATE `records` SET money=money-" + value);
-        get_money();
+        if (first_zanogo) {
+            first_zanogo = false;
+        } else {
+            if (money >= 100) {
+                mDb.execSQL("UPDATE `records` SET money=money-100");
+                get_money();
+            } else {
+                return;
+            }
+        }
 
 
+        muz_zanogo.setEnabled(false);
+        if (first_video) {
+            videoView.seekTo(0);
+
+        } else {
+            videoView2.seekTo(0);
+
+        }
+        timer1.cancel();
+        timer1.start();
     }
 
 
