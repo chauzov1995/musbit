@@ -90,13 +90,13 @@
                 android:layout_height="wrap_content"
                 android:clipChildren="false">
 
-                <VideoView
+                <com.devbrackets.android.exomedia.ui.widget.VideoView
                     android:id="@+id/videoView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true" />
 
-                <VideoView
+                <com.devbrackets.android.exomedia.ui.widget.VideoView
                     android:id="@+id/videoView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

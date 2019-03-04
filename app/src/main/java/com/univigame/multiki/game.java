@@ -15,8 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
+
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -213,7 +214,7 @@ public class game extends AppCompatActivity {
 
 
         videoView.start();
-        videoView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        videoView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         videoView2.getLayoutParams().height = 0;
         videoView.requestLayout();
 
@@ -387,7 +388,7 @@ public class game extends AppCompatActivity {
 
 
         videoView2.start();
-        videoView2.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        videoView2.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         videoView.getLayoutParams().height = 0;
         videoView2.requestLayout();
 
