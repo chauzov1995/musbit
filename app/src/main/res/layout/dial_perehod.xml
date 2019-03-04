@@ -11,16 +11,16 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="230dp"
+        android:layout_height="230dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_design" />
+        app:srcCompat="@drawable/icon" />
 
     <Button
         android:id="@+id/perehod_btn"
@@ -52,8 +52,10 @@
         android:layout_marginBottom="32dp"
 
         android:background="@drawable/otvet_do_design"
+        android:drawableStart="@drawable/apple_design"
+        android:drawablePadding="-24dp"
         android:fontFamily="@font/sfprodisplay_regular"
-        android:text="asdadad"
+        android:text="Открыть в Apple Music"
         android:textAllCaps="false"
         android:textColor="#269BFF"
         android:textSize="17sp"
@@ -75,16 +77,26 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="196dp" />
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/sfprodisplay_regular"
+        android:text="Яд"
+        android:textColor="#000"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="229dp" />
+        android:layout_marginBottom="46dp"
+        android:fontFamily="@font/sfprodisplay_regular"
+        android:text="Эрика Лундмон"
+        android:textColor="#000"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

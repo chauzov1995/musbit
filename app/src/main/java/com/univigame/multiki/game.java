@@ -288,6 +288,10 @@ public class game extends AppCompatActivity {
                 pravotv.setBackground(getResources().getDrawable(R.drawable.otvet_prav_design));
                 pravotv.setTextColor(Color.BLACK);
 
+
+
+
+
                 timer2 = new CountDownTimer(8000, 1000) {
 
 
@@ -476,7 +480,7 @@ public class game extends AppCompatActivity {
                         if (prav2) {
 
 
-                            dial_perehod customDialog1 = new dial_perehod(game.this, money);
+                            dial_perehod customDialog1 = new dial_perehod(game.this, money );
                             customDialog1.show();
 
 
