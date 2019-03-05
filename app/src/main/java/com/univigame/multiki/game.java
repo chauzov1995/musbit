@@ -10,10 +10,12 @@ import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -97,7 +99,11 @@ public class game extends AppCompatActivity {
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
         otv4 = (Button) findViewById(R.id.otv4);
+        RelativeLayout  relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();  // deprecated
+        relativeLayout.getLayoutParams().height=(width*720/1280);
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {

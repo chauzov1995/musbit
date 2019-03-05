@@ -1,16 +1,21 @@
 package com.univigame.multiki;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class dial_perehod {
     private EditText dialogEditBox;
@@ -51,6 +56,8 @@ public class dial_perehod {
 
 
 
+
+
         btn_share.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
 
@@ -67,7 +74,7 @@ public class dial_perehod {
         button_apple.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
 
-
+                openLink(activity, musik.url_applemus);
 
             }
         });
@@ -85,6 +92,26 @@ public class dial_perehod {
 
     public void show() {
         dialog.show();
+    }
+
+
+    private static final String VK_APP_PACKAGE_ID = "com.apple.android.music";
+
+
+    public static void openLink(Activity activity, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        List<ResolveInfo> resInfo = activity.getPackageManager().queryIntentActivities(intent, 0);
+
+        if (resInfo.isEmpty()) return;
+
+        for (ResolveInfo info : resInfo) {
+            if (info.activityInfo == null) continue;
+            if (VK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)        ) {
+                intent.setPackage(info.activityInfo.packageName);
+                break;
+            }
+        }
+        activity.startActivity(intent);
     }
 
 
