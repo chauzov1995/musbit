@@ -2,19 +2,24 @@ package com.univigame.multiki;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class CustomDialog_money {
     private EditText dialogEditBox;
     private TextView dialogInfo;
-    private Button dialogButton, button4;
+    private Button dialogButton;
     private Dialog dialog;
     private MainActivity activity;
     int money;
+    ImageButton button4;
 
     public CustomDialog_money(MainActivity activity, int money) {
         this.activity = activity;
@@ -30,11 +35,15 @@ public class CustomDialog_money {
         dialog.setCancelable(false);
 
 
-        TextView textView7 = (TextView) dialog.findViewById(R.id.textView7);
-        button4 = (Button) dialog.findViewById(R.id.button4);
+        dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        Button textView7 = (Button) dialog.findViewById(R.id.btn_money);
+        button4 = (ImageButton) dialog.findViewById(R.id.button4);
         dialogButton = (Button) dialog.findViewById(R.id.dialog_button);
 
-        textView7.setText(money+"");
+        textView7.setText("Монеты "+money);
         button4.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
                 dialog.dismiss();

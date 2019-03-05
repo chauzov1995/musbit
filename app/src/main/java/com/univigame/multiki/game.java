@@ -121,13 +121,16 @@ public class game extends AppCompatActivity {
 
 
         spisokvsego = new ArrayList<class_spis_vsego>();
-        Cursor c = mDb.rawQuery("SELECT id, name, url FROM musbit ", null);
+        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit ", null);
         if (c.moveToFirst()) {
             int id = c.getColumnIndex("id");
             int nazv = c.getColumnIndex("name");
             int url = c.getColumnIndex("url");
+            int ispoln = c.getColumnIndex("ispoln");
+            int applemusikurl = c.getColumnIndex("applemusikurl");
+
             do {
-                spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url)));
+                spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
             } while (c.moveToNext());
         }
         lengtht = spisokvsego.size();
@@ -230,11 +233,7 @@ public class game extends AppCompatActivity {
                 visualization_vremyaisteklo();
 
 
-                if (level + 1 == lengtht) {
-                    level = 0;
-                } else {
-                    level++;
-                }
+
 
 
                 if (prav1) {
@@ -311,7 +310,7 @@ public class game extends AppCompatActivity {
                         if (prav1) {
 
 
-                            dial_perehod customDialog1 = new dial_perehod(game.this, money);
+                            dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
                             customDialog1.show();
 
 
@@ -324,6 +323,12 @@ public class game extends AppCompatActivity {
                             startActivity(intent);
                         }
 
+
+                        if (level + 1 == lengtht) {
+                            level = 0;
+                        } else {
+                            level++;
+                        }
 
                     }
                 }.start();
@@ -404,12 +409,6 @@ public class game extends AppCompatActivity {
                 visualization_vremyaisteklo();
 
 
-                if (level + 1 == lengtht) {
-                    level = 0;
-                } else {
-                    level++;
-                }
-
 
                 if (prav2) {
 
@@ -481,7 +480,7 @@ public class game extends AppCompatActivity {
                         if (prav2) {
 
 
-                            dial_perehod customDialog1 = new dial_perehod(game.this, money );
+                            dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level) );
                             customDialog1.show();
 
 
@@ -492,6 +491,12 @@ public class game extends AppCompatActivity {
                             intent.putExtra("gameover_money", gameover_money);
                             intent.putExtra("gameover_schore", gameover_schore);
                             startActivity(intent);
+                        }
+
+                        if (level + 1 == lengtht) {
+                            level = 0;
+                        } else {
+                            level++;
                         }
 
 

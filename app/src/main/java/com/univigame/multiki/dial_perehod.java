@@ -19,11 +19,13 @@ public class dial_perehod {
     private Dialog dialog;
     private game activity;
     int money;
+    class_spis_vsego musik;
 
 
-    public dial_perehod(game activity, int money) {
+    public dial_perehod(game activity, int money, class_spis_vsego musik) {
         this.activity = activity;
         this.money = money;
+        this.musik=musik;
         init();
     }
 
@@ -42,15 +44,40 @@ public class dial_perehod {
 
 
         perehod_btn = (Button) dialog.findViewById(R.id.perehod_btn);
+        ((TextView) dialog.findViewById(R.id.textView6)).setText(musik.nazv);
+        ((TextView) dialog.findViewById(R.id.textView10)).setText(musik.author);
+        Button   button_apple = (Button) dialog.findViewById(R.id.button);
+        Button   btn_share = (Button) dialog.findViewById(R.id.btn_share);
 
 
+
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я угадал песню , в игре MusBi ссылка");
+                sendIntent.setType("text/plain");
+                activity.startActivity(Intent.createChooser(sendIntent,"Поделиться"));
+            }
+        });
+
+
+
+        button_apple.setOnClickListener(new OnClickListener() {
+            public void onClick(View r) {
+
+
+
+            }
+        });
 
         perehod_btn.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
 
                 dialog.dismiss();
                 activity.start_sled=true;
-               // activity.load_new_vopr(false);
+
 
             }
         });

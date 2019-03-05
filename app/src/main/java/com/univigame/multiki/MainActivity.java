@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView9;
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
+    long energi_do12=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
             tek_energy = 12;
         else
             tek_energy = 11 - ((energy - unixTime) / 600);
-
+        energi_do12=energy - unixTime;
 
         textView10.setText(score + "");
         btn_energ.setText("Энергия " + tek_energy + "/12");
@@ -293,12 +294,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("json", "" + zakaz.getString("name"));
                     String name = zakaz.getString("name");
                     String imageurl = zakaz.getString("url");
+                    String ispoln = zakaz.getString("author");
+                    String applemusikurl = zakaz.getString("url_applemus");
 
-                    Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`)" +
-                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "')");
+                    Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`, ispoln, applemusikurl)" +
+                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "', '"+ispoln+"', '"+applemusikurl+"' )");
 
-                    mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`)" +
-                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "')");
+                    mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`, ispoln, applemusikurl)" +
+                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "', '"+ispoln+"', '"+applemusikurl+"' )");
 
                 }
 

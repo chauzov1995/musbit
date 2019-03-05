@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorPrimary">
+    <item android:drawable="@drawable/twoenergy"
+        android:width="44.25dp"
+        android:height="26dp"
+        android:left="50dp"
+
+
+        />
+</ripple>

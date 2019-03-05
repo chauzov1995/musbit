@@ -42,6 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(" CREATE TABLE `musbit` (\n" +
                 "  `id` int NOT NULL DEFAULT 0,\n" +
                 "  `name` varchar NOT NULL DEFAULT '',\n" +
+                "  `ispoln` varchar NOT NULL DEFAULT '',\n" +
+                "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
                 "  `url` varchar NOT NULL DEFAULT '',\n" +
                 "  `sort` int NOT NULL DEFAULT 0\n" +
 
