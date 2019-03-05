@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -58,7 +60,7 @@ public class game extends AppCompatActivity {
     // public MyFragment2 fragment2;
     int gameover_money = 0;
     int gameover_schore = 0;
-    CountDownTimer timer1, timer2;
+    CountDownTimer timer1;
     ProgressBar progressBar2;
     ConstraintLayout body;
     int random_vopt_btn2, random_vopt_btn1;
@@ -99,11 +101,11 @@ public class game extends AppCompatActivity {
         otv2 = (Button) findViewById(R.id.otv2);
         otv3 = (Button) findViewById(R.id.otv3);
         otv4 = (Button) findViewById(R.id.otv4);
-        RelativeLayout  relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();  // deprecated
-        relativeLayout.getLayoutParams().height=(width*720/1280);
+        relativeLayout.getLayoutParams().height = (width * 720 / 1280);
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -118,6 +120,76 @@ public class game extends AppCompatActivity {
         fiftyfifty.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 fiftyfifty();
+            }
+        });
+
+        //завершение первого видео
+        videoView.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion() {
+
+
+                videoView.stopPlayback();
+
+
+                if (prav1) {
+
+
+                    dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
+                    customDialog1.show();
+
+
+                } else {
+
+                    onBackPressed();
+                    Intent intent = new Intent(tekactiviti, game_over.class);
+                    intent.putExtra("gameover_money", gameover_money);
+                    intent.putExtra("gameover_schore", gameover_schore);
+                    startActivity(intent);
+                }
+
+
+                if (level + 1 == lengtht) {
+                    level = 0;
+                } else {
+                    level++;
+                }
+
+
+            }
+        });
+
+        videoView2.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion() {
+
+
+                videoView2.stopPlayback();
+
+
+                if (prav2) {
+
+
+                    dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
+                    customDialog1.show();
+
+
+                } else {
+
+                    onBackPressed();
+                    Intent intent = new Intent(tekactiviti, game_over.class);
+                    intent.putExtra("gameover_money", gameover_money);
+                    intent.putExtra("gameover_schore", gameover_schore);
+                    startActivity(intent);
+                }
+
+                if (level + 1 == lengtht) {
+                    level = 0;
+                } else {
+                    level++;
+                }
+
+
             }
         });
 
@@ -163,7 +235,7 @@ public class game extends AppCompatActivity {
         super.onDestroy();
 
         if (timer1 != null) timer1.cancel();
-        if (timer2 != null) timer2.cancel();
+
         if (timer != null) timer.cancel();
         if (timer3 != null) timer3.cancel();
     }
@@ -239,9 +311,6 @@ public class game extends AppCompatActivity {
                 visualization_vremyaisteklo();
 
 
-
-
-
                 if (prav1) {
 
                     mDb.execSQL("UPDATE `records` SET money=money+10");
@@ -295,49 +364,6 @@ public class game extends AppCompatActivity {
                 pravotv.setTextColor(Color.BLACK);
 
 
-
-
-
-                timer2 = new CountDownTimer(8000, 1000) {
-
-
-                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("осталось ", millisUntilFinished / 1000 + "");
-                    }
-
-                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                    public void onFinish() {
-
-
-                        videoView.stopPlayback();
-
-
-                        if (prav1) {
-
-
-                            dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
-                            customDialog1.show();
-
-
-                        } else {
-
-                            onBackPressed();
-                            Intent intent = new Intent(tekactiviti, game_over.class);
-                            intent.putExtra("gameover_money", gameover_money);
-                            intent.putExtra("gameover_schore", gameover_schore);
-                            startActivity(intent);
-                        }
-
-
-                        if (level + 1 == lengtht) {
-                            level = 0;
-                        } else {
-                            level++;
-                        }
-
-                    }
-                }.start();
             }
         }.start();
 
@@ -415,7 +441,6 @@ public class game extends AppCompatActivity {
                 visualization_vremyaisteklo();
 
 
-
                 if (prav2) {
 
                     mDb.execSQL("UPDATE `records` SET money=money+10");
@@ -468,46 +493,7 @@ public class game extends AppCompatActivity {
                 pravotv.setBackground(getResources().getDrawable(R.drawable.otvet_prav_design));
                 pravotv.setTextColor(Color.BLACK);
 
-                timer2 = new CountDownTimer(8000, 1000) {
 
-
-                    //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("осталось ", millisUntilFinished / 1000 + "");
-                    }
-
-                    //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
-                    public void onFinish() {
-
-
-                        videoView2.stopPlayback();
-
-
-                        if (prav2) {
-
-
-                            dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level) );
-                            customDialog1.show();
-
-
-                        } else {
-
-                            onBackPressed();
-                            Intent intent = new Intent(tekactiviti, game_over.class);
-                            intent.putExtra("gameover_money", gameover_money);
-                            intent.putExtra("gameover_schore", gameover_schore);
-                            startActivity(intent);
-                        }
-
-                        if (level + 1 == lengtht) {
-                            level = 0;
-                        } else {
-                            level++;
-                        }
-
-
-                    }
-                }.start();
             }
         }.start();
 
