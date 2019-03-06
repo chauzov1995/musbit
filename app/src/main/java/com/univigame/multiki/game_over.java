@@ -45,7 +45,7 @@ public class game_over extends AppCompatActivity {
 
 
         total_score.setText(gameover_schore+"");
-        tvplmoney.setText("+ "+gameover_money+" (монет)");
+        tvplmoney.setText("+ "+gameover_money);
 
 
         btn_vmenu.setOnClickListener(new View.OnClickListener() {

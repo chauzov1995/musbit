@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -158,6 +160,8 @@ public class game extends AppCompatActivity {
 
             }
         });
+
+
 
         videoView2.setOnCompletionListener(new OnCompletionListener() {
             @Override
@@ -637,6 +641,8 @@ public class game extends AppCompatActivity {
 
         if (first_fifty) {
             first_fifty = false;
+            Drawable img = getResources().getDrawable( R.drawable.podskcoins_design );
+            fiftyfifty.setCompoundDrawablesWithIntrinsicBounds(img,null,null, null);
         } else {
             if (money >= 100) {
                 mDb.execSQL("UPDATE `records` SET money=money-100");
@@ -698,6 +704,9 @@ public class game extends AppCompatActivity {
 
         if (first_zanogo) {
             first_zanogo = false;
+            Drawable img = getResources().getDrawable( R.drawable.podskcoins_design );
+            muz_zanogo.setCompoundDrawablesWithIntrinsicBounds(null,null,img ,null);
+
         } else {
             if (money >= 100) {
                 mDb.execSQL("UPDATE `records` SET money=money-100");

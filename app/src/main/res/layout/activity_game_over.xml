@@ -10,6 +10,27 @@
     tools:context=".game_over">
 
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvplmoney"
+        app:layout_constraintStart_toEndOf="@+id/tvplmoney"
+        app:layout_constraintTop_toTopOf="@+id/tvplmoney"
+        app:srcCompat="@drawable/money_game_design" />
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="38dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/total_score"
+        app:layout_constraintEnd_toStartOf="@+id/total_score"
+        app:layout_constraintTop_toTopOf="@+id/total_score"
+        app:srcCompat="@drawable/trophy_design" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
@@ -29,6 +50,7 @@
         android:id="@+id/total_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
         android:layout_marginTop="32dp"
         android:layout_weight="2"
         android:fontFamily="@font/sfprodisplay_regular"
@@ -42,17 +64,16 @@
 
     <TextView
         android:id="@+id/tvplmoney"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_weight="1"
         android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
-        android:text="+10 (монет)"
+        android:text="+10"
         android:textColor="#fff"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
