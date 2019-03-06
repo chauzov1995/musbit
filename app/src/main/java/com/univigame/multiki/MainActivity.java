@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.Auth;
@@ -27,13 +28,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PlayGamesAuthProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int RC_SIGN_IN = 55;
     MainActivity tekactiviti;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
@@ -71,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+        Bundle bundle = new Bundle();
 
-        Bundle extras = new Bundle();
-        extras.putString("max_ad_content_rating", "G");
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+
+        bundle.putString("max_ad_content_rating", "G");
         //инит рекл
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
@@ -96,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 //инста
-                //  openLink(this, "http://vk.com/id1");
+                  openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
             }
         });
         button7.setOnClickListener(new View.OnClickListener() {
@@ -194,45 +205,21 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-    private static final int RC_LEADERBOARD_UI = 9004;
-
     private void showLeaderboard() {
-        Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .getLeaderboardIntent(getString(R.string.leaderboard_id))
-                .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        startActivityForResult(intent, RC_LEADERBOARD_UI);
-                    }
-                });
+
     }
 
 
-    private void signInSilently() {
-        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
-                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-        signInClient.silentSignIn().addOnCompleteListener(this,
-                new OnCompleteListener<GoogleSignInAccount>() {
-                    @Override
-                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                        if (task.isSuccessful()) {
-                            // The signed in account is stored in the task's result.
-                            GoogleSignInAccount signedInAccount = task.getResult();
-                        } else {
-                            // Player will need to sign-in explicitly using via UI
-                            Log.d("pfkegf", "asdasd");
-                        }
-                    }
-                });
-    }
+
+
+
 
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        signInSilently();
+
 
         TextView textView10 = (TextView) findViewById(R.id.textView9);
         Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
@@ -328,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String VK_APP_PACKAGE_ID = "com.vkontakte.android";
     private static final String FACEBOOK_APP_PACKAGE_ID = "com.facebook.katana";
+    private static final String INSTAGRAMM_APP_PACKAGE_ID = "com.facebook.katana";
 
     public static void openLink(Activity activity, String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -338,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
         for (ResolveInfo info : resInfo) {
             if (info.activityInfo == null) continue;
             if (VK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
+                    || FACEBOOK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
                     || FACEBOOK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
             ) {
                 intent.setPackage(info.activityInfo.packageName);
