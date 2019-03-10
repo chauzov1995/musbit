@@ -3,7 +3,7 @@
     <item android:drawable="@drawable/apple"
         android:width="26dp"
         android:height="26dp"
-android:left="24dp"
+android:left="12dp"
 
 
         />

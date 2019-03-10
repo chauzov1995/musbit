@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     long energi_do12=0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         tekactiviti = this;
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mAuth = FirebaseAuth.getInstance();
 
         Bundle bundle = new Bundle();
 
@@ -83,6 +84,22 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = user.getUid();
+        }
 
         bundle.putString("max_ad_content_rating", "G");
         //инит рекл
@@ -183,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         textView9.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                showLeaderboard();
+             //   showLeaderboard();
             }
         });
 
@@ -204,15 +221,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private void showLeaderboard() {
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+      //  updateUI(currentUser);
     }
 
 
 
 
+// ...
+// Initialize Firebase Auth
 
+
+    private void showLeaderboard() {
+// Initialize Firebase Auth
+
+
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(FirebaseAnalytics.Param.SCORE, 200);
+        bundle.putString("leaderboard_id", "CgkIpYam4KYPEAIQAQ");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle);
+        //startSignInIntent();
+
+    }
+
+
+    private void startSignInIntent() {
+        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
+                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        Intent intent = signInClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // The signed in account is stored in the result.
+                GoogleSignInAccount signedInAccount = result.getSignInAccount();
+            } else {
+                String message = result.getStatus().getStatusMessage();
+                if (message == null || message.isEmpty()) {
+                    //message = getString(R.string.signin_other_error);
+                }
+                new AlertDialog.Builder(this).setMessage(message)
+                        .setNeutralButton(android.R.string.ok, null).show();
+            }
+        }
+    }
 
 
     @Override

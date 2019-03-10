@@ -1,35 +1,43 @@
 {
   "project_info": {
-    "project_number": "223687751945",
-    "firebase_url": "https://musbit.firebaseio.com",
-    "project_id": "musbit",
-    "storage_bucket": "musbit.appspot.com"
+    "project_number": "525798572837",
+    "firebase_url": "https://musbit-75212377.firebaseio.com",
+    "project_id": "musbit-75212377",
+    "storage_bucket": "musbit-75212377.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:223687751945:android:d42dd58015d5b4db",
+        "mobilesdk_app_id": "1:525798572837:android:d42dd58015d5b4db",
         "android_client_info": {
           "package_name": "com.univigame.musbit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "223687751945-391hjsngt3188aavu8hcpvjqb5fus6kh.apps.googleusercontent.com",
+          "client_id": "525798572837-irdipbd5f86u8k6ksusmas9vmrno840r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.univigame.musbit",
-            "certificate_hash": "046f44e8a027e0f575e0f1fe4a7eac8b517c52a9"
+            "certificate_hash": "a65115b04c281be1ad7d34b287e36e1eb6c100de"
           }
         },
         {
-          "client_id": "223687751945-n2t1ntth8mlchkoal9ljomhivt09rh78.apps.googleusercontent.com",
+          "client_id": "525798572837-2jit8tmiqck2b5h8h20uohca058iac5o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.univigame.musbit",
+            "certificate_hash": "f59e9fc763f39c768c57bd71011d88d1212b43e3"
+          }
+        },
+        {
+          "client_id": "525798572837-47jhj8vdjm80ol2blqmin1l3srkcud2i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDqItO8lJqTqHedLSdFgvIY4A-6Ru5HJvY"
+          "current_key": "AIzaSyCMcgnrqAQ3zQYTBQkXmVMDfF808fAUuSY"
         }
       ],
       "services": {
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "223687751945-n2t1ntth8mlchkoal9ljomhivt09rh78.apps.googleusercontent.com",
+              "client_id": "525798572837-47jhj8vdjm80ol2blqmin1l3srkcud2i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

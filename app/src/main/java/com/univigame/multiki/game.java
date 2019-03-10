@@ -129,7 +129,8 @@ public class game extends AppCompatActivity {
         videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion() {
-
+                body.setVisibility(View.INVISIBLE);
+                progressBar2.setVisibility(View.VISIBLE);
 
                 videoView.stopPlayback();
 
@@ -158,6 +159,24 @@ public class game extends AppCompatActivity {
                 }
 
 
+
+
+                //межстраничная реклма
+                rekl_n_otv++;
+                if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                        mInterstitialAd = new InterstitialAd(game.this);
+                        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
+                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                    } else {
+                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                    }
+                    rekl_n_otv = 0;
+                }
+
+                //межстраничная реклма
+
             }
         });
 
@@ -166,7 +185,8 @@ public class game extends AppCompatActivity {
         videoView2.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion() {
-
+                body.setVisibility(View.INVISIBLE);
+                progressBar2.setVisibility(View.VISIBLE);
 
                 videoView2.stopPlayback();
 
@@ -193,7 +213,21 @@ public class game extends AppCompatActivity {
                     level++;
                 }
 
+                //межстраничная реклма
+                rekl_n_otv++;
+                if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                        mInterstitialAd = new InterstitialAd(game.this);
+                        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
+                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                    } else {
+                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                    }
+                    rekl_n_otv = 0;
+                }
 
+                //межстраничная реклма
             }
         });
 
@@ -232,6 +266,21 @@ public class game extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
 
 
     @Override
@@ -323,23 +372,10 @@ public class game extends AppCompatActivity {
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     get_money();
-           /*
-            load_new_vopr();
-            //межстраничная реклма
-            if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    mInterstitialAd = new InterstitialAd(this);
-                    mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }
-                rekl_n_otv = -1;
-            }
-            rekl_n_otv++;
-            //межстраничная реклма
-*/
+
+
+
+
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
@@ -396,7 +432,7 @@ public class game extends AppCompatActivity {
                 public void run() {
                     if (videoView2.getBufferPercentage() == 100 && start_sled) {
                         //       videoView.stopPlayback();
-                        Log.d("старт", "2nfqvth");
+                        Log.d("старт", ""+videoView2.getBufferPercentage());
                         start_sled = false;
 
                         timer3.cancel();
@@ -412,7 +448,8 @@ public class game extends AppCompatActivity {
         first_video = false;
         prav2 = false;
         get_money();//обновим  монеты
-
+        body.setVisibility(View.VISIBLE);
+        progressBar2.setVisibility(View.INVISIBLE);
 
         btn_visualization_otv(varianti2);
 
@@ -453,23 +490,9 @@ public class game extends AppCompatActivity {
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     get_money();
-           /*
-            load_new_vopr();
-            //межстраничная реклма
-            if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    mInterstitialAd = new InterstitialAd(this);
-                    mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }
-                rekl_n_otv = -1;
-            }
-            rekl_n_otv++;
-            //межстраничная реклма
-*/
+
+
+
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
@@ -717,7 +740,7 @@ public class game extends AppCompatActivity {
         }
 
 
-        muz_zanogo.setEnabled(false);
+       // muz_zanogo.setEnabled(false);
         if (first_video) {
             videoView.seekTo(0);
 
