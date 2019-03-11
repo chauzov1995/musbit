@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView9;
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
-    long energi_do12=0;
+    long energi_do12 = 0;
 
 
     @Override
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         Bundle bundle = new Bundle();
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 //инста
-                  openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
+                openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
             }
         });
         button7.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
         textView9.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-             //   showLeaderboard();
+                //   showLeaderboard();
             }
         });
 
@@ -226,10 +225,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-      //  updateUI(currentUser);
+        //  updateUI(currentUser);
     }
-
-
 
 
 // ...
@@ -238,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void showLeaderboard() {
 // Initialize Firebase Auth
-
 
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -284,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
 
-
         TextView textView10 = (TextView) findViewById(R.id.textView9);
         Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
         cursor.moveToFirst();
@@ -300,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             tek_energy = 12;
         else
             tek_energy = 11 - ((energy - unixTime) / 600);
-        energi_do12=energy - unixTime;
+        energi_do12 = energy - unixTime;
 
         textView10.setText(score + "");
         btn_energ.setText("Энергия " + tek_energy + "/12");
@@ -335,26 +330,56 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(buf.toString());
 
-                if (jsonArray.length() > 0) mDb.execSQL("DELETE FROM `musbit` ");
+             //   if (jsonArray.length() > 0) mDb.execSQL("DELETE FROM `musbit` ");
 
-                Cursor curs = mDb.rawQuery("SELECT id FROM `musbit` ", null);
-
-
+                Cursor curs = mDb.rawQuery("SELECT * FROM `musbit` ", null);
+                ArrayList<String> proverka = new ArrayList<String>();
+                if (curs.moveToFirst()) {
+                    int id = curs.getColumnIndex("id");
+                    do {
+                        proverka.add(curs.getString(id));
+                    } while (curs.moveToNext());
+                }
+                curs.close();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject zakaz = jsonArray.getJSONObject(i);
                     Log.d("json", "" + zakaz.getString("name"));
+                    String id = zakaz.getString("id");
                     String name = zakaz.getString("name");
                     String imageurl = zakaz.getString("url");
                     String ispoln = zakaz.getString("author");
                     String applemusikurl = zakaz.getString("url_applemus");
 
-                    Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`, ispoln, applemusikurl)" +
-                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "', '"+ispoln+"', '"+applemusikurl+"' )");
 
-                    mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`,`sort`, ispoln, applemusikurl)" +
-                            " VALUES ('" + (i + 1) + "', '" + name + "', '" + imageurl + "', '" + (i + 1) + "', '"+ispoln+"', '"+applemusikurl+"' )");
+                    if (proverka.indexOf(id) != -1) {
 
+                        Log.d("ыйд", "UPDATE `musbit` SET" +
+                                " `name`='" + name + "'," +
+                                " `url`='" + imageurl + "'," +
+                                " ispoln='" + ispoln + "'," +
+                                " applemusikurl='" + applemusikurl + "'" +
+                                " WHERE id=" + id);
+
+                        mDb.execSQL("UPDATE `musbit` SET" +
+                                " `name`='" + name + "'," +
+                                " `url`='" + imageurl + "'," +
+                                " ispoln='" + ispoln + "'," +
+                                " applemusikurl='" + applemusikurl + "'" +
+                                " WHERE id=" + id);
+
+                       proverka.remove(proverka.indexOf(id)) ;
+                    } else {
+
+                        Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
+                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
+
+                        mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
+                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
+                    }
                 }
+            String  proverkatrim= proverka.toString() .substring(1, proverka.toString().length()-1);
+                mDb.execSQL("DELETE FROM `musbit` where id in ("+proverkatrim+")");
+                Log.d("asdad", proverka.toString());
 
 
                 content = "";

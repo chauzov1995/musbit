@@ -249,6 +249,7 @@ public class game extends AppCompatActivity {
                 spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
             } while (c.moveToNext());
         }
+        c.close();
         lengtht = spisokvsego.size();
 
 
