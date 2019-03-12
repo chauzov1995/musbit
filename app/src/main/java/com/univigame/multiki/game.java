@@ -24,7 +24,10 @@ import android.widget.TextView;
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
@@ -68,6 +71,7 @@ public class game extends AppCompatActivity {
     int random_vopt_btn2, random_vopt_btn1;
     int[] varianti1, varianti2;
     boolean first_fifty = true, first_zanogo = true;
+    dial_perehod customDialog1;
 
 
     @Override
@@ -82,10 +86,10 @@ public class game extends AppCompatActivity {
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
+
+
         //всплывающяя реклама
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mejstranrekl_first();
         //всплывающяя реклама
 
 
@@ -138,17 +142,28 @@ public class game extends AppCompatActivity {
                 if (prav1) {
 
 
-                    dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
+                    customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
                     customDialog1.show();
+
+
+                    //межстраничная реклма
+                    mejstranrekl();
+                    //межстраничная реклма
 
 
                 } else {
 
+
+                    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+                    customDialog1.show();
+
+/*
                     onBackPressed();
                     Intent intent = new Intent(tekactiviti, game_over.class);
                     intent.putExtra("gameover_money", gameover_money);
                     intent.putExtra("gameover_schore", gameover_schore);
                     startActivity(intent);
+                    */
                 }
 
 
@@ -159,27 +174,8 @@ public class game extends AppCompatActivity {
                 }
 
 
-
-
-                //межстраничная реклма
-                rekl_n_otv++;
-                if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                        mInterstitialAd = new InterstitialAd(game.this);
-                        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                    } else {
-                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                    }
-                    rekl_n_otv = 0;
-                }
-
-                //межстраничная реклма
-
             }
         });
-
 
 
         videoView2.setOnCompletionListener(new OnCompletionListener() {
@@ -198,13 +194,24 @@ public class game extends AppCompatActivity {
                     customDialog1.show();
 
 
+                    //межстраничная реклма
+                    mejstranrekl();
+                    //межстраничная реклма
+
+
                 } else {
 
+
+                    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+                    customDialog1.show();
+
+/*
                     onBackPressed();
                     Intent intent = new Intent(tekactiviti, game_over.class);
                     intent.putExtra("gameover_money", gameover_money);
                     intent.putExtra("gameover_schore", gameover_schore);
                     startActivity(intent);
+                    */
                 }
 
                 if (level + 1 == lengtht) {
@@ -213,21 +220,7 @@ public class game extends AppCompatActivity {
                     level++;
                 }
 
-                //межстраничная реклма
-                rekl_n_otv++;
-                if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                        mInterstitialAd = new InterstitialAd(game.this);
-                        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-                        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                    } else {
-                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                    }
-                    rekl_n_otv = 0;
-                }
 
-                //межстраничная реклма
             }
         });
 
@@ -237,7 +230,7 @@ public class game extends AppCompatActivity {
 
 
         spisokvsego = new ArrayList<class_spis_vsego>();
-        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit ", null);
+        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1", null);
         if (c.moveToFirst()) {
             int id = c.getColumnIndex("id");
             int nazv = c.getColumnIndex("name");
@@ -281,7 +274,6 @@ public class game extends AppCompatActivity {
         super.onResume();
 
     }
-
 
 
     @Override
@@ -375,8 +367,6 @@ public class game extends AppCompatActivity {
                     get_money();
 
 
-
-
                 } else {
                     if (selectedotv != null) {
                         selectedotv.setBackground(getResources().getDrawable(R.drawable.otvet_noprav_design));
@@ -433,7 +423,7 @@ public class game extends AppCompatActivity {
                 public void run() {
                     if (videoView2.getBufferPercentage() == 100 && start_sled) {
                         //       videoView.stopPlayback();
-                        Log.d("старт", ""+videoView2.getBufferPercentage());
+                        Log.d("старт", "" + videoView2.getBufferPercentage());
                         start_sled = false;
 
                         timer3.cancel();
@@ -491,7 +481,6 @@ public class game extends AppCompatActivity {
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     get_money();
-
 
 
                 } else {
@@ -665,8 +654,8 @@ public class game extends AppCompatActivity {
 
         if (first_fifty) {
             first_fifty = false;
-            Drawable img = getResources().getDrawable( R.drawable.podskcoins_design );
-            fiftyfifty.setCompoundDrawablesWithIntrinsicBounds(img,null,null, null);
+            Drawable img = getResources().getDrawable(R.drawable.podskcoins_design);
+            fiftyfifty.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
         } else {
             if (money >= 100) {
                 mDb.execSQL("UPDATE `records` SET money=money-100");
@@ -728,8 +717,8 @@ public class game extends AppCompatActivity {
 
         if (first_zanogo) {
             first_zanogo = false;
-            Drawable img = getResources().getDrawable( R.drawable.podskcoins_design );
-            muz_zanogo.setCompoundDrawablesWithIntrinsicBounds(null,null,img ,null);
+            Drawable img = getResources().getDrawable(R.drawable.podskcoins_design);
+            muz_zanogo.setCompoundDrawablesWithIntrinsicBounds(null, null, img, null);
 
         } else {
             if (money >= 100) {
@@ -741,7 +730,7 @@ public class game extends AppCompatActivity {
         }
 
 
-       // muz_zanogo.setEnabled(false);
+        // muz_zanogo.setEnabled(false);
         if (first_video) {
             videoView.seekTo(0);
 
@@ -766,6 +755,74 @@ public class game extends AppCompatActivity {
         textView.setText("Счёт: " + (gameover_schore));
         cursor.close();
 
+    }
+
+    void mejstranrekl() {
+
+
+        rekl_n_otv++;
+        if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
+
+            if (mInterstitialAd.isLoaded()) {
+                customDialog1.setbutton_enabled(false);
+
+                mInterstitialAd.show();
+
+
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.");
+            }
+            rekl_n_otv = 0;
+        }
+
+        //заагрузка новой рекламы
+        if(rekl_n_otv==1)
+            mejstranrekl_first();
+
+    }
+
+    void mejstranrekl_first() {
+        mInterstitialAd = new InterstitialAd(game.this);
+        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                customDialog1.setbutton_enabled(true);
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+                customDialog1.setbutton_enabled(true);
+            }
+        });
+
+    }
+
+    public void game_over(){
+        onBackPressed();
+        Intent intent = new Intent(tekactiviti, game_over.class);
+        intent.putExtra("gameover_money", gameover_money);
+        intent.putExtra("gameover_schore", gameover_schore);
+        startActivity(intent);
     }
 
 

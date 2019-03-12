@@ -34,6 +34,10 @@ public class dial_perehod {
         init();
     }
 
+    public  void setbutton_enabled(boolean enabled){
+        perehod_btn.setEnabled(enabled);
+    }
+
     private void init() {
 
         dialog = new Dialog(activity, R.style.CustomDialog);

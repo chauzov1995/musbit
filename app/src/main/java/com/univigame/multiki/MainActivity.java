@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(buf.toString());
 
-             //   if (jsonArray.length() > 0) mDb.execSQL("DELETE FROM `musbit` ");
+                //   if (jsonArray.length() > 0) mDb.execSQL("DELETE FROM `musbit` ");
 
                 Cursor curs = mDb.rawQuery("SELECT * FROM `musbit` ", null);
                 ArrayList<String> proverka = new ArrayList<String>();
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
                                 " applemusikurl='" + applemusikurl + "'" +
                                 " WHERE id=" + id);
 
-                       proverka.remove(proverka.indexOf(id)) ;
+                        proverka.remove(proverka.indexOf(id));
                     } else {
 
                         Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
@@ -377,9 +377,32 @@ public class MainActivity extends AppCompatActivity {
                                 " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
                     }
                 }
-            String  proverkatrim= proverka.toString() .substring(1, proverka.toString().length()-1);
-                mDb.execSQL("DELETE FROM `musbit` where id in ("+proverkatrim+")");
+
+                //удалим песни которых уже нет
+                String proverkatrim = proverka.toString().substring(1, proverka.toString().length() - 1);
+                mDb.execSQL("DELETE FROM `musbit` where id in (" + proverkatrim + ")");
                 Log.d("asdad", proverka.toString());
+
+
+                //при первом скачивании перемешать все песни
+                Cursor curss = mDb.rawQuery("SELECT * FROM musbit WHERE podtverjd = 1", null);
+if(curss.getCount()<4) {
+    Log.d("колличество меньше 4", curss.getCount() + "");
+                mDb.execSQL("DELETE FROM `musbit1`");
+
+                mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                        " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                        " FROM musbit" +
+                        " ORDER BY RANDOM()");
+
+                mDb.execSQL("DELETE FROM `musbit`");
+
+                mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                        " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                        " FROM musbit1" +
+                        " ORDER BY RANDOM()");
+}
+
 
 
                 content = "";
@@ -404,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String VK_APP_PACKAGE_ID = "com.vkontakte.android";
     private static final String FACEBOOK_APP_PACKAGE_ID = "com.facebook.katana";
-    private static final String INSTAGRAMM_APP_PACKAGE_ID = "com.facebook.katana";
+    private static final String INSTAGRAMM_APP_PACKAGE_ID = "com.instagram.android";
 
     public static void openLink(Activity activity, String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -417,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
             if (VK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
                     || FACEBOOK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
                     || FACEBOOK_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
+                    || INSTAGRAMM_APP_PACKAGE_ID.equals(info.activityInfo.packageName)
             ) {
                 intent.setPackage(info.activityInfo.packageName);
                 break;

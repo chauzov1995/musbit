@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         // конструктор суперкласса
@@ -45,11 +45,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `ispoln` varchar NOT NULL DEFAULT '',\n" +
                 "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
                 "  `url` varchar NOT NULL DEFAULT '',\n" +
-                "  `sort` int NOT NULL DEFAULT 0\n" +
-
-
+                "  `sort` int NOT NULL DEFAULT 0,\n" +
+                "  `podtverjd` int NOT NULL DEFAULT 0\n" +
                 ");"
 
+        );
+
+        db.execSQL(" CREATE TABLE `musbit1` (\n" +
+                "  `id` int NOT NULL DEFAULT 0,\n" +
+                "  `name` varchar NOT NULL DEFAULT '',\n" +
+                "  `ispoln` varchar NOT NULL DEFAULT '',\n" +
+                "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
+                "  `url` varchar NOT NULL DEFAULT '',\n" +
+                "  `sort` int NOT NULL DEFAULT 0,\n" +
+                "  `podtverjd` int NOT NULL DEFAULT 0\n" +
+                ");"
         );
 
         Calendar calendar = Calendar.getInstance();
@@ -66,7 +76,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         switch (oldVersion) {
-         //   case 2:
+            case 1:
+                db.execSQL("ALTER TABLE musbit ADD COLUMN `podtverjd` int NOT NULL DEFAULT 0");
+                db.execSQL(" CREATE TABLE `musbit1` (\n" +
+                        "  `id` int NOT NULL DEFAULT 0,\n" +
+                        "  `name` varchar NOT NULL DEFAULT '',\n" +
+                        "  `ispoln` varchar NOT NULL DEFAULT '',\n" +
+                        "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
+                        "  `url` varchar NOT NULL DEFAULT '',\n" +
+                        "  `sort` int NOT NULL DEFAULT 0,\n" +
+                        "  `podtverjd` int NOT NULL DEFAULT 0\n" +
+                        ");"
+                );
+
         }
     }
 }
