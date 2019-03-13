@@ -61,6 +61,7 @@
         android:textAllCaps="false"
         android:textColor="#269BFF"
         android:textSize="17sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
         app:layout_constraintEnd_toStartOf="@+id/btn_share"
         app:layout_constraintStart_toStartOf="@+id/perehod_btn" />
@@ -72,6 +73,7 @@
 
         android:layout_marginBottom="16dp"
         android:background="@drawable/share_design"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
         app:layout_constraintEnd_toEndOf="@+id/perehod_btn" />
 
@@ -92,11 +94,12 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
+        android:layout_marginBottom="84dp"
         android:fontFamily="@font/sfprodisplay_regular"
         android:text="Эрика Лундмон"
         android:textColor="#000"
         android:textSize="17sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />

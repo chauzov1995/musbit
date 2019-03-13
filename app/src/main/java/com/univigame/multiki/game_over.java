@@ -22,6 +22,7 @@ public class game_over extends AppCompatActivity {
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
     Intent intent;
+    int gameover_schore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class game_over extends AppCompatActivity {
 
         intent = getIntent();
         int gameover_money = intent.getIntExtra("gameover_money",0);
-        int gameover_schore = intent.getIntExtra("gameover_schore",0);
+         gameover_schore = intent.getIntExtra("gameover_schore",0);
 
 
         mDBHelper = new DatabaseHelper(this);
@@ -116,7 +117,7 @@ long tek_energy;
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Приложение name, скачивай от сюда - ссылка");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+gameover_schore+" очков в игре MusBit - угадай музыку по биту, скачай и побей мой рекорд - https://play.google.com/store/apps/details?id=com.univigame.musbit");
                 sendIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent,"Поделиться"));
             }

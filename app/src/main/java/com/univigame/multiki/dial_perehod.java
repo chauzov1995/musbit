@@ -67,7 +67,7 @@ public class dial_perehod {
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я угадал песню , в игре MusBi ссылка");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я угадал песню \""+musik.nazv+"\" исполнителя \""+musik.author+"\" в супер викторине \"MusBit\". Друзья, присоединяйтесь - это очень весело! https://play.google.com/store/apps/details?id=com.univigame.musbit");
                 sendIntent.setType("text/plain");
                 activity.startActivity(Intent.createChooser(sendIntent,"Поделиться"));
             }

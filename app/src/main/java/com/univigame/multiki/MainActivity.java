@@ -386,23 +386,11 @@ public class MainActivity extends AppCompatActivity {
 
                 //при первом скачивании перемешать все песни
                 Cursor curss = mDb.rawQuery("SELECT * FROM musbit WHERE podtverjd = 1", null);
-if(curss.getCount()<4) {
-    Log.d("колличество меньше 4", curss.getCount() + "");
-                mDb.execSQL("DELETE FROM `musbit1`");
-
-                mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                        " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
-                        " FROM musbit" +
-                        " ORDER BY RANDOM()");
-
-                mDb.execSQL("DELETE FROM `musbit`");
-
-                mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                        " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
-                        " FROM musbit1" +
-                        " ORDER BY RANDOM()");
-}
-
+                if(curss.getCount()<4) {
+                    Log.d("колличество меньше 4", curss.getCount() + "");
+                peremeshatb(mDb);
+                }
+                curss.close();
 
 
                 content = "";
@@ -421,6 +409,25 @@ if(curss.getCount()<4) {
             byn_start.setEnabled(true);
         }
 
+
+    }
+
+  public static void peremeshatb(SQLiteDatabase  mDb){
+      Log.d("peremeshatb", "перемешали");
+
+           mDb.execSQL("DELETE FROM `musbit1`");
+
+           mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                   " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                   " FROM musbit" +
+                   " ORDER BY RANDOM()");
+
+           mDb.execSQL("DELETE FROM `musbit`");
+
+           mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                   " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                   " FROM musbit1" +
+                   " ORDER BY RANDOM()");
 
     }
 

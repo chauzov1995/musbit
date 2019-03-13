@@ -43,6 +43,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         init();
     }
 
+
     private void init() {
 
         dialog = new Dialog(activity, R.style.CustomDialog);
@@ -72,20 +73,20 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
 
 
         perehod_btn = (Button) dialog.findViewById(R.id.perehod_btn);
-      final   TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
+        final TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
 
 
-         timer1 = new CountDownTimer(10000, 1000) {
+        timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
             public void onTick(long millisUntilFinished) {
                 Log.d("осталось тимер1", millisUntilFinished / 1000 + "");
-                textView6.setText((millisUntilFinished / 1000)+"");
+                textView6.setText((millisUntilFinished / 1000) + "");
             }
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-              dialog.cancel();
+                dialog.cancel();
 
             }
         }.start();
@@ -97,24 +98,18 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
                 dialog.dismiss();
 
 
-
-                loadetsd=true;
-
-
-
-
-
-
+                loadetsd = true;
 
 
             }
         });
     }
-boolean loadetsd=false;
-    boolean prosmotrel=false;
+
+    boolean loadetsd = false;
+    boolean prosmotrel = false;
 
     private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+        mRewardedVideoAd.loadAd(activity.getString(R.string.voznagr_rekl_1zhisn),
                 new AdRequest.Builder().build());
     }
 
@@ -145,20 +140,21 @@ boolean loadetsd=false;
 
     @Override
     public void onRewardedVideoAdClosed() {
-        if(prosmotrel){
-            activity.customDialog1 = new dial_perehod(activity, activity.money, activity.spisokvsego.get(activity.level));
+        if (prosmotrel) {
+            activity.customDialog1 = new dial_perehod(activity, activity.money, musik);
             activity.customDialog1.show();
-        }else {
+        } else {
             dialog.cancel();
 
-        }}
+        }
+    }
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
 
-      //  dialog.dismiss();
+        //  dialog.dismiss();
 
-        prosmotrel=true;
+        prosmotrel = true;
     }
 
     @Override

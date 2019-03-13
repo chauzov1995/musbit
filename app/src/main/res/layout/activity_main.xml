@@ -144,6 +144,7 @@
         android:layout_marginEnd="32dp"
         android:layout_weight="1"
         android:background="@drawable/facebook_design"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/button7"
         app:layout_constraintEnd_toEndOf="@+id/byn_start2" />
 
@@ -155,6 +156,7 @@
         android:layout_marginStart="32dp"
         android:layout_weight="1"
         android:background="@drawable/insta_design"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/button7"
         app:layout_constraintStart_toStartOf="@+id/byn_start2" />
 

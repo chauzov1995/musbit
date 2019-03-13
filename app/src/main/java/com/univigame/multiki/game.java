@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.univigame.multiki.MainActivity.peremeshatb;
+
 
 public class game extends AppCompatActivity {
 
@@ -229,6 +231,25 @@ public class game extends AppCompatActivity {
         mDb = mDBHelper.getWritableDatabase();
 
 
+        load_spus_vsego();
+
+        Cursor cursor2 = mDb.rawQuery("SELECT * FROM records ", null);
+        cursor2.moveToFirst();
+        level = (cursor2.getInt(cursor2.getColumnIndex("level")));
+        cursor2.close();
+
+
+        body.setVisibility(View.INVISIBLE);
+        progressBar2.setVisibility(View.VISIBLE);
+
+        get_money();//обновим  монеты
+        load_new_vopr(level);//новый вопрос при старте
+
+
+    }
+
+
+   void  load_spus_vsego(){
         spisokvsego = new ArrayList<class_spis_vsego>();
         Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1", null);
         if (c.moveToFirst()) {
@@ -244,20 +265,6 @@ public class game extends AppCompatActivity {
         }
         c.close();
         lengtht = spisokvsego.size();
-
-
-        Cursor cursor2 = mDb.rawQuery("SELECT * FROM records ", null);
-        cursor2.moveToFirst();
-        level = (cursor2.getInt(cursor2.getColumnIndex("level")));
-        cursor2.close();
-
-
-        body.setVisibility(View.INVISIBLE);
-        progressBar2.setVisibility(View.VISIBLE);
-
-        get_money();//обновим  монеты
-        load_new_vopr(level);//новый вопрос при старте
-
 
     }
 
@@ -333,6 +340,13 @@ public class game extends AppCompatActivity {
 //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
             mDb.execSQL("UPDATE `records` SET level=0");
             sled_level = 0;
+
+            peremeshatb(mDb);
+            load_spus_vsego();
+
+
+
+
         } else {
             mDb.execSQL("UPDATE `records` SET level=level+1");
             sled_level = level + 1;
@@ -449,6 +463,12 @@ public class game extends AppCompatActivity {
 //если больше нет вопросов то всё с нуля начать, напиши ещё код для перемешки
             mDb.execSQL("UPDATE `records` SET level=0");
             sled_level = 0;
+
+            peremeshatb(mDb);
+            load_spus_vsego();
+
+
+
         } else {
             mDb.execSQL("UPDATE `records` SET level=level+1");
             sled_level = level + 1;
