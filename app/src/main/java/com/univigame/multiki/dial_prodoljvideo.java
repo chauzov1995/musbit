@@ -55,7 +55,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         // Use an activity context to get the rewarded video instance.
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(activity);
         mRewardedVideoAd.setRewardedVideoAdListener(dial_prodoljvideo.this);
-
+        loadRewardedVideoAd();
 
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -94,14 +94,15 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         perehod_btn.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
                 timer1.cancel();
+                dialog.dismiss();
+
+
+
+                loadetsd=true;
 
 
 
 
-
-
-
-                loadRewardedVideoAd();
 
 
 
@@ -109,7 +110,8 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
             }
         });
     }
-
+boolean loadetsd=false;
+    boolean prosmotrel=false;
 
     private void loadRewardedVideoAd() {
         mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
@@ -124,9 +126,11 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
 
     @Override
     public void onRewardedVideoAdLoaded() {
-        if (mRewardedVideoAd.isLoaded()) {
+
+        if (mRewardedVideoAd.isLoaded() && loadetsd) {
             mRewardedVideoAd.show();
         }
+
     }
 
     @Override
@@ -141,15 +145,20 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
 
     @Override
     public void onRewardedVideoAdClosed() {
+        if(prosmotrel){
+            activity.customDialog1 = new dial_perehod(activity, activity.money, activity.spisokvsego.get(activity.level));
+            activity.customDialog1.show();
+        }else {
+            dialog.cancel();
 
-    }
+        }}
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
 
-        dialog.dismiss();
-        activity.start_sled = true;
+      //  dialog.dismiss();
 
+        prosmotrel=true;
     }
 
     @Override
@@ -159,7 +168,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
-
+        dialog.cancel();
     }
 
     @Override
