@@ -61,9 +61,11 @@
 
     <Button
         android:id="@+id/dialog_button"
-        android:layout_width="351dp"
+        android:layout_width="0dp"
         android:layout_height="68dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/start_design"
         android:drawableStart="@drawable/plusstomoney_design"
         android:drawablePadding="-30dp"

@@ -125,14 +125,14 @@ public class nagrada_za_reklamu extends AppCompatActivity implements RewardedVid
     public void onRewardedVideoAdClosed() {
         //   Toast.makeText(this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
         //   loadRewardedVideoAd();
-        onBackPressed();
+        this.onBackPressed();
     }
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int errorCode) {
         Toast.makeText(this, "Не удалось загрузить рекламу", Toast.LENGTH_LONG).show();
         //   mDb.execSQL("UPDATE `records` SET money=money+" + 50);
-        onBackPressed();
+        this.onBackPressed();
 
 
         // Toast.makeText(this, "Вам начислено 50 монет", Toast.LENGTH_LONG);

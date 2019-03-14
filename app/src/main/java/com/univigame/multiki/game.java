@@ -88,8 +88,6 @@ public class game extends AppCompatActivity {
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
-
-
         //всплывающяя реклама
         mejstranrekl_first();
         //всплывающяя реклама
@@ -231,13 +229,14 @@ public class game extends AppCompatActivity {
         mDb = mDBHelper.getWritableDatabase();
 
 
-        load_spus_vsego();
-
         Cursor cursor2 = mDb.rawQuery("SELECT * FROM records ", null);
         cursor2.moveToFirst();
         level = (cursor2.getInt(cursor2.getColumnIndex("level")));
         cursor2.close();
 
+
+        load_spus_vsego();
+        lengtht = spisokvsego.size();
 
         body.setVisibility(View.INVISIBLE);
         progressBar2.setVisibility(View.VISIBLE);
@@ -245,11 +244,10 @@ public class game extends AppCompatActivity {
         get_money();//обновим  монеты
         load_new_vopr(level);//новый вопрос при старте
 
-
     }
 
 
-   void  load_spus_vsego(){
+    void load_spus_vsego() {
         spisokvsego = new ArrayList<class_spis_vsego>();
         Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1", null);
         if (c.moveToFirst()) {
@@ -264,7 +262,8 @@ public class game extends AppCompatActivity {
             } while (c.moveToNext());
         }
         c.close();
-        lengtht = spisokvsego.size();
+
+
 
     }
 
@@ -325,6 +324,8 @@ public class game extends AppCompatActivity {
 
 
     void start_ugadka() {
+        prav_otvet_dlyaperemesh=spisokvsego.get(level).id;
+        Log.d("start_ugadka", "level - " + level);
         first_video = true;
         prav1 = false;
         get_money();//обновим  монеты
@@ -343,8 +344,6 @@ public class game extends AppCompatActivity {
 
             peremeshatb(mDb);
             load_spus_vsego();
-
-
 
 
         } else {
@@ -450,6 +449,8 @@ public class game extends AppCompatActivity {
 
 
     void start_ugadka2() {
+        prav_otvet_dlyaperemesh=spisokvsego.get(level).id;
+        Log.d("start_ugadka", "level - " + level);
         first_video = false;
         prav2 = false;
         get_money();//обновим  монеты
@@ -466,7 +467,6 @@ public class game extends AppCompatActivity {
 
             peremeshatb(mDb);
             load_spus_vsego();
-
 
 
         } else {
@@ -537,13 +537,14 @@ public class game extends AppCompatActivity {
 
     }
 
+    int prav_otvet_dlyaperemesh;
 
     void otvnvibor(View r, class_spis_vsego otv_sel_btn_elem) {
 
         if (first_video) {
             selectedotv = (Button) r;
             prav1 = false;
-            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
+            if (otv_sel_btn_elem.id == prav_otvet_dlyaperemesh) {
                 prav1 = true;
             }
 
@@ -558,7 +559,7 @@ public class game extends AppCompatActivity {
         } else {
             selectedotv = (Button) r;
             prav2 = false;
-            if (otv_sel_btn_elem.id == spisokvsego.get(level).id) {
+            if (otv_sel_btn_elem.id == prav_otvet_dlyaperemesh) {
                 prav2 = true;
             }
 
@@ -796,7 +797,7 @@ public class game extends AppCompatActivity {
         }
 
         //заагрузка новой рекламы
-        if(rekl_n_otv==1)
+        if (rekl_n_otv == 1)
             mejstranrekl_first();
 
     }
@@ -837,7 +838,7 @@ public class game extends AppCompatActivity {
 
     }
 
-    public void game_over(){
+    public void game_over() {
         onBackPressed();
         Intent intent = new Intent(tekactiviti, game_over.class);
         intent.putExtra("gameover_money", gameover_money);
