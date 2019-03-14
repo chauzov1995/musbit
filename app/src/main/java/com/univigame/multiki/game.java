@@ -30,6 +30,8 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -74,7 +76,7 @@ public class game extends AppCompatActivity {
     int[] varianti1, varianti2;
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
-
+boolean first_gameover=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,16 +156,14 @@ public class game extends AppCompatActivity {
                 } else {
 
 
-                    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
-                    customDialog1.show();
+                    if(first_gameover==false) {
+                        dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+                        customDialog1.show();
+                        first_gameover=true;
+                    }else{
 
-/*
-                    onBackPressed();
-                    Intent intent = new Intent(tekactiviti, game_over.class);
-                    intent.putExtra("gameover_money", gameover_money);
-                    intent.putExtra("gameover_schore", gameover_schore);
-                    startActivity(intent);
-                    */
+                        game_over();
+                    }
                 }
 
 
@@ -201,16 +201,16 @@ public class game extends AppCompatActivity {
 
                 } else {
 
+if(first_gameover==false) {
+    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+    customDialog1.show();
+    first_gameover=true;
+}else{
 
-                    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
-                    customDialog1.show();
-
+    game_over();
+}
 /*
-                    onBackPressed();
-                    Intent intent = new Intent(tekactiviti, game_over.class);
-                    intent.putExtra("gameover_money", gameover_money);
-                    intent.putExtra("gameover_schore", gameover_schore);
-                    startActivity(intent);
+
                     */
                 }
 
@@ -376,7 +376,13 @@ public class game extends AppCompatActivity {
 
                     gameover_money += 10;
                     gameover_schore += 100;
+
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
+                    try {
+                    Games.getLeaderboardsClient(game.this, GoogleSignIn.getLastSignedInAccount(game.this))
+                            .submitScore(getString(R.string.leaderboard), gameover_schore);
+                    }catch (Exception e){}
+
                     get_money();
 
 
@@ -500,6 +506,10 @@ public class game extends AppCompatActivity {
                     gameover_money += 10;
                     gameover_schore += 100;
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
+                    try {
+                        Games.getLeaderboardsClient(game.this, GoogleSignIn.getLastSignedInAccount(game.this))
+                                .submitScore(getString(R.string.leaderboard), gameover_schore);
+                    }catch (Exception ignored){}
                     get_money();
 
 

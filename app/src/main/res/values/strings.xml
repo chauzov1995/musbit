@@ -1,7 +1,7 @@
 <resources>
 
 
-    <string name="app_name">Угадай музыку по биту</string>
+    <string name="app_name">MusBit</string>
     <string name="rekl_id_app">ca-app-pub-3318198202821312~4744413616</string>
     <string name="voznagr_rekl_2energy">ca-app-pub-3318198202821312/2003410648</string>
     <string name="voznagr_rekl_100m">ca-app-pub-3318198202821312/4984797203</string>

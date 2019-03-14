@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -81,24 +83,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
 
 
-        mAuth = FirebaseAuth.getInstance();
 
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
 
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
-        }
 
         bundle.putString("max_ad_content_rating", "G");
         //инит рекл
@@ -111,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         btn_money = (Button) findViewById(R.id.btn_money);
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
         textView9 = (TextView) findViewById(R.id.textView9);
+        ImageView imageView3 = (ImageView) findViewById(R.id.imageView3);
+
 
         Button button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
@@ -199,10 +188,14 @@ public class MainActivity extends AppCompatActivity {
 
         textView9.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                //   showLeaderboard();
+                   showLeaderboard();
             }
         });
-
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                showLeaderboard();
+            }
+        });
 
         mDBHelper = new DatabaseHelper(this);
         mDb = mDBHelper.getWritableDatabase();
@@ -223,56 +216,62 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //  updateUI(currentUser);
+
     }
 
 
-// ...
-// Initialize Firebase Auth
-
+    private static final int RC_LEADERBOARD_UI = 9004;
 
     private void showLeaderboard() {
-// Initialize Firebase Auth
 
+      //  Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+        //        .submitScore(getString(R.string.leaderboard_2), 100);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        Bundle bundle = new Bundle();
-        bundle.putLong(FirebaseAnalytics.Param.SCORE, 200);
-        bundle.putString("leaderboard_id", "CgkIpYam4KYPEAIQAQ");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.POST_SCORE, bundle);
-        //startSignInIntent();
-
-    }
-
-
-    private void startSignInIntent() {
-        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
-                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-        Intent intent = signInClient.getSignInIntent();
-        startActivityForResult(intent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                // The signed in account is stored in the result.
-                GoogleSignInAccount signedInAccount = result.getSignInAccount();
-            } else {
-                String message = result.getStatus().getStatusMessage();
-                if (message == null || message.isEmpty()) {
-                    //message = getString(R.string.signin_other_error);
+try {
+    Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+            .getLeaderboardIntent(getString(R.string.leaderboard))
+            .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                @Override
+                public void onSuccess(Intent intent) {
+                    startActivityForResult(intent, RC_LEADERBOARD_UI);
                 }
-                new AlertDialog.Builder(this).setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null).show();
-            }
+            });
+}catch (Exception e){}
+}
+
+
+    //тихий вход
+    private void signInSilently() {
+        GoogleSignInOptions signInOptions = GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN;
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (GoogleSignIn.hasPermissions(account, signInOptions.getScopeArray())) {
+            // Already signed in.
+            // The signed in account is stored in the 'account' variable.
+            GoogleSignInAccount signedInAccount = account;
+        } else {
+            // Haven't been signed-in before. Try the silent sign-in first.
+            GoogleSignInClient signInClient = GoogleSignIn.getClient(this, signInOptions);
+            signInClient
+                    .silentSignIn()
+                    .addOnCompleteListener(
+                            this,
+                            new OnCompleteListener<GoogleSignInAccount>() {
+                                @Override
+                                public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                                    if (task.isSuccessful()) {
+                                        // The signed in account is stored in the task's result.
+                                        GoogleSignInAccount signedInAccount = task.getResult();
+                                    } else {
+                                        // Player will need to sign-in explicitly using via UI.
+                                        // See [sign-in best practices](http://developers.google.com/games/services/checklist) for guidance on how and when to implement Interactive Sign-in,
+                                        // and [Performing Interactive Sign-in](http://developers.google.com/games/services/android/signin#performing_interactive_sign-in) for details on how to implement
+                                        // Interactive Sign-in.
+                                    }
+                                }
+                            });
         }
     }
+
 
 
     @Override
@@ -300,6 +299,10 @@ public class MainActivity extends AppCompatActivity {
         textView10.setText(score + "");
         btn_energ.setText("Энергия " + tek_energy + "/12");
         btn_money.setText("Монеты " + money + "");
+
+
+
+        signInSilently();
 
     }
 

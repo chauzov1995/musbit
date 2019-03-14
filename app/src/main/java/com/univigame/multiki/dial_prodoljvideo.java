@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -73,9 +74,14 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
 
 
         perehod_btn = (Button) dialog.findViewById(R.id.perehod_btn);
+        ImageButton button4 = (ImageButton) dialog.findViewById( R.id.button4 );
         final TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
 
-
+        button4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View r) {
+                dialog.cancel();
+            }
+        });
         timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой

@@ -8,6 +8,6 @@ Save this file as res/values/games-ids.xml in your project.
     <string name="app_id" translatable="false">525798572837</string>
     <!-- package_name -->
     <string name="package_name" translatable="false">com.univigame.musbit</string>
-    <!-- leaderboard Лучшие за неделю -->
-    <string name="leaderboard" translatable="false">CgkIpYam4KYPEAIQAQ</string>
+    <!-- leaderboard Лучшие игроки -->
+    <string name="leaderboard" translatable="false">CgkIpYam4KYPEAIQAg</string>
 </resources>
