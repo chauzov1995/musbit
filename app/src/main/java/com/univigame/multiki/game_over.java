@@ -66,23 +66,22 @@ public class game_over extends AppCompatActivity {
 
 //вычтем энергию за игру
 
-                    Cursor cursor = mDb.rawQuery("SELECT energy FROM records ", null);
-                    cursor.moveToFirst();
+                long  tek_energy;
 
-                    int energy = (cursor.getInt(cursor.getColumnIndex("energy")));
-                    cursor.close();
-
+                Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
+                cursor.moveToFirst();
 
 
+                int energy = (cursor.getInt(cursor.getColumnIndex("energy")));
+                int score = (cursor.getInt(cursor.getColumnIndex("score")));
 
                 long unixTime = System.currentTimeMillis() / 1000L;
-long tek_energy;
+
 
                 if (unixTime >= energy)
                     tek_energy = 12;
                 else
                     tek_energy = 11 - ((energy - unixTime) / 600);
-
 
 
 

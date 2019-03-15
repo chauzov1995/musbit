@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.Auth;
@@ -29,29 +27,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PlayGamesAuthProvider;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
     long energi_do12 = 0;
+    TextView textView10;
 
 
     @Override
@@ -85,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+ //       Log.d("bynthytn", isOnline()+"");
 
 
         bundle.putString("max_ad_content_rating", "G");
@@ -99,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
         textView9 = (TextView) findViewById(R.id.textView9);
         ImageView imageView3 = (ImageView) findViewById(R.id.imageView3);
-
+         textView10 = (TextView) findViewById(R.id.textView9);
 
         Button button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
@@ -130,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
 
         byn_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
+
+
+                tek_energy();
+
+
                 if (tek_energy > 0) {
 
 //вычтем энергию за игру
@@ -213,19 +208,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
 
 
     private static final int RC_LEADERBOARD_UI = 9004;
 
     private void showLeaderboard() {
 
-      //  Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-        //        .submitScore(getString(R.string.leaderboard_2), 100);
+
+     if(   signedInAccount==null){
+         startSignInIntent();
+     }
+
+
 
 try {
     Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
@@ -239,7 +233,7 @@ try {
 }catch (Exception e){}
 }
 
-
+    GoogleSignInAccount signedInAccount;
     //тихий вход
     private void signInSilently() {
         GoogleSignInOptions signInOptions = GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN;
@@ -247,7 +241,7 @@ try {
         if (GoogleSignIn.hasPermissions(account, signInOptions.getScopeArray())) {
             // Already signed in.
             // The signed in account is stored in the 'account' variable.
-            GoogleSignInAccount signedInAccount = account;
+             signedInAccount = account;
         } else {
             // Haven't been signed-in before. Try the silent sign-in first.
             GoogleSignInClient signInClient = GoogleSignIn.getClient(this, signInOptions);
@@ -266,9 +260,37 @@ try {
                                         // See [sign-in best practices](http://developers.google.com/games/services/checklist) for guidance on how and when to implement Interactive Sign-in,
                                         // and [Performing Interactive Sign-in](http://developers.google.com/games/services/android/signin#performing_interactive_sign-in) for details on how to implement
                                         // Interactive Sign-in.
+
                                     }
                                 }
                             });
+        }
+    }
+
+
+    private void startSignInIntent() {
+        GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
+                GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        Intent intent = signInClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // The signed in account is stored in the result.
+                GoogleSignInAccount signedInAccount = result.getSignInAccount();
+            } else {
+                String message = result.getStatus().getStatusMessage();
+                if (message == null || message.isEmpty()) {
+                    message = getString(R.string.signin_other_error);
+                }
+                new AlertDialog.Builder(this).setMessage(message)
+                        .setNeutralButton(android.R.string.ok, null).show();
+            }
         }
     }
 
@@ -279,7 +301,17 @@ try {
         super.onResume();
 
 
-        TextView textView10 = (TextView) findViewById(R.id.textView9);
+        tek_energy();
+
+
+        signInSilently();
+
+
+    }
+
+    void tek_energy(){
+
+
         Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
         cursor.moveToFirst();
 
@@ -297,14 +329,11 @@ try {
         energi_do12 = energy - unixTime;
 
         textView10.setText(score + "");
-        btn_energ.setText("Энергия " + tek_energy + "/12");
+        btn_energ.setText("Энергия " + tek_energy + " / 12");
         btn_money.setText("Монеты " + money + "");
-
-
-
-        signInSilently();
-
     }
+
+
 
 
     private class load_spis_valut extends AsyncTask<String, Void, String> {
