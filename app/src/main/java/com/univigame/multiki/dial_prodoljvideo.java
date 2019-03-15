@@ -64,6 +64,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 dialog.dismiss();
+                timer1.cancel();
                 activity.game_over();
             }
         });

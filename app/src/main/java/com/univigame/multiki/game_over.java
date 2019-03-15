@@ -28,7 +28,7 @@ public class game_over extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
-        getSupportActionBar().hide();
+
 
         intent = getIntent();
         int gameover_money = intent.getIntExtra("gameover_money",0);
