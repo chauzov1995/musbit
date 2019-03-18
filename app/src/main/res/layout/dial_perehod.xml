@@ -85,7 +85,7 @@
         android:fontFamily="@font/sfprodisplay_regular"
         android:text="Яд"
         android:textColor="#000"
-        android:textSize="30sp"
+        android:textSize="26sp"
         app:layout_constraintBottom_toTopOf="@+id/textView10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -97,7 +97,7 @@
         android:layout_marginBottom="84dp"
         android:fontFamily="@font/sfprodisplay_regular"
         android:text="Эрика Лундмон"
-        android:textColor="#000"
+        android:textColor="#555"
         android:textSize="17sp"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
         app:layout_constraintEnd_toEndOf="parent"

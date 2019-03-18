@@ -23,6 +23,7 @@ import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -71,6 +72,8 @@ public class game extends AppCompatActivity {
     int[] varianti1, varianti2;
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
+    private AdView mAdView;
+
 boolean first_gameover=false;
 
     @Override
@@ -82,7 +85,6 @@ boolean first_gameover=false;
 
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
-        MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
         //всплывающяя реклама
@@ -105,6 +107,12 @@ boolean first_gameover=false;
         otv3 = (Button) findViewById(R.id.otv3);
         otv4 = (Button) findViewById(R.id.otv4);
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();  // deprecated
