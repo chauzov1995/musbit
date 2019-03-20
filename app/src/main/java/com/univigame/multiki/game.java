@@ -39,7 +39,7 @@ import static com.univigame.multiki.MainActivity.peremeshatb;
 public class game extends AppCompatActivity {
 
     //настройки
-    int pokaz_rekl_kajd_n_otv = 5;
+    int pokaz_rekl_kajd_n_otv = 4;
     boolean first_video = false;//важно, для первого определения прав ответа
 
 
