@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
  //       Log.d("bynthytn", isOnline()+"");
 
 
-        bundle.putString("max_ad_content_rating", "G");
+        bundle.putString("max_ad_content_rating", "PG");
         //инит рекл
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 

@@ -55,6 +55,7 @@ public class game extends AppCompatActivity {
 
     // int random_vopt_btn;
     int money, level;
+
     boolean[] btn_enabl = {true, true, true, true};
     private InterstitialAd mInterstitialAd;
     int rekl_n_otv = 0;
@@ -840,6 +841,7 @@ public class game extends AppCompatActivity {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // Code to be executed when an ad request fails.
+                if(customDialog1!=null)
                 customDialog1.setbutton_enabled(true);
             }
 
@@ -857,6 +859,7 @@ public class game extends AppCompatActivity {
             @Override
             public void onAdClosed() {
                 // Code to be executed when the interstitial ad is closed.
+                if(customDialog1!=null)
                 customDialog1.setbutton_enabled(true);
             }
         });

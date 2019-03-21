@@ -36,8 +36,8 @@ public class game_over extends AppCompatActivity {
 
 
         intent = getIntent();
-        int gameover_money = intent.getIntExtra("gameover_money",0);
-         gameover_schore = intent.getIntExtra("gameover_schore",0);
+        int gameover_money = intent.getIntExtra("gameover_money", 0);
+        gameover_schore = intent.getIntExtra("gameover_schore", 0);
 
 
         mDBHelper = new DatabaseHelper(this);
@@ -50,8 +50,8 @@ public class game_over extends AppCompatActivity {
         total_score = (TextView) findViewById(R.id.total_score);
 
 
-        total_score.setText(gameover_schore+"");
-        tvplmoney.setText("+ "+gameover_money);
+        total_score.setText(gameover_schore + "");
+        tvplmoney.setText("+ " + gameover_money);
 
 
         btn_vmenu.setOnClickListener(new View.OnClickListener() {
@@ -62,16 +62,15 @@ public class game_over extends AppCompatActivity {
         btn_restart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
 
-              //  onBackPressed();
+                //  onBackPressed();
 
 
                 onBackPressed();
 
 
-
 //вычтем энергию за игру
 
-                long  tek_energy;
+                long tek_energy;
 
                 Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
                 cursor.moveToFirst();
@@ -89,8 +88,7 @@ public class game_over extends AppCompatActivity {
                     tek_energy = 11 - ((energy - unixTime) / 600);
 
 
-
-                if(tek_energy>0){
+                if (tek_energy > 0) {
 
                     if (energy >= unixTime)
                         mDb.execSQL("UPDATE `records` SET energy=energy+" + 600);
@@ -98,20 +96,14 @@ public class game_over extends AppCompatActivity {
                         mDb.execSQL("UPDATE `records` SET energy=" + (unixTime + 600));
                     //Log.d("asdasd",energy+" "+unixTime);
 //вычтем энергию за игру
-                  //  game_over.this.dismiss();
+                    //  game_over.this.dismiss();
                     onBackPressed();
                     Intent intent = new Intent(game_over.this, game.class);
                     startActivity(intent);
                 } else {
-                    CustomDialog_energy customDialog1 = new CustomDialog_energy((Activity)game_over.this, tek_energy);
+                    CustomDialog_energy customDialog1 = new CustomDialog_energy((Activity) game_over.this, tek_energy);
                     customDialog1.show();
                 }
-
-
-
-
-
-
 
 
             }
@@ -121,17 +113,14 @@ public class game_over extends AppCompatActivity {
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал "+gameover_schore+" очков в игре MusBit - угадай музыку по биту, скачай и побей мой рекорд - https://play.google.com/store/apps/details?id=com.univigame.musbit");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Я набрал " + gameover_schore + " очков в игре MusBit - угадай музыку по биту, скачай и побей мой рекорд - https://play.google.com/store/apps/details?id=com.univigame.musbit");
                 sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent,"Поделиться"));
+                startActivity(Intent.createChooser(sendIntent, "Поделиться"));
             }
         });
 
 
-
-
-
-
+        AdSettings.setIsChildDirected(true);//для детей
         rewardedVideoAd = new RewardedVideoAd(this, "338186373483051_338187103482978");
         rewardedVideoAd.setAdListener(new RewardedVideoAdListener() {
             @Override
@@ -178,13 +167,6 @@ public class game_over extends AppCompatActivity {
             }
         });
         rewardedVideoAd.loadAd();
-
-
-
-
-
-
-
 
 
     }
