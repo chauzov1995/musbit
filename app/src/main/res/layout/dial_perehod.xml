@@ -45,24 +45,14 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="0dp"
+        android:layout_width="237dp"
 
         android:layout_height="68dp"
 
 
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-
-        android:background="@drawable/otvet_do_design"
-        android:drawableStart="@drawable/apple_design"
-        android:drawablePadding="-12dp"
-        android:fontFamily="@font/sfprodisplay_regular"
-        android:text="Открыть в Apple Music"
-        android:textAllCaps="false"
-        android:textColor="#269BFF"
-        android:textSize="17sp"
+        android:background="@drawable/apple_mus"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
-        app:layout_constraintEnd_toStartOf="@+id/btn_share"
         app:layout_constraintStart_toStartOf="@+id/perehod_btn" />
 
     <Button
@@ -72,7 +62,6 @@
 
         android:layout_marginBottom="16dp"
         android:background="@drawable/share_design"
-        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
         app:layout_constraintEnd_toEndOf="@+id/perehod_btn" />
 
@@ -80,7 +69,6 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/sfprodisplay_regular"
         android:text="Яд"
         android:textColor="#000"
@@ -93,7 +81,7 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
-        android:layout_marginBottom="84dp"
+        android:layout_marginBottom="120dp"
         android:fontFamily="@font/sfprodisplay_regular"
         android:text="Эрика Лундмон"
         android:textColor="#555"

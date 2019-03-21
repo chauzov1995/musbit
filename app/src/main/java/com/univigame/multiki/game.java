@@ -74,7 +74,7 @@ public class game extends AppCompatActivity {
     dial_perehod customDialog1;
     private AdView mAdView;
 
-boolean first_gameover=false;
+    boolean first_gameover = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ boolean first_gameover=false;
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();  // deprecated
-        relativeLayout.getLayoutParams().height = (width * 720 / 1280);
+        relativeLayout.getLayoutParams().height = (width * 720 / 1280)+1;
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -141,8 +141,6 @@ boolean first_gameover=false;
                 body.setVisibility(View.INVISIBLE);
                 progressBar2.setVisibility(View.VISIBLE);
 
-                videoView.stopPlayback();
-
 
                 if (prav1) {
 
@@ -159,11 +157,11 @@ boolean first_gameover=false;
                 } else {
 
 
-                    if(first_gameover==false) {
+                    if (first_gameover == false) {
                         dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
                         customDialog1.show();
-                        first_gameover=true;
-                    }else{
+                        first_gameover = true;
+                    } else {
 
                         game_over();
                     }
@@ -187,8 +185,6 @@ boolean first_gameover=false;
                 body.setVisibility(View.INVISIBLE);
                 progressBar2.setVisibility(View.VISIBLE);
 
-                videoView2.stopPlayback();
-
 
                 if (prav2) {
 
@@ -204,17 +200,17 @@ boolean first_gameover=false;
 
                 } else {
 
-if(first_gameover==false) {
-    dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
-    customDialog1.show();
-    first_gameover=true;
-}else{
+                    if (first_gameover == false) {
+                        dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+                        customDialog1.show();
+                        first_gameover = true;
+                    } else {
 
-    game_over();
-}
-/*
+                        game_over();
+                    }
+                    /*
 
-                    */
+                     */
                 }
 
                 if (level + 1 == lengtht) {
@@ -265,7 +261,6 @@ if(first_gameover==false) {
             } while (c.moveToNext());
         }
         c.close();
-
 
 
     }
@@ -327,7 +322,7 @@ if(first_gameover==false) {
 
 
     void start_ugadka() {
-        prav_otvet_dlyaperemesh=spisokvsego.get(level).id;
+        prav_otvet_dlyaperemesh = spisokvsego.get(level).id;
         Log.d("start_ugadka", "level - " + level);
         first_video = true;
         prav1 = false;
@@ -355,11 +350,9 @@ if(first_gameover==false) {
         }
         load_new_vopr2(sled_level);
 
-
+        vv_1();
         videoView.start();
-        videoView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        videoView2.getLayoutParams().height = 0;
-        videoView.requestLayout();
+
 
         timer1 = new CountDownTimer(10000, 1000) {
 
@@ -382,9 +375,10 @@ if(first_gameover==false) {
 
                     mDb.execSQL("UPDATE `records` SET score=" + gameover_schore + " where score<" + gameover_schore);
                     try {
-                    Games.getLeaderboardsClient(game.this, GoogleSignIn.getLastSignedInAccount(game.this))
-                            .submitScore(getString(R.string.leaderboard), gameover_schore);
-                    }catch (Exception e){}
+                        Games.getLeaderboardsClient(game.this, GoogleSignIn.getLastSignedInAccount(game.this))
+                                .submitScore(getString(R.string.leaderboard), gameover_schore);
+                    } catch (Exception e) {
+                    }
 
                     get_money();
 
@@ -458,7 +452,7 @@ if(first_gameover==false) {
 
 
     void start_ugadka2() {
-        prav_otvet_dlyaperemesh=spisokvsego.get(level).id;
+        prav_otvet_dlyaperemesh = spisokvsego.get(level).id;
         Log.d("start_ugadka", "level - " + level);
         first_video = false;
         prav2 = false;
@@ -484,11 +478,9 @@ if(first_gameover==false) {
         }
         load_new_vopr(sled_level);
 
-
+        vv_2();
         videoView2.start();
-        videoView2.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        videoView.getLayoutParams().height = 0;
-        videoView2.requestLayout();
+
 
         timer1 = new CountDownTimer(10000, 1000) {
 
@@ -512,7 +504,8 @@ if(first_gameover==false) {
                     try {
                         Games.getLeaderboardsClient(game.this, GoogleSignIn.getLastSignedInAccount(game.this))
                                 .submitScore(getString(R.string.leaderboard), gameover_schore);
-                    }catch (Exception ignored){}
+                    } catch (Exception ignored) {
+                    }
                     get_money();
 
 
@@ -550,6 +543,25 @@ if(first_gameover==false) {
 
     }
 
+    public void vv_1() {
+
+        videoView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        videoView2.getLayoutParams().height = 2;
+        videoView.bringToFront();
+        videoView.requestLayout();
+        videoView2.requestLayout();
+    }
+
+    public void vv_2() {
+
+        videoView2.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        videoView.getLayoutParams().height = 2;
+
+        videoView2.bringToFront();
+        videoView2.requestLayout();
+        videoView.requestLayout();
+    }
+
     int prav_otvet_dlyaperemesh;
 
     void otvnvibor(View r, class_spis_vsego otv_sel_btn_elem) {
@@ -562,9 +574,9 @@ if(first_gameover==false) {
             }
 
 
-            videoView.pause();
+        //    videoView.pause();
             videoView.seekTo(10000);
-            videoView.start();
+         //   videoView.start();
             timer1.cancel();
             timer1.onFinish();
 
@@ -578,9 +590,9 @@ if(first_gameover==false) {
 
 
             // videoView.SEE
-            videoView2.pause();
+         //   videoView2.pause();
             videoView2.seekTo(10000);
-            videoView2.start();
+         //   videoView2.start();
             timer1.cancel();
             timer1.onFinish();
 
