@@ -4,18 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
-import com.facebook.ads.*;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
 
 public class game_over extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class game_over extends AppCompatActivity {
     Intent intent;
     int gameover_schore;
     private final String TAG = game_over.class.getSimpleName();
-    private RewardedVideoAd rewardedVideoAd;
+    private RewardedVideoAd mRewardedVideoAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,53 @@ public class game_over extends AppCompatActivity {
 
         total_score.setText(gameover_schore + "");
         tvplmoney.setText("+ " + gameover_money);
+
+
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewardedVideoAdLoaded() {
+                if (mRewardedVideoAd.isLoaded()) {
+                    mRewardedVideoAd.show();
+                }
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+
+            }
+
+            @Override
+            public void onRewardedVideoCompleted() {
+
+            }
+        });
+        loadRewardedVideoAd();
 
 
         btn_vmenu.setOnClickListener(new View.OnClickListener() {
@@ -120,55 +167,13 @@ public class game_over extends AppCompatActivity {
         });
 
 
-        AdSettings.setIsChildDirected(true);//для детей
-        rewardedVideoAd = new RewardedVideoAd(this, "338186373483051_338187103482978");
-        rewardedVideoAd.setAdListener(new RewardedVideoAdListener() {
-            @Override
-            public void onError(Ad ad, AdError error) {
-                // Rewarded video ad failed to load
-                Log.e(TAG, "Rewarded video ad failed to load: " + error.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Rewarded video ad is loaded and ready to be displayed
-                Log.d(TAG, "Rewarded video ad is loaded and ready to be displayed!");
-                rewardedVideoAd.show();
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Rewarded video ad clicked
-                Log.d(TAG, "Rewarded video ad clicked!");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Rewarded Video ad impression - the event will fire when the
-                // video starts playing
-                Log.d(TAG, "Rewarded video ad impression logged!");
-            }
-
-            @Override
-            public void onRewardedVideoCompleted() {
-                // Rewarded Video View Complete - the video has been played to the end.
-                // You can use this event to initialize your reward
-                Log.d(TAG, "Rewarded video completed!");
-
-                // Call method to give reward
-                // giveReward();
-            }
-
-            @Override
-            public void onRewardedVideoClosed() {
-                // The Rewarded Video ad was closed - this can occur during the video
-                // by closing the app, or closing the end card.
-                Log.d(TAG, "Rewarded video ad closed!");
-            }
-        });
-        rewardedVideoAd.loadAd();
 
 
+
+    }
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd(getString(R.string.vozn_game_over),
+                new AdRequest.Builder().build());
     }
 
 }

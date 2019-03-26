@@ -9,6 +9,7 @@
     <string name="voznagr_rekl_1zhisn">ca-app-pub-3318198202821312/1178642468</string>
     <string name="baner_botoom">ca-app-pub-3318198202821312/6795861885</string>
     <string name="perehod_rekl">ca-app-pub-3318198202821312/5974445242</string>
+    <string name="vozn_game_over">ca-app-pub-3318198202821312/9276558093</string>
     <!--
     <string name="app_name">Угадай вид спорта</string>
     <string name="rekl_id_app">ca-app-pub-3318198202821312~5847333647</string>
@@ -50,4 +51,5 @@
     <string name="leaderboard_id">CgkIifLQpsEGEAIQAQ</string>
     <string name="signin_other_error">Не удалось войти в Google Play Игры</string>
     <string name="app_name_opisanie">Угадай музыку по биту</string>
+
 </resources>
