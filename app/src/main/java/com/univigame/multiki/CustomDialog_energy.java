@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +17,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,7 +42,7 @@ public class CustomDialog_energy {
     TextView timer_view;
     Button  imageView5;
     int  sekdoplus1=10;
-
+    private RewardedAd rewardedAd;
 
     public CustomDialog_energy(Activity activity, long tek_energy  ){
         this.activity = activity;
@@ -57,6 +67,8 @@ public class CustomDialog_energy {
                 button4 = (ImageButton) dialog.findViewById( R.id.button4 );
         dialogButton = (Button) dialog.findViewById( R.id.dialog_button );
          timer_view = (TextView) dialog.findViewById( R.id.textView8 );
+
+        dialogButton.setVisibility(View.INVISIBLE);
 
 
         imageView5.setText("Энергия "+tek_energy+" / 12");
@@ -98,14 +110,69 @@ public class CustomDialog_energy {
         dialogButton.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
                 dialog.dismiss();
-                Intent intent = new Intent(activity, nagrada_za_reklamu.class);
-                intent.putExtra("type_nagr", 3);
-                activity.startActivity(intent);
+
+
+
+                if (rewardedAd.isLoaded()) {
+                    Activity activityContext = activity;
+                    RewardedAdCallback adCallback = new RewardedAdCallback() {
+                        public void onRewardedAdOpened() {
+                            // Ad opened.
+                        }
+
+                        public void onRewardedAdClosed() {
+                            // Ad closed.
+
+                        }
+
+                        public void onUserEarnedReward(@NonNull RewardItem reward) {
+                            // User earned reward.
+                            mDb.execSQL("UPDATE `records` SET energy=energy-" + (600*reward.getAmount()));
+
+                            Toast.makeText(activity, "Вам начислено " +
+                                    reward.getAmount() + " " + reward.getType(), Toast.LENGTH_LONG).show();
+                        }
+
+                        public void onRewardedAdFailedToShow(int errorCode) {
+                            // Ad failed to display
+                        }
+                    };
+                    rewardedAd.show(activityContext, adCallback);
+                } else {
+                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+                }
+
+
 
 
 
             }
         });
+
+
+
+        rewardedAd = new RewardedAd(activity,
+               activity.getString(R.string.voznagr_rekl_2energy));
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+
+                if(tek_energy<12) {
+                    dialogButton.setVisibility(View.VISIBLE);
+                    YoYo.with(Techniques.FlipInX).playOn(dialogButton);
+                }
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(int errorCode) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
+
     }
 
     public void show(){

@@ -15,10 +15,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.gms.ads.AdListener;
@@ -28,6 +31,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.games.Games;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -67,13 +71,14 @@ public class game extends AppCompatActivity {
     int gameover_money = 0;
     int gameover_schore = 0;
     CountDownTimer timer1;
-    ProgressBar progressBar2;
+    AVLoadingIndicatorView progressBar2;
     ConstraintLayout body;
     int random_vopt_btn2, random_vopt_btn1;
     int[] varianti1, varianti2;
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
     private AdView mAdView;
+    LinearLayout LL_money;
 
     boolean first_gameover = false;
 
@@ -93,8 +98,9 @@ public class game extends AppCompatActivity {
         //всплывающяя реклама
 
 
+        LL_money = (LinearLayout) findViewById(R.id.LL_money);
         body = (ConstraintLayout) findViewById(R.id.body);
-        progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
+        progressBar2 = (AVLoadingIndicatorView) findViewById(R.id.progressBar2);
         fiftyfifty = (Button) findViewById(R.id.fiftyfifty);
         muz_zanogo = (Button) findViewById(R.id.button5);
         button3 = (Button) findViewById(R.id.button3);
@@ -572,6 +578,12 @@ public class game extends AppCompatActivity {
             prav1 = false;
             if (otv_sel_btn_elem.id == prav_otvet_dlyaperemesh) {
                 prav1 = true;
+                YoYo.with(Techniques.Pulse).playOn(selectedotv);
+                YoYo.with(Techniques.Swing).playOn(textView);
+                YoYo.with(Techniques.Swing).playOn(LL_money);
+
+            }else{
+                YoYo.with(Techniques.Shake).playOn(selectedotv);
             }
 
 
@@ -587,7 +599,17 @@ public class game extends AppCompatActivity {
             prav2 = false;
             if (otv_sel_btn_elem.id == prav_otvet_dlyaperemesh) {
                 prav2 = true;
+                YoYo.with(Techniques.Pulse).playOn(selectedotv);
+                YoYo.with(Techniques.Swing).playOn(textView);
+                YoYo.with(Techniques.Swing).playOn(LL_money);
+
+            }else{
+                YoYo.with(Techniques.Shake).playOn(selectedotv);
+
+
             }
+
+
 
 
             // videoView.SEE

@@ -40,10 +40,6 @@
                      android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".nagrada_za_reklamu"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".game_over"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

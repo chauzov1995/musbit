@@ -1,6 +1,7 @@
 package com.univigame.multiki;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +20,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -57,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     long energi_do12 = 0;
     TextView textView10;
+    private RewardedAd rewardedAd;
+   LinearLayout linearLayout2;
 
 
     @Override
@@ -74,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
  //       Log.d("bynthytn", isOnline()+"");
 
 
@@ -82,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
+        linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
         byn_start = (Button) findViewById(R.id.byn_start);
         byn_start2 = (Button) findViewById(R.id.byn_start2);
         btn_energ = (Button) findViewById(R.id.btn_energ);
@@ -96,7 +115,32 @@ public class MainActivity extends AppCompatActivity {
         Button button8 = (Button) findViewById(R.id.button8);
 
 
-        byn_start.setEnabled(false);
+
+        btn_videomodey.setVisibility(View.INVISIBLE);
+        byn_start.setVisibility(View.INVISIBLE);
+     //   byn_start.setEnabled(false);
+
+
+
+
+        new  CountDownTimer(1000000, 5000){
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                YoYo.with(Techniques.Tada)
+                .playOn(findViewById(R.id.linearLayout2));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+        }.start();
+
+
+
+
 
 
         button6.setOnClickListener(new View.OnClickListener() {
@@ -163,9 +207,42 @@ public class MainActivity extends AppCompatActivity {
         });
         btn_videomodey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                Intent intent = new Intent(MainActivity.this, nagrada_za_reklamu.class);
-                intent.putExtra("type_nagr", 1);
-                startActivity(intent);
+
+
+
+
+
+
+                if (rewardedAd.isLoaded()) {
+                    Activity activityContext = MainActivity.this;
+                    RewardedAdCallback adCallback = new RewardedAdCallback() {
+                        public void onRewardedAdOpened() {
+                            // Ad opened.
+                        }
+
+                        public void onRewardedAdClosed() {
+                            // Ad closed.
+
+                        }
+
+                        public void onUserEarnedReward(@NonNull RewardItem reward) {
+                            // User earned reward.
+                            mDb.execSQL("UPDATE `records` SET money=money+" + reward.getAmount());
+
+                            Toast.makeText(MainActivity.this, "Вам начислено " +
+                                    reward.getAmount() + " " + reward.getType(), Toast.LENGTH_LONG).show();
+                        }
+
+                        public void onRewardedAdFailedToShow(int errorCode) {
+                            // Ad failed to display
+                        }
+                    };
+                    rewardedAd.show(activityContext, adCallback);
+                } else {
+                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+                }
+
+
             }
         });
 
@@ -181,14 +258,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        textView9.setOnClickListener(new View.OnClickListener() {
+        linearLayout2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                    showLeaderboard();
-            }
-        });
-        imageView3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                showLeaderboard();
             }
         });
 
@@ -205,6 +277,38 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
         }
+
+
+
+
+
+
+        rewardedAd = new RewardedAd(this,
+                getString(R.string.voznagr_rekl_100m));
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+
+
+                btn_videomodey.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.BounceInLeft).playOn(btn_videomodey);
+
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(int errorCode) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
+
+
+
+
+
     }
 
 
@@ -438,7 +542,8 @@ try {
         @Override
         protected void onPostExecute(String content) {
 
-            byn_start.setEnabled(true);
+            byn_start.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.FlipInX).playOn(byn_start);
         }
 
 

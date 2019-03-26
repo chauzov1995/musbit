@@ -39,7 +39,7 @@
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
@@ -64,23 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.7" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginBottom="24dp"
-        android:layout_weight="1"
-        android:fontFamily="@font/sfprodisplay_semibold"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="4305"
-        android:textColor="#fff"
-        android:textSize="45sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_videomodey"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/btn_videomodey"
@@ -163,16 +146,6 @@
         app:layout_constraintStart_toStartOf="@+id/byn_start2" />
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="38dp"
-        android:layout_height="34dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView9"
-        app:layout_constraintEnd_toStartOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="@+id/textView9"
-        app:srcCompat="@drawable/trophy_design" />
-
-    <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -184,5 +157,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_design" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/btn_videomodey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="38dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/trophy_design"
+            tools:layout_editor_absoluteX="127dp"
+            tools:layout_editor_absoluteY="238dp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sfprodisplay_semibold"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="4305"
+            android:textColor="#fff"
+            android:textSize="45sp"
+            tools:layout_editor_absoluteX="173dp"
+            tools:layout_editor_absoluteY="224dp" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
