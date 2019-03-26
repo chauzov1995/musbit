@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
@@ -55,7 +64,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PurchasesUpdatedListener {
     private static final int RC_SIGN_IN = 55;
     MainActivity tekactiviti;
     private DatabaseHelper mDBHelper;
@@ -70,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textView10;
     private RewardedAd rewardedAd;
    LinearLayout linearLayout2;
+    private BillingClient billingClient;
+    private SkuDetails neogr_energ;
 
 
     @Override
@@ -143,10 +154,74 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+        billingClient = BillingClient.newBuilder(this).setListener(this).build();
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
+                if (billingResponseCode == BillingClient.BillingResponse.OK) {
+                    // The billing client is ready. You can query purchases here.
+
+                    List<String> skuList = new ArrayList<> ();
+                    skuList.add("neogr_energ");
+
+                    SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                    params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+                    billingClient.querySkuDetailsAsync(params.build(),
+                            new SkuDetailsResponseListener() {
+                                @Override
+                                public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                                    // Process the result.
+
+                                    if (responseCode == BillingClient.BillingResponse.OK
+                                            && skuDetailsList != null) {
+                                        for (SkuDetails skuDetails : skuDetailsList) {
+                                            String sku = skuDetails.getSku();
+                                            String price = skuDetails.getPrice();
+                                            if ("neogr_energ".equals(sku)) {
+                                                //neogr_energ=skuDetails;
+                                                Log.d("ценааааа",""+ price);
+
+                                                // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+                                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                                        .setSkuDetails(skuDetails)
+                                                        .build();
+                                                int responseCode = billingClient.launchBillingFlow(flowParams);
+
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                }
+            }
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        });
+
+
+
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 //инста
-                openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
+             //   openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
+
+
+
+
+
+
+// create new Person
+
+
+// Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+
+
+
+
             }
         });
         button7.setOnClickListener(new View.OnClickListener() {
@@ -314,6 +389,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
     private static final int RC_LEADERBOARD_UI = 9004;
 
     private void showLeaderboard() {
@@ -437,7 +514,19 @@ try {
         btn_money.setText("Монеты " + money + "");
     }
 
-
+    @Override
+    public void onPurchasesUpdated(@BillingClient.BillingResponse int responseCode, List<Purchase> purchases) {
+        if (responseCode == BillingClient.BillingResponse.OK
+                && purchases != null) {
+            for (Purchase purchase : purchases) {
+             //   handlePurchase(purchase);
+            }
+        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
+        }
+    }
 
 
     private class load_spis_valut extends AsyncTask<String, Void, String> {
