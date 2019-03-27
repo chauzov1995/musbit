@@ -138,7 +138,7 @@
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_weight="1"
         android:background="@drawable/insta_design"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/button7"
         app:layout_constraintEnd_toStartOf="@+id/button7"
         app:layout_constraintStart_toStartOf="@+id/byn_start2" />

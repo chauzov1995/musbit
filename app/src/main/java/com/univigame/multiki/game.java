@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,6 +30,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.games.Games;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -78,6 +83,7 @@ public class game extends AppCompatActivity {
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
     private AdView mAdView;
+    private RewardedAd rewardedAd;
     LinearLayout LL_money;
 
     boolean first_gameover = false;
@@ -119,6 +125,24 @@ public class game extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+
+
+        rewardedAd = new RewardedAd(this,
+                getString(R.string.vozn_game_over));
+
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(int errorCode) {
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -337,6 +361,7 @@ public class game extends AppCompatActivity {
 //оставим для первого старта
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
+        button3.setVisibility(View.VISIBLE);
 
 
         btn_visualization_otv(varianti1);
@@ -464,6 +489,7 @@ public class game extends AppCompatActivity {
         first_video = false;
         prav2 = false;
         get_money();//обновим  монеты
+        button3.setVisibility(View.VISIBLE);
         body.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.INVISIBLE);
 
@@ -584,6 +610,7 @@ public class game extends AppCompatActivity {
 
             }else{
                 YoYo.with(Techniques.Shake).playOn(selectedotv);
+                button3.setVisibility(View.INVISIBLE);
             }
 
 
@@ -605,7 +632,7 @@ public class game extends AppCompatActivity {
 
             }else{
                 YoYo.with(Techniques.Shake).playOn(selectedotv);
-
+                button3.setVisibility(View.INVISIBLE);
 
             }
 
@@ -889,6 +916,46 @@ public class game extends AppCompatActivity {
     }
 
     public void game_over() {
+
+
+
+        if (rewardedAd.isLoaded()) {
+           // Activity activityContext = ...;
+            RewardedAdCallback adCallback = new RewardedAdCallback() {
+                public void onRewardedAdOpened() {
+                    // Ad opened.
+                }
+
+                public void onRewardedAdClosed() {
+                    // Ad closed.
+
+                    game_over2();
+                }
+
+                public void onUserEarnedReward(@NonNull RewardItem reward) {
+                    // User earned reward.
+
+                }
+
+                public void onRewardedAdFailedToShow(int errorCode) {
+                    // Ad failed to display
+                    game_over2();
+                }
+            };
+            rewardedAd.show(game.this, adCallback);
+        } else {
+            Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+            game_over2();
+        }
+
+
+
+
+
+    }
+
+    void game_over2(){
+
         onBackPressed();
         Intent intent = new Intent(tekactiviti, game_over.class);
         intent.putExtra("gameover_money", gameover_money);

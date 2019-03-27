@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
    LinearLayout linearLayout2;
     private BillingClient billingClient;
     private SkuDetails neogr_energ;
+    SkuDetails  skuDetails123;
 
 
     @Override
@@ -176,17 +178,15 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                     if (responseCode == BillingClient.BillingResponse.OK
                                             && skuDetailsList != null) {
                                         for (SkuDetails skuDetails : skuDetailsList) {
+
+                                              skuDetails123=skuDetails;
                                             String sku = skuDetails.getSku();
                                             String price = skuDetails.getPrice();
                                             if ("neogr_energ".equals(sku)) {
-                                                //neogr_energ=skuDetails;
-                                                Log.d("ценааааа",""+ price);
+                                              String  premiumUpgradePrice = price;
 
-                                                // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
-                                                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                                        .setSkuDetails(skuDetails)
-                                                        .build();
-                                                int responseCode = billingClient.launchBillingFlow(flowParams);
+
+
 
                                             }
                                         }
@@ -203,6 +203,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         });
 
 
+  //      Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
+  // Log.d("json",     purchasesResult.getPurchasesList().size()+"");
+
 
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -212,13 +215,11 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
 
-
-
-// create new Person
-
-
 // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
-
+                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                        .setSkuDetails(skuDetails123)
+                        .build();
+                int responseCode = billingClient.launchBillingFlow(MainActivity.this,flowParams);
 
 
 

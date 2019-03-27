@@ -11,10 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.ads.AdView;
 
 
 public class game_over extends AppCompatActivity {
@@ -27,7 +24,8 @@ public class game_over extends AppCompatActivity {
     Intent intent;
     int gameover_schore;
     private final String TAG = game_over.class.getSimpleName();
-    private RewardedVideoAd mRewardedVideoAd;
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,55 +48,17 @@ public class game_over extends AppCompatActivity {
         total_score = (TextView) findViewById(R.id.total_score);
 
 
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+
         total_score.setText(gameover_schore + "");
         tvplmoney.setText("+ " + gameover_money);
 
 
-        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-        mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-            @Override
-            public void onRewardedVideoAdLoaded() {
-                if (mRewardedVideoAd.isLoaded()) {
-                    mRewardedVideoAd.show();
-                }
-            }
 
-            @Override
-            public void onRewardedVideoAdOpened() {
-
-            }
-
-            @Override
-            public void onRewardedVideoStarted() {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdClosed() {
-
-            }
-
-            @Override
-            public void onRewarded(RewardItem rewardItem) {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdLeftApplication() {
-
-            }
-
-            @Override
-            public void onRewardedVideoAdFailedToLoad(int i) {
-
-            }
-
-            @Override
-            public void onRewardedVideoCompleted() {
-
-            }
-        });
-        loadRewardedVideoAd();
 
 
         btn_vmenu.setOnClickListener(new View.OnClickListener() {
@@ -171,9 +131,6 @@ public class game_over extends AppCompatActivity {
 
 
     }
-    private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd(getString(R.string.vozn_game_over),
-                new AdRequest.Builder().build());
-    }
+
 
 }

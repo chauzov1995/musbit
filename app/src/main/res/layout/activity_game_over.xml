@@ -33,15 +33,15 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/sfprodisplay_semibold"
         android:gravity="center"
         android:text="Игра окончена"
         android:textColor="#fff"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvplmoney"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,13 +51,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="46dp"
-        android:layout_marginTop="32dp"
         android:layout_weight="2"
         android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="0"
         android:textColor="#fff"
         android:textSize="60sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvplmoney" />
@@ -66,13 +66,13 @@
         android:id="@+id/tvplmoney"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:layout_weight="1"
         android:fontFamily="@font/sfprodisplay_regular"
         android:gravity="center"
         android:text="+10"
         android:textColor="#fff"
         android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/total_score"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -104,11 +104,11 @@
         android:id="@+id/btn_share"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:layout_marginBottom="65dp"
         android:background="@drawable/share_design"
         app:layout_constraintBottom_toTopOf="@+id/btn_restart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_score" />
 
     <Button
         android:id="@+id/btn_restart"
@@ -128,11 +128,23 @@
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_vmenu"
-        app:layout_constraintTop_toBottomOf="@+id/tvplmoney"
-        app:layout_constraintVertical_bias="0.64" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_share" />
+
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="MEDIUM_RECTANGLE"
+        ads:adUnitId="@string/banner_gameover"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
