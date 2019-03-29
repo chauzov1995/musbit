@@ -133,12 +133,11 @@
 
     <Button
         android:id="@+id/button6"
-        android:layout_width="30dp"
-        android:layout_height="31dp"
+        android:layout_width="51dp"
+        android:layout_height="42dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_weight="1"
-        android:background="@drawable/insta_design"
-        android:visibility="invisible"
+        android:background="@drawable/unlim_ener_design"
         app:layout_constraintBaseline_toBaselineOf="@+id/button7"
         app:layout_constraintEnd_toStartOf="@+id/button7"
         app:layout_constraintStart_toStartOf="@+id/byn_start2" />

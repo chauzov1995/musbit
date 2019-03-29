@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import static com.univigame.multiki.MainActivity.unlim_energy_bool;
+
 
 public class game_over extends AppCompatActivity {
 
@@ -95,7 +97,7 @@ public class game_over extends AppCompatActivity {
                     tek_energy = 11 - ((energy - unixTime) / 600);
 
 
-                if (tek_energy > 0) {
+                if (tek_energy > 0 || unlim_energy_bool) {
 
                     if (energy >= unixTime)
                         mDb.execSQL("UPDATE `records` SET energy=energy+" + 600);

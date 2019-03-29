@@ -30,6 +30,7 @@ import com.android.billingclient.api.BillingClientStateListener;
 
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -77,12 +78,14 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseAuth mAuth;
     long energi_do12 = 0;
-    TextView textView10;
+
     private RewardedAd rewardedAd;
-   LinearLayout linearLayout2;
+    LinearLayout linearLayout2;
     private BillingClient billingClient;
     private SkuDetails neogr_energ;
-    SkuDetails  skuDetails123;
+    SkuDetails unlim_energy;
+
+    public static boolean unlim_energy_bool = true;
 
 
     @Override
@@ -98,14 +101,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         Bundle bundle = new Bundle();
 
 
-
-
-
-
-
-
-
- //       Log.d("bynthytn", isOnline()+"");
+        //       Log.d("bynthytn", isOnline()+"");
 
 
         bundle.putString("max_ad_content_rating", "G");
@@ -121,27 +117,24 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         btn_videomodey = (Button) findViewById(R.id.btn_videomodey);
         textView9 = (TextView) findViewById(R.id.textView9);
         ImageView imageView3 = (ImageView) findViewById(R.id.imageView3);
-         textView10 = (TextView) findViewById(R.id.textView9);
+
 
         Button button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
         Button button8 = (Button) findViewById(R.id.button8);
 
 
-
         btn_videomodey.setVisibility(View.INVISIBLE);
         byn_start.setVisibility(View.INVISIBLE);
-     //   byn_start.setEnabled(false);
+        //   byn_start.setEnabled(false);
 
 
-
-
-        new  CountDownTimer(1000000, 5000){
+        new CountDownTimer(1000000, 5000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
                 YoYo.with(Techniques.Tada)
-                .playOn(findViewById(R.id.linearLayout2));
+                        .playOn(findViewById(R.id.linearLayout2));
             }
 
             @Override
@@ -152,11 +145,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         }.start();
 
 
-
-
-
-
-
         billingClient = BillingClient.newBuilder(this).setListener(this).build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -164,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 if (billingResponseCode == BillingClient.BillingResponse.OK) {
                     // The billing client is ready. You can query purchases here.
 
-                    List<String> skuList = new ArrayList<> ();
-                    skuList.add("neogr_energ");
+                    List<String> skuList = new ArrayList<>();
+                    skuList.add("unlim_energy_test1");
 
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
@@ -179,22 +167,23 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                             && skuDetailsList != null) {
                                         for (SkuDetails skuDetails : skuDetailsList) {
 
-                                              skuDetails123=skuDetails;
+
                                             String sku = skuDetails.getSku();
                                             String price = skuDetails.getPrice();
-                                            if ("neogr_energ".equals(sku)) {
-                                              String  premiumUpgradePrice = price;
+                                            if ("unlim_energy_test1".equals(sku)) {
 
-
-
+                                                unlim_energy = skuDetails;
+                                                update_purshase();
 
                                             }
+                                            Log.d("price", price);
                                         }
                                     }
                                 }
                             });
                 }
             }
+
             @Override
             public void onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
@@ -203,24 +192,21 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         });
 
 
-  //      Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
-  // Log.d("json",     purchasesResult.getPurchasesList().size()+"");
+        //    Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
+        // Log.d("json",     purchasesResult.getPurchasesList().size()+"");
 
 
         button6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
                 //инста
-             //   openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
-
-
+                //   openLink(MainActivity.this, "https://www.instagram.com/musbitgame/");
 
 
 // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
                 BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                        .setSkuDetails(skuDetails123)
+                        .setSkuDetails(unlim_energy)
                         .build();
-                int responseCode = billingClient.launchBillingFlow(MainActivity.this,flowParams);
-
+                int responseCode = billingClient.launchBillingFlow(MainActivity.this, flowParams);
 
 
             }
@@ -245,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 tek_energy();
 
 
-                if (tek_energy > 0) {
+                if (tek_energy > 0 || unlim_energy_bool) {
 
 //вычтем энергию за игру
                     Cursor cursor = mDb.rawQuery("SELECT energy FROM records ", null);
@@ -271,8 +257,10 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         });
         btn_energ.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                CustomDialog_energy customDialog1 = new CustomDialog_energy(tekactiviti, tek_energy);
-                customDialog1.show();
+                if (unlim_energy_bool == false) {
+                    CustomDialog_energy customDialog1 = new CustomDialog_energy(tekactiviti, tek_energy);
+                    customDialog1.show();
+                }
             }
         });
         btn_money.setOnClickListener(new View.OnClickListener() {
@@ -283,10 +271,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         });
         btn_videomodey.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-
-
-
-
 
 
                 if (rewardedAd.isLoaded()) {
@@ -336,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         linearLayout2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
-                   showLeaderboard();
+                showLeaderboard();
             }
         });
 
@@ -347,16 +331,13 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         new load_spis_valut().execute();
         ;//загрузим песни с сайта
 
-
+/*
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
 
         }
-
-
-
-
+*/
 
 
         rewardedAd = new RewardedAd(this,
@@ -381,15 +362,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
 
-
-
-
-
     }
-
-
-
-
 
 
     private static final int RC_LEADERBOARD_UI = 9004;
@@ -397,25 +370,26 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private void showLeaderboard() {
 
 
-     if(   signedInAccount==null){
-         startSignInIntent();
-     }
+        if (signedInAccount == null) {
+            startSignInIntent();
+        }
 
 
-
-try {
-    Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-            .getLeaderboardIntent(getString(R.string.leaderboard))
-            .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                @Override
-                public void onSuccess(Intent intent) {
-                    startActivityForResult(intent, RC_LEADERBOARD_UI);
-                }
-            });
-}catch (Exception e){}
-}
+        try {
+            Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                    .getLeaderboardIntent(getString(R.string.leaderboard))
+                    .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                        @Override
+                        public void onSuccess(Intent intent) {
+                            startActivityForResult(intent, RC_LEADERBOARD_UI);
+                        }
+                    });
+        } catch (Exception e) {
+        }
+    }
 
     GoogleSignInAccount signedInAccount;
+
     //тихий вход
     private void signInSilently() {
         GoogleSignInOptions signInOptions = GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN;
@@ -423,7 +397,7 @@ try {
         if (GoogleSignIn.hasPermissions(account, signInOptions.getScopeArray())) {
             // Already signed in.
             // The signed in account is stored in the 'account' variable.
-             signedInAccount = account;
+            signedInAccount = account;
         } else {
             // Haven't been signed-in before. Try the silent sign-in first.
             GoogleSignInClient signInClient = GoogleSignIn.getClient(this, signInOptions);
@@ -477,7 +451,6 @@ try {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -489,9 +462,49 @@ try {
         signInSilently();
 
 
+        //  Log.d("yiem", purchasesResult.getPurchasesList() + "");
+
     }
 
-    void tek_energy(){
+
+    void update_purshase() {
+
+
+        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP,
+                new PurchaseHistoryResponseListener() {
+                    @Override
+                    public void onPurchaseHistoryResponse(@BillingClient.BillingResponse int responseCode,
+                                                          List<Purchase> purchasesList) {
+
+                        if (responseCode == BillingClient.BillingResponse.OK
+                                && purchasesList != null) {
+
+
+                            for (Purchase purchase : purchasesList) {
+                                // Process the result.
+
+
+                                if (purchase.getSku().equals("unlim_energy_test1")) {
+
+                                    mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1" );
+                                    tek_energy();
+                                }
+
+
+                            }
+
+
+
+
+                        }
+                    }
+                });
+
+
+    }
+
+
+    void tek_energy() {
 
 
         Cursor cursor = mDb.rawQuery("SELECT * FROM records ", null);
@@ -500,8 +513,15 @@ try {
 
         int energy = (cursor.getInt(cursor.getColumnIndex("energy")));
         int score = (cursor.getInt(cursor.getColumnIndex("score")));
+        int magazin_unlim_energy = (cursor.getInt(cursor.getColumnIndex("magazin_unlim_energy")));
         money = (cursor.getInt(cursor.getColumnIndex("money")));
         long unixTime = System.currentTimeMillis() / 1000L;
+
+        if (magazin_unlim_energy == 1) {
+            unlim_energy_bool = true;
+        } else {
+            unlim_energy_bool = false;
+        }
 
 
         if (unixTime >= energy)
@@ -510,8 +530,12 @@ try {
             tek_energy = 11 - ((energy - unixTime) / 600);
         energi_do12 = energy - unixTime;
 
-        textView10.setText(score + "");
-        btn_energ.setText("Энергия " + tek_energy + " / 12");
+        textView9.setText(score + "");
+        if (unlim_energy_bool) {
+            btn_energ.setText("Энергия ∞ / 12");
+        } else {
+            btn_energ.setText("Энергия " + tek_energy + " / 12");
+        }
         btn_money.setText("Монеты " + money + "");
     }
 
@@ -520,7 +544,10 @@ try {
         if (responseCode == BillingClient.BillingResponse.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
-             //   handlePurchase(purchase);
+                //   handlePurchase(purchase);
+                if (purchase.getSku().equals("unlim_energy_test1")) {
+                    mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1");
+                }
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
             // Handle an error caused by a user cancelling the purchase flow.
@@ -612,9 +639,9 @@ try {
 
                 //при первом скачивании перемешать все песни
                 Cursor curss = mDb.rawQuery("SELECT * FROM musbit WHERE podtverjd = 1", null);
-                if(curss.getCount()<4) {
+                if (curss.getCount() < 4) {
                     Log.d("колличество меньше 4", curss.getCount() + "");
-                peremeshatb(mDb);
+                    peremeshatb(mDb);
                 }
                 curss.close();
 
@@ -639,22 +666,22 @@ try {
 
     }
 
-  public static void peremeshatb(SQLiteDatabase  mDb){
-      Log.d("peremeshatb", "перемешали");
+    public static void peremeshatb(SQLiteDatabase mDb) {
+        Log.d("peremeshatb", "перемешали");
 
-           mDb.execSQL("DELETE FROM `musbit1`");
+        mDb.execSQL("DELETE FROM `musbit1`");
 
-           mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                   " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
-                   " FROM musbit" +
-                   " ORDER BY RANDOM()");
+        mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                " FROM musbit" +
+                " ORDER BY RANDOM()");
 
-           mDb.execSQL("DELETE FROM `musbit`");
+        mDb.execSQL("DELETE FROM `musbit`");
 
-           mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                   " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
-                   " FROM musbit1" +
-                   " ORDER BY RANDOM()");
+        mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+                " FROM musbit1" +
+                " ORDER BY RANDOM()");
 
     }
 
