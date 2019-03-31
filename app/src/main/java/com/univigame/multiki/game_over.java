@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import static com.univigame.multiki.MainActivity.noads_bool;
 import static com.univigame.multiki.MainActivity.unlim_energy_bool;
 
 
@@ -50,11 +51,11 @@ public class game_over extends AppCompatActivity {
         total_score = (TextView) findViewById(R.id.total_score);
 
 
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
+        if(noads_bool==false) {
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
         total_score.setText(gameover_schore + "");
         tvplmoney.setText("+ " + gameover_money);

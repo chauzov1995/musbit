@@ -84,9 +84,11 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private BillingClient billingClient;
     private SkuDetails neogr_energ;
     SkuDetails unlim_energy;
+    SkuDetails noads_sky;
 
-    public static boolean unlim_energy_bool = true;
-
+    public static boolean unlim_energy_bool = false;
+    public static boolean noads_bool = false;
+    Button button6,  button8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +121,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         ImageView imageView3 = (ImageView) findViewById(R.id.imageView3);
 
 
-        Button button6 = (Button) findViewById(R.id.button6);
+         button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
-        Button button8 = (Button) findViewById(R.id.button8);
+         button8 = (Button) findViewById(R.id.button8);
 
 
         btn_videomodey.setVisibility(View.INVISIBLE);
@@ -154,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
                     List<String> skuList = new ArrayList<>();
                     skuList.add("unlim_energy_test1");
+                    skuList.add("noads");
 
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
@@ -176,6 +179,14 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                                 update_purshase();
 
                                             }
+                                            if ("noads".equals(sku)) {
+
+                                                noads_sky = skuDetails;
+                                                update_purshase();
+
+                                            }
+
+
                                             Log.d("price", price);
                                         }
                                     }
@@ -219,8 +230,15 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         });
         button8.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
+
+                BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                        .setSkuDetails(noads_sky)
+                        .build();
+                int responseCode = billingClient.launchBillingFlow(MainActivity.this, flowParams);
+
+
                 //facebook
-                openLink(MainActivity.this, "https://www.facebook.com/MusBit-угадай-музыку-по-биту-1116667585187816");
+               // openLink(MainActivity.this, "https://www.facebook.com/MusBit-угадай-музыку-по-биту-1116667585187816");
             }
         });
 
@@ -489,6 +507,11 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                     mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1" );
                                     tek_energy();
                                 }
+                                if (purchase.getSku().equals("noads")) {
+
+                                    mDb.execSQL("UPDATE `records` SET magazin_noads=1" );
+                                    tek_energy();
+                                }
 
 
                             }
@@ -514,14 +537,23 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         int energy = (cursor.getInt(cursor.getColumnIndex("energy")));
         int score = (cursor.getInt(cursor.getColumnIndex("score")));
         int magazin_unlim_energy = (cursor.getInt(cursor.getColumnIndex("magazin_unlim_energy")));
+        int magazin_noads = (cursor.getInt(cursor.getColumnIndex("magazin_noads")));
         money = (cursor.getInt(cursor.getColumnIndex("money")));
         long unixTime = System.currentTimeMillis() / 1000L;
 
         if (magazin_unlim_energy == 1) {
             unlim_energy_bool = true;
+            button6.setVisibility(View.INVISIBLE);
         } else {
             unlim_energy_bool = false;
         }
+        if (magazin_noads == 1) {
+            noads_bool = true;
+            button8.setVisibility(View.INVISIBLE);
+        } else {
+            noads_bool = false;
+        }
+
 
 
         if (unixTime >= energy)
@@ -547,6 +579,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 //   handlePurchase(purchase);
                 if (purchase.getSku().equals("unlim_energy_test1")) {
                     mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1");
+                }
+                if (purchase.getSku().equals("noads")) {
+                    mDb.execSQL("UPDATE `records` SET magazin_noads=1");
                 }
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {

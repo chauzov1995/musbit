@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.univigame.multiki.MainActivity.noads_bool;
 import static com.univigame.multiki.MainActivity.peremeshatb;
 
 
@@ -99,9 +100,7 @@ public class game extends AppCompatActivity {
         extras.putString("max_ad_content_rating", "G");
 
 
-        //всплывающяя реклама
-        mejstranrekl_first();
-        //всплывающяя реклама
+
 
 
         LL_money = (LinearLayout) findViewById(R.id.LL_money);
@@ -122,11 +121,19 @@ public class game extends AppCompatActivity {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
 
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+
+        if(noads_bool==false) {
+
+            //всплывающяя реклама
+            mejstranrekl_first();
+            //всплывающяя реклама
 
 
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+
+        }
 
         rewardedAd = new RewardedAd(this,
                 getString(R.string.vozn_game_over));
@@ -181,6 +188,7 @@ public class game extends AppCompatActivity {
 
 
                     //межстраничная реклма
+
                     mejstranrekl();
                     //межстраничная реклма
 
@@ -855,6 +863,7 @@ public class game extends AppCompatActivity {
 
     void mejstranrekl() {
 
+        if(noads_bool==true) return;
 
         rekl_n_otv++;
         if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
@@ -878,6 +887,9 @@ public class game extends AppCompatActivity {
     }
 
     void mejstranrekl_first() {
+
+
+
         mInterstitialAd = new InterstitialAd(game.this);
         mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -919,7 +931,7 @@ public class game extends AppCompatActivity {
 
 
 
-        if (rewardedAd.isLoaded()) {
+        if (rewardedAd.isLoaded() && noads_bool==false) {
            // Activity activityContext = ...;
             RewardedAdCallback adCallback = new RewardedAdCallback() {
                 public void onRewardedAdOpened() {

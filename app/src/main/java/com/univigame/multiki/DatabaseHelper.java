@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public DatabaseHelper(Context context) {
         // конструктор суперкласса
@@ -33,8 +33,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `score` int NOT NULL DEFAULT '0',\n" +
                 "  `money` int NOT NULL DEFAULT '0',\n" +
                 "  `level` int NOT NULL DEFAULT '0',\n" +
-                "  `magazin_unlim_energy` int NOT NULL DEFAULT 0\n" +
-
+                "  `magazin_unlim_energy` int NOT NULL DEFAULT 0,\n" +
+                "  `magazin_noads` int NOT NULL DEFAULT 0\n" +
 
                 ");"
 
@@ -91,6 +91,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 );
             case  2:
                 db.execSQL("ALTER TABLE records ADD COLUMN `magazin_unlim_energy` int NOT NULL DEFAULT 0");
+            case  3:
+                db.execSQL("ALTER TABLE records ADD COLUMN `magazin_noads` int NOT NULL DEFAULT 0");
         }
     }
 }
