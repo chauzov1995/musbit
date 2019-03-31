@@ -287,7 +287,7 @@ public class game extends AppCompatActivity {
 
     void load_spus_vsego() {
         spisokvsego = new ArrayList<class_spis_vsego>();
-        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1 Order by id asc", null);
+        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1 Order by sort asc", null);
         if (c.moveToFirst()) {
             int id = c.getColumnIndex("id");
             int nazv = c.getColumnIndex("name");

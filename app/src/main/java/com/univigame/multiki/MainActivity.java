@@ -661,8 +661,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                         Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
                                 " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
 
-                        mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
-                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
+                        mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort)" +
+                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999)");
                     }
                 }
 
@@ -712,6 +712,30 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 " ORDER BY RANDOM()");
 
         mDb.execSQL("DELETE FROM `musbit`");
+
+
+        Cursor c = mDb.rawQuery("SELECT * FROM musbit1", null);
+        if (c.moveToFirst()) {
+            int id = c.getColumnIndex("id");
+            int name = c.getColumnIndex("name");
+            int ispoln = c.getColumnIndex("ispoln");
+            int applemusikurl = c.getColumnIndex("applemusikurl");
+            int url = c.getColumnIndex("url");
+         //   int sort = c.getColumnIndex("sort");
+            int podtverjd = c.getColumnIndex("podtverjd");
+
+int sort=0;
+            do {
+              //  spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
+                mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                        " VALUES ('"+c.getString(id)+"', '"+c.getString(name)+"', '"+c.getString(ispoln)+"'," +
+                        " '"+c.getString(applemusikurl)+"', '"+c.getString(url)+"', '"+sort+"', '"+c.getString(podtverjd)+"')");
+
+                sort++;
+            } while (c.moveToNext());
+        }
+        c.close();
+
 
         mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
                 " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
