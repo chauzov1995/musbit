@@ -380,8 +380,14 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
 
-    }
 
+
+         customDialog1 = new dial_podgr_spis_pes(this);
+        customDialog1.show();
+
+
+    }
+    dial_podgr_spis_pes customDialog1;
 
     private static final int RC_LEADERBOARD_UI = 9004;
 
@@ -696,6 +702,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
             byn_start.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.FlipInX).playOn(byn_start);
+            customDialog1.destroy();
         }
 
 
