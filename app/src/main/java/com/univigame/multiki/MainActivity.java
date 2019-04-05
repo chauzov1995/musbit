@@ -55,6 +55,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.perf.metrics.AddTrace;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,9 +89,10 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
     public static boolean unlim_energy_bool = false;
     public static boolean noads_bool = false;
-    Button button6,  button8;
+    Button button6, button8;
 
     @Override
+    @AddTrace(name = "onCreateTrace", enabled = true /* optional */)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -121,9 +123,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         ImageView imageView3 = (ImageView) findViewById(R.id.imageView3);
 
 
-         button6 = (Button) findViewById(R.id.button6);
+        button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
-         button8 = (Button) findViewById(R.id.button8);
+        button8 = (Button) findViewById(R.id.button8);
 
 
         btn_videomodey.setVisibility(View.INVISIBLE);
@@ -238,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
                 //facebook
-               // openLink(MainActivity.this, "https://www.facebook.com/MusBit-угадай-музыку-по-биту-1116667585187816");
+                // openLink(MainActivity.this, "https://www.facebook.com/MusBit-угадай-музыку-по-биту-1116667585187816");
             }
         });
 
@@ -380,13 +382,12 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
 
-
-
-         customDialog1 = new dial_podgr_spis_pes(this);
+        customDialog1 = new dial_podgr_spis_pes(this);
         customDialog1.show();
 
 
     }
+
     dial_podgr_spis_pes customDialog1;
 
     private static final int RC_LEADERBOARD_UI = 9004;
@@ -510,19 +511,17 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
                                 if (purchase.getSku().equals("unlim_energy_test1")) {
 
-                                    mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1" );
+                                    mDb.execSQL("UPDATE `records` SET magazin_unlim_energy=1");
                                     tek_energy();
                                 }
                                 if (purchase.getSku().equals("noads")) {
 
-                                    mDb.execSQL("UPDATE `records` SET magazin_noads=1" );
+                                    mDb.execSQL("UPDATE `records` SET magazin_noads=1");
                                     tek_energy();
                                 }
 
 
                             }
-
-
 
 
                         }
@@ -559,7 +558,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         } else {
             noads_bool = false;
         }
-
 
 
         if (unixTime >= energy)
@@ -608,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 URL url = new URL("https://teplogico.ru/musbit");
                 HttpURLConnection c = (HttpURLConnection) url.openConnection();
                 c.setRequestMethod("GET");
-                c.setReadTimeout(10000);
+                c.setReadTimeout(20000);
                 c.connect();
 
                 reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -728,15 +726,15 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             int ispoln = c.getColumnIndex("ispoln");
             int applemusikurl = c.getColumnIndex("applemusikurl");
             int url = c.getColumnIndex("url");
-         //   int sort = c.getColumnIndex("sort");
+            //   int sort = c.getColumnIndex("sort");
             int podtverjd = c.getColumnIndex("podtverjd");
 
-int sort=0;
+            int sort = 0;
             do {
-              //  spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
+                //  spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
                 mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                        " VALUES ('"+c.getString(id)+"', '"+c.getString(name)+"', '"+c.getString(ispoln)+"'," +
-                        " '"+c.getString(applemusikurl)+"', '"+c.getString(url)+"', '"+sort+"', '"+c.getString(podtverjd)+"')");
+                        " VALUES ('" + c.getString(id) + "', '" + c.getString(name) + "', '" + c.getString(ispoln) + "'," +
+                        " '" + c.getString(applemusikurl) + "', '" + c.getString(url) + "', '" + sort + "', '" + c.getString(podtverjd) + "')");
 
                 sort++;
             } while (c.moveToNext());

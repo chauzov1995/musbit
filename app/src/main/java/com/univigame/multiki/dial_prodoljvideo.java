@@ -27,7 +27,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.util.List;
 
-public class dial_prodoljvideo implements RewardedVideoAdListener {
+public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListener {
 
     private Button perehod_btn;
     private Dialog dialog;
@@ -43,6 +43,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         this.musik = musik;
         init();
     }
+
 
 
     private void init() {
@@ -78,11 +79,7 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         ImageButton button4 = (ImageButton) dialog.findViewById( R.id.button4 );
         final TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
 
-        button4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View r) {
-                dialog.cancel();
-            }
-        });
+        button4.setOnClickListener(r -> dialog.cancel());
         timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
@@ -99,16 +96,14 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
         }.start();
 
 
-        perehod_btn.setOnClickListener(new OnClickListener() {
-            public void onClick(View r) {
-                timer1.cancel();
-                dialog.dismiss();
+        perehod_btn.setOnClickListener(r -> {
+            timer1.cancel();
+            dialog.dismiss();
 
 
-                loadetsd = true;
+            loadetsd = true;
 
 
-            }
         });
     }
 
@@ -177,5 +172,15 @@ public class dial_prodoljvideo implements RewardedVideoAdListener {
     @Override
     public void onRewardedVideoCompleted() {
 
+    }
+
+    @Override
+    public void cancel() {
+
+    }
+
+    @Override
+    public void dismiss() {
+        if (timer1 != null) timer1.cancel();
     }
 }
