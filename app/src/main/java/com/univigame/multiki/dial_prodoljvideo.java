@@ -79,7 +79,7 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
         ImageButton button4 = (ImageButton) dialog.findViewById( R.id.button4 );
         final TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
 
-        button4.setOnClickListener(r -> dialog.cancel());
+        button4.setOnClickListener(r -> dialog.dismiss());
         timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
@@ -90,7 +90,7 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-                dialog.cancel();
+                dialog.dismiss();
 
             }
         }.start();
@@ -146,7 +146,7 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
             activity.customDialog1 = new dial_perehod(activity, activity.money, musik);
             activity.customDialog1.show();
         } else {
-            dialog.cancel();
+            dialog.dismiss();
 
         }
     }
@@ -166,7 +166,7 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
-        dialog.cancel();
+        dialog.dismiss();
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public DatabaseHelper(Context context) {
         // конструктор суперкласса
@@ -47,7 +47,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
                 "  `url` varchar NOT NULL DEFAULT '',\n" +
                 "  `sort` int NOT NULL DEFAULT 0,\n" +
-                "  `podtverjd` int NOT NULL DEFAULT 0\n" +
+                "  `podtverjd` int NOT NULL DEFAULT 0,\n" +
+                "  `youtube_url` varchar NOT NULL DEFAULT ''\n" +
                 ");"
 
         );
@@ -59,7 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "  `applemusikurl` varchar NOT NULL DEFAULT '',\n" +
                 "  `url` varchar NOT NULL DEFAULT '',\n" +
                 "  `sort` int NOT NULL DEFAULT 0,\n" +
-                "  `podtverjd` int NOT NULL DEFAULT 0\n" +
+                "  `podtverjd` int NOT NULL DEFAULT 0,\n" +
+                "  `youtube_url` varchar NOT NULL DEFAULT ''\n" +
                 ");"
         );
 
@@ -93,6 +95,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE records ADD COLUMN `magazin_unlim_energy` int NOT NULL DEFAULT 0");
             case  3:
                 db.execSQL("ALTER TABLE records ADD COLUMN `magazin_noads` int NOT NULL DEFAULT 0");
+            case 4:
+                db.execSQL("ALTER TABLE musbit ADD COLUMN `youtube_url` varchar NOT NULL DEFAULT ''");
+                db.execSQL("ALTER TABLE musbit1 ADD COLUMN `youtube_url` varchar NOT NULL DEFAULT ''");
+
         }
     }
 }

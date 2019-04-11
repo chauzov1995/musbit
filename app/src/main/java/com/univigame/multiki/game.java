@@ -287,16 +287,18 @@ public class game extends AppCompatActivity {
 
     void load_spus_vsego() {
         spisokvsego = new ArrayList<class_spis_vsego>();
-        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln FROM musbit where podtverjd=1 Order by sort asc", null);
+        Cursor c = mDb.rawQuery("SELECT id, name, url, applemusikurl, ispoln, youtube_url FROM musbit where podtverjd=1 Order by sort asc", null);
         if (c.moveToFirst()) {
             int id = c.getColumnIndex("id");
             int nazv = c.getColumnIndex("name");
             int url = c.getColumnIndex("url");
             int ispoln = c.getColumnIndex("ispoln");
             int applemusikurl = c.getColumnIndex("applemusikurl");
+            int youtube_url = c.getColumnIndex("youtube_url");
+
 
             do {
-                spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
+                spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl), c.getString(youtube_url)));
             } while (c.moveToNext());
         }
         c.close();

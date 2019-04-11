@@ -57,6 +57,7 @@ public class dial_perehod {
         ((TextView) dialog.findViewById(R.id.textView10)).setText(musik.author);
         Button   button_apple = (Button) dialog.findViewById(R.id.button);
         Button   btn_share = (Button) dialog.findViewById(R.id.btn_share);
+        Button   button9 = (Button) dialog.findViewById(R.id.button9);
 
 
 
@@ -79,6 +80,17 @@ public class dial_perehod {
             public void onClick(View r) {
 
                 openLink(activity, musik.url_applemus);
+
+            }
+        });
+
+        button9.setOnClickListener(new OnClickListener() {
+            public void onClick(View r) {
+
+
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(musik.url_youtube));
+                activity.startActivity(intent);
 
             }
         });

@@ -45,15 +45,29 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="237dp"
+        android:layout_width="68dp"
 
         android:layout_height="68dp"
 
 
         android:layout_marginBottom="16dp"
-        android:background="@drawable/apple_mus"
+        android:background="@drawable/aple_design"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
+        app:layout_constraintEnd_toStartOf="@+id/button9"
         app:layout_constraintStart_toStartOf="@+id/perehod_btn" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="68dp"
+
+        android:layout_height="68dp"
+
+
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/youtube_design"
+        app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
+        app:layout_constraintEnd_toStartOf="@+id/btn_share"
+        app:layout_constraintStart_toEndOf="@+id/button" />
 
     <Button
         android:id="@+id/btn_share"
@@ -63,7 +77,8 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/share_design"
         app:layout_constraintBottom_toTopOf="@+id/perehod_btn"
-        app:layout_constraintEnd_toEndOf="@+id/perehod_btn" />
+        app:layout_constraintEnd_toEndOf="@+id/perehod_btn"
+        app:layout_constraintStart_toEndOf="@+id/button9" />
 
     <TextView
         android:id="@+id/textView6"

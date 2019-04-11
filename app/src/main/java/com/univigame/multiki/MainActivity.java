@@ -641,6 +641,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                     String imageurl = zakaz.getString("url");
                     String ispoln = zakaz.getString("author");
                     String applemusikurl = zakaz.getString("url_applemus");
+                    String youtube_url = zakaz.getString("youtube_url");
 
 
                     if (proverka.indexOf(id) != -1) {
@@ -656,7 +657,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                 " `name`='" + name + "'," +
                                 " `url`='" + imageurl + "'," +
                                 " ispoln='" + ispoln + "'," +
-                                " applemusikurl='" + applemusikurl + "'" +
+                                " applemusikurl='" + applemusikurl + "'," +
+                                " youtube_url='" + youtube_url + "'" +
                                 " WHERE id=" + id);
 
                         proverka.remove(proverka.indexOf(id));
@@ -665,8 +667,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                         Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl)" +
                                 " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' )");
 
-                        mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort)" +
-                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999)");
+                        mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort, youtube_url)" +
+                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999,'" + youtube_url + "')");
                     }
                 }
 
@@ -711,8 +713,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         mDb.execSQL("DELETE FROM `musbit1`");
 
-        mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+        mDb.execSQL("INSERT into musbit1 (id, name, ispoln, applemusikurl, youtube_url, url, sort, podtverjd )" +
+                " SELECT id, name, ispoln, applemusikurl, youtube_url, url, sort, 1" +
                 " FROM musbit" +
                 " ORDER BY RANDOM()");
 
@@ -725,6 +727,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             int name = c.getColumnIndex("name");
             int ispoln = c.getColumnIndex("ispoln");
             int applemusikurl = c.getColumnIndex("applemusikurl");
+            int youtube_url = c.getColumnIndex("youtube_url");
             int url = c.getColumnIndex("url");
             //   int sort = c.getColumnIndex("sort");
             int podtverjd = c.getColumnIndex("podtverjd");
@@ -732,9 +735,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             int sort = 0;
             do {
                 //  spisokvsego.add(new class_spis_vsego(c.getInt(id), c.getString(nazv), c.getString(url), c.getString(ispoln), c.getString(applemusikurl)));
-                mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
+                mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, youtube_url, url, sort, podtverjd )" +
                         " VALUES ('" + c.getString(id) + "', '" + c.getString(name) + "', '" + c.getString(ispoln) + "'," +
-                        " '" + c.getString(applemusikurl) + "', '" + c.getString(url) + "', '" + sort + "', '" + c.getString(podtverjd) + "')");
+                        " '" + c.getString(applemusikurl) + "', '"+ c.getString(youtube_url)+"', '" + c.getString(url) + "', '" + sort + "', '" + c.getString(podtverjd) + "')");
 
                 sort++;
             } while (c.moveToNext());
@@ -742,8 +745,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         c.close();
 
 
-        mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, url, sort, podtverjd )" +
-                " SELECT id, name, ispoln, applemusikurl, url, sort, 1" +
+        mDb.execSQL("INSERT into musbit (id, name, ispoln, applemusikurl, youtube_url, url, sort, podtverjd )" +
+                " SELECT id, name, ispoln, applemusikurl, youtube_url, url, sort, 1" +
                 " FROM musbit1" +
                 " ORDER BY RANDOM()");
 
