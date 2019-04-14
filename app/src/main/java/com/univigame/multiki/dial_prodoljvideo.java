@@ -1,33 +1,25 @@
 package com.univigame.multiki;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
-import java.util.List;
-
-public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListener {
+public class dial_prodoljvideo {
 
     private Button perehod_btn;
     private Dialog dialog;
@@ -35,7 +27,10 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
     int money;
     class_spis_vsego musik;
     CountDownTimer timer1;
-    private RewardedVideoAd mRewardedVideoAd;
+
+    boolean loadetsd = false;
+    boolean prosmotrel = false;
+
 
     public dial_prodoljvideo(game activity, int money, class_spis_vsego musik) {
         this.activity = activity;
@@ -45,7 +40,6 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
     }
 
 
-
     private void init() {
 
         dialog = new Dialog(activity, R.style.CustomDialog);
@@ -53,33 +47,70 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
         dialog.setContentView(R.layout.dial_prodoljvideo);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-
-
-        // Use an activity context to get the rewarded video instance.
-        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(activity);
-        mRewardedVideoAd.setRewardedVideoAdListener(dial_prodoljvideo.this);
-        loadRewardedVideoAd();
-
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                dialog.dismiss();
-                timer1.cancel();
-                activity.game_over();
-            }
-        });
-
-
+        dialog.setOnCancelListener(dialogInterface -> close_Ad_fail());
         dialog.getWindow().setLayout(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
         perehod_btn = (Button) dialog.findViewById(R.id.perehod_btn);
-        ImageButton button4 = (ImageButton) dialog.findViewById( R.id.button4 );
+        ImageButton button4 = (ImageButton) dialog.findViewById(R.id.button4);
         final TextView textView6 = (TextView) dialog.findViewById(R.id.textView6);
 
-        button4.setOnClickListener(r -> dialog.dismiss());
+        button4.setOnClickListener(r -> {
+                    close_Ad_fail();
+                }
+        );
+        perehod_btn.setOnClickListener(r -> {
+            if (timer1 != null) timer1.cancel();
+
+            RewardedAdCallback adCallback = new RewardedAdCallback() {
+                public void onRewardedAdOpened() {
+                    // Ad opened.
+                }
+
+                public void onRewardedAdClosed() {
+                    // Ad closed.
+                    if (prosmotrel)//единственный успешный вход
+                    {
+                        dialog.dismiss();
+                        activity.prodolj_dialog(musik);
+
+                        activity.rewardedAd = new RewardedAd(activity,
+                                activity.getString(R.string.vozn_game_over));
+
+                        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+                            @Override
+                            public void onRewardedAdLoaded() {
+                                // Ad successfully loaded.
+                            }
+
+                            @Override
+                            public void onRewardedAdFailedToLoad(int errorCode) {
+                                // Ad failed to load.
+                            }
+                        };
+                        activity.rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+                    } else {
+                        close_Ad_fail();
+                    }
+                }
+
+                public void onUserEarnedReward(@NonNull RewardItem reward) {
+                    // User earned reward.
+                    prosmotrel = true;
+                }
+
+                public void onRewardedAdFailedToShow(int errorCode) {
+                    // Ad failed to display
+                    close_Ad_fail();
+                }
+            };
+            activity.rewardedAd.show(activity, adCallback);
+
+
+        });
+
+
         timer1 = new CountDownTimer(10000, 1000) {
 
             //Здесь обновляем текст счетчика обратного отсчета с каждой секундой
@@ -90,97 +121,28 @@ public class dial_prodoljvideo implements DialogInterface, RewardedVideoAdListen
 
             //Задаем действия после завершения отсчета (высвечиваем надпись "Бабах!"):
             public void onFinish() {
-                dialog.dismiss();
+
+                close_Ad_fail();
 
             }
         }.start();
 
 
-        perehod_btn.setOnClickListener(r -> {
-            timer1.cancel();
-            dialog.dismiss();
-
-
-            loadetsd = true;
-
-
-        });
-    }
-
-    boolean loadetsd = false;
-    boolean prosmotrel = false;
-
-    private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd(activity.getString(R.string.voznagr_rekl_1zhisn),
-                new AdRequest.Builder().build());
     }
 
 
-    public void show() {
+    private void close_Ad_fail() {
+
+
+        if (timer1 != null) timer1.cancel();
+        dialog.dismiss();
+        activity.game_over();
+
+    }
+
+    void show() {
         dialog.show();
     }
 
 
-    @Override
-    public void onRewardedVideoAdLoaded() {
-
-        if (mRewardedVideoAd.isLoaded() && loadetsd) {
-            mRewardedVideoAd.show();
-        }
-
-    }
-
-    @Override
-    public void onRewardedVideoAdOpened() {
-
-    }
-
-    @Override
-    public void onRewardedVideoStarted() {
-
-    }
-
-    @Override
-    public void onRewardedVideoAdClosed() {
-        if (prosmotrel) {
-            activity.customDialog1 = new dial_perehod(activity, activity.money, musik);
-            activity.customDialog1.show();
-        } else {
-            dialog.dismiss();
-
-        }
-    }
-
-    @Override
-    public void onRewarded(RewardItem rewardItem) {
-
-        //  dialog.dismiss();
-
-        prosmotrel = true;
-    }
-
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int i) {
-        dialog.dismiss();
-    }
-
-    @Override
-    public void onRewardedVideoCompleted() {
-
-    }
-
-    @Override
-    public void cancel() {
-
-    }
-
-    @Override
-    public void dismiss() {
-        if (timer1 != null) timer1.cancel();
-    }
 }

@@ -49,7 +49,7 @@ import static com.univigame.multiki.MainActivity.peremeshatb;
 public class game extends AppCompatActivity {
 
     //настройки
-    int pokaz_rekl_kajd_n_otv = 4;
+    int pokaz_rekl_kajd_n_otv = 5;
     boolean first_video = false;//важно, для первого определения прав ответа
 
 
@@ -84,7 +84,7 @@ public class game extends AppCompatActivity {
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
     private AdView mAdView;
-    private RewardedAd rewardedAd;
+    public RewardedAd rewardedAd;
     LinearLayout LL_money;
 
     boolean first_gameover = false;
@@ -98,9 +98,6 @@ public class game extends AppCompatActivity {
 
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
-
-
-
 
 
         LL_money = (LinearLayout) findViewById(R.id.LL_money);
@@ -121,8 +118,7 @@ public class game extends AppCompatActivity {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
 
-
-        if(noads_bool==false) {
+        if (noads_bool == false) {
 
             //всплывающяя реклама
             mejstranrekl_first();
@@ -154,7 +150,7 @@ public class game extends AppCompatActivity {
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();  // deprecated
-        relativeLayout.getLayoutParams().height = (width * 720 / 1280)+1;
+        relativeLayout.getLayoutParams().height = (width * 720 / 1280) + 1;
 
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View r) {
@@ -181,29 +177,9 @@ public class game extends AppCompatActivity {
 
 
                 if (prav1) {
-
-
-                    customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
-                    customDialog1.show();
-
-
-                    //межстраничная реклма
-
-                    mejstranrekl();
-                    //межстраничная реклма
-
-
+                    prodolj_dialog(spisokvsego.get(level));
                 } else {
-
-
-                    if (first_gameover == false) {
-                        dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
-                        customDialog1.show();
-                        first_gameover = true;
-                    } else {
-
-                        game_over();
-                    }
+                    game_over();
                 }
 
 
@@ -226,30 +202,9 @@ public class game extends AppCompatActivity {
 
 
                 if (prav2) {
-
-
-                    dial_perehod customDialog1 = new dial_perehod(game.this, money, spisokvsego.get(level));
-                    customDialog1.show();
-
-
-                    //межстраничная реклма
-                    mejstranrekl();
-                    //межстраничная реклма
-
-
+                    prodolj_dialog(spisokvsego.get(level));
                 } else {
-
-                    if (first_gameover == false) {
-                        dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
-                        customDialog1.show();
-                        first_gameover = true;
-                    } else {
-
-                        game_over();
-                    }
-                    /*
-
-                     */
+                    game_over();
                 }
 
                 if (level + 1 == lengtht) {
@@ -303,7 +258,7 @@ public class game extends AppCompatActivity {
         }
         c.close();
 
-Log.d("spisokvsego count",spisokvsego.size()+"");
+        Log.d("spisokvsego count", spisokvsego.size() + "");
     }
 
 
@@ -618,15 +573,15 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
                 YoYo.with(Techniques.Swing).playOn(textView);
                 YoYo.with(Techniques.Swing).playOn(LL_money);
 
-            }else{
+            } else {
                 YoYo.with(Techniques.Shake).playOn(selectedotv);
                 button3.setVisibility(View.INVISIBLE);
             }
 
 
-        //    videoView.pause();
+            //    videoView.pause();
             videoView.seekTo(10000);
-         //   videoView.start();
+            //   videoView.start();
             timer1.cancel();
             timer1.onFinish();
 
@@ -640,19 +595,17 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
                 YoYo.with(Techniques.Swing).playOn(textView);
                 YoYo.with(Techniques.Swing).playOn(LL_money);
 
-            }else{
+            } else {
                 YoYo.with(Techniques.Shake).playOn(selectedotv);
                 button3.setVisibility(View.INVISIBLE);
 
             }
 
 
-
-
             // videoView.SEE
-         //   videoView2.pause();
+            //   videoView2.pause();
             videoView2.seekTo(10000);
-         //   videoView2.start();
+            //   videoView2.start();
             timer1.cancel();
             timer1.onFinish();
 
@@ -865,7 +818,7 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
 
     void mejstranrekl() {
 
-        if(noads_bool==true) return;
+        if (noads_bool == true) return;
 
         rekl_n_otv++;
         if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
@@ -891,7 +844,6 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
     void mejstranrekl_first() {
 
 
-
         mInterstitialAd = new InterstitialAd(game.this);
         mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -904,8 +856,8 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // Code to be executed when an ad request fails.
-                if(customDialog1!=null)
-                customDialog1.setbutton_enabled(true);
+                if (customDialog1 != null)
+                    customDialog1.setbutton_enabled(true);
             }
 
             @Override
@@ -922,8 +874,8 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
             @Override
             public void onAdClosed() {
                 // Code to be executed when the interstitial ad is closed.
-                if(customDialog1!=null)
-                customDialog1.setbutton_enabled(true);
+                if (customDialog1 != null)
+                    customDialog1.setbutton_enabled(true);
             }
         });
 
@@ -932,49 +884,72 @@ Log.d("spisokvsego count",spisokvsego.size()+"");
     public void game_over() {
 
 
+        if (!first_gameover) {
+            first_gameover = true;
+            if (rewardedAd.isLoaded()) {
+                dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
+                customDialog1.show();
+            } else {
+                game_over();
+            }
 
-        if (rewardedAd.isLoaded() && noads_bool==false) {
-           // Activity activityContext = ...;
-            RewardedAdCallback adCallback = new RewardedAdCallback() {
-                public void onRewardedAdOpened() {
-                    // Ad opened.
-                }
-
-                public void onRewardedAdClosed() {
-                    // Ad closed.
-
-                    game_over2();
-                }
-
-                public void onUserEarnedReward(@NonNull RewardItem reward) {
-                    // User earned reward.
-
-                }
-
-                public void onRewardedAdFailedToShow(int errorCode) {
-                    // Ad failed to display
-                    game_over2();
-                }
-            };
-            rewardedAd.show(game.this, adCallback);
         } else {
-            Log.d("TAG", "The rewarded ad wasn't loaded yet.");
-            game_over2();
+
+
+            if (rewardedAd.isLoaded() && !noads_bool) {
+                // Activity activityContext = ...;
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    public void onRewardedAdOpened() {
+                        // Ad opened.
+                    }
+
+                    public void onRewardedAdClosed() {
+                        // Ad closed.
+
+                        game_over2();
+                    }
+
+                    public void onUserEarnedReward(@NonNull RewardItem reward) {
+                        // User earned reward.
+
+                    }
+
+                    public void onRewardedAdFailedToShow(int errorCode) {
+                        // Ad failed to display
+                        game_over2();
+                    }
+                };
+                rewardedAd.show(game.this, adCallback);
+            } else {
+
+                game_over2();
+            }
+
+
         }
-
-
-
-
-
     }
 
-    void game_over2(){
+    void game_over2() {
 
         onBackPressed();
         Intent intent = new Intent(tekactiviti, game_over.class);
         intent.putExtra("gameover_money", gameover_money);
         intent.putExtra("gameover_schore", gameover_schore);
         startActivity(intent);
+    }
+
+    public void prodolj_dialog(class_spis_vsego musik) {
+
+
+
+        customDialog1 = new dial_perehod(game.this, money, musik);
+        customDialog1.show();
+
+
+        //межстраничная реклма
+
+        mejstranrekl();
+        //межстраничная реклма
     }
 
 

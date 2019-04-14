@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public DatabaseHelper(Context context) {
         // конструктор суперкласса
@@ -98,6 +98,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case 4:
                 db.execSQL("ALTER TABLE musbit ADD COLUMN `youtube_url` varchar NOT NULL DEFAULT ''");
                 db.execSQL("ALTER TABLE musbit1 ADD COLUMN `youtube_url` varchar NOT NULL DEFAULT ''");
+            case 5:
+                db.execSQL("DELETE FROM `musbit`");
 
         }
     }
