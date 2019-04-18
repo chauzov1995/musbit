@@ -35,6 +35,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.appodeal.ads.Appodeal;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
@@ -110,7 +111,13 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         bundle.putString("max_ad_content_rating", "G");
         //инит рекл
-        MobileAds.initialize(this, getString(R.string.rekl_id_app));
+
+
+        String appKey = "02470d91e42b82a305a900f8373490887b7660e64b19cbb8";
+        Appodeal.initialize(this, appKey,  Appodeal.INTERSTITIAL , true);
+
+
+     //   MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
 
         linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
@@ -635,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 curs.close();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject zakaz = jsonArray.getJSONObject(i);
-                    Log.d("json", "" + zakaz.getString("name"));
+                   // Log.d("json", "" + zakaz.getString("name"));
                     String id = zakaz.getString("id");
                     String name = zakaz.getString("name");
                     String imageurl = zakaz.getString("url");
@@ -645,7 +652,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
                     if (proverka.indexOf(id) != -1) {
-
+/*
                         Log.d("ыйд", "UPDATE `musbit` SET" +
                                 " `name`='" + name + "'," +
                                 " `url`='" + imageurl + "'," +
@@ -653,7 +660,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                 " applemusikurl='" + applemusikurl + "'," +
                                 " youtube_url='" + youtube_url + "'" +
                                 " WHERE id=" + id);
-
+*/
                         mDb.execSQL("UPDATE `musbit` SET" +
                                 " `name`='" + name + "'," +
                                 " `url`='" + imageurl + "'," +
@@ -665,8 +672,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                         proverka.remove(proverka.indexOf(id));
                     } else {
 
-                        Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort, youtube_url)" +
-                                " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999,'" + youtube_url + "')");
+                     //   Log.d("ыйд", "INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort, youtube_url)" +
+                     //           " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999,'" + youtube_url + "')");
 
                         mDb.execSQL("INSERT INTO `musbit` ( `id`,`name`, `url`, ispoln, applemusikurl, sort, youtube_url)" +
                                 " VALUES ('" + id + "', '" + name + "', '" + imageurl + "', '" + ispoln + "', '" + applemusikurl + "' ,999,'" + youtube_url + "')");

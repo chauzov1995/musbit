@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.appodeal.ads.Appodeal;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
@@ -117,19 +118,29 @@ public class game extends AppCompatActivity {
         otv4 = (Button) findViewById(R.id.otv4);
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
+        String appKey = "02470d91e42b82a305a900f8373490887b7660e64b19cbb8";
+        Appodeal.initialize(this, appKey,  Appodeal.INTERSTITIAL , true);
 
         if (noads_bool == false) {
+
+
+        //    Appodeal.show(this, Appodeal.BANNER_BOTTOM);
+
+
+
 
             //всплывающяя реклама
             mejstranrekl_first();
             //всплывающяя реклама
 
-
+/*
             mAdView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
-
+*/
         }
+
+
 
         rewardedAd = new RewardedAd(this,
                 getString(R.string.vozn_game_over));
@@ -272,6 +283,7 @@ public class game extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Appodeal.onResume(this, Appodeal.BANNER_BOTTOM);
 
     }
 
@@ -710,6 +722,7 @@ public class game extends AppCompatActivity {
 
     void fiftyfifty() {
 
+        Appodeal.show(this, Appodeal.INTERSTITIAL);
 
         if (first_fifty) {
             first_fifty = false;
