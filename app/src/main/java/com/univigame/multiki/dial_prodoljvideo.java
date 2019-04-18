@@ -72,7 +72,9 @@ public class dial_prodoljvideo {
                     // Ad closed.
                     if (prosmotrel)//единственный успешный вход
                     {
-                        dialog.dismiss();
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                         activity.prodolj_dialog(musik);
 
                         activity.rewardedAd = new RewardedAd(activity,
@@ -135,7 +137,9 @@ public class dial_prodoljvideo {
 
 
         if (timer1 != null) timer1.cancel();
+        if (dialog != null && dialog.isShowing()) {
         dialog.dismiss();
+        }
         activity.game_over();
 
     }
