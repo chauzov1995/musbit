@@ -1,11 +1,8 @@
 package com.univigame.multiki;
 
-import android.Manifest;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,8 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +22,6 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
-
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
@@ -36,14 +30,9 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.RewardedVideoCallbacks;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -81,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private FirebaseAuth mAuth;
     long energi_do12 = 0;
 
-    private RewardedAd rewardedAd;
+
     LinearLayout linearLayout2;
     private BillingClient billingClient;
     private SkuDetails neogr_energ;
@@ -114,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
         String appKey = "02470d91e42b82a305a900f8373490887b7660e64b19cbb8";
-        Appodeal.initialize(this, appKey,  Appodeal.INTERSTITIAL , true);
-
+        Appodeal.initialize(this, appKey, Appodeal.BANNER | Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC , true);
+     //   Appodeal.show(this, Appodeal.BANNER_BOTTOM);
 
      //   MobileAds.initialize(this, getString(R.string.rekl_id_app));
 
@@ -300,7 +289,10 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             public void onClick(View r) {
 
 
-                if (rewardedAd.isLoaded()) {
+                Appodeal.show(MainActivity.this, Appodeal.REWARDED_VIDEO);
+/*
+
+     if (rewardedAd.isLoaded()) {
                     Activity activityContext = MainActivity.this;
                     RewardedAdCallback adCallback = new RewardedAdCallback() {
                         public void onRewardedAdOpened() {
@@ -329,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                     Log.d("TAG", "The rewarded ad wasn't loaded yet.");
                 }
 
-
+ */
             }
         });
 
@@ -367,6 +359,57 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 */
 
 
+
+       // Appodeal.show(this, Appodeal.REWARDED_VIDEO);
+
+
+
+        Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+            @Override
+            public void onRewardedVideoLoaded(boolean isPrecache) {
+
+                btn_videomodey.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.BounceInLeft).playOn(btn_videomodey);
+
+                Log.d("Appodeal", "onRewardedVideoLoaded");
+            }
+            @Override
+            public void onRewardedVideoFailedToLoad() {
+                Log.d("Appodeal", "onRewardedVideoFailedToLoad");
+            }
+            @Override
+            public void onRewardedVideoShown() {
+                Log.d("Appodeal", "onRewardedVideoShown");
+            }
+            @Override
+            public void onRewardedVideoFinished(double amount, String name) {
+                Log.d("Appodeal", "onRewardedVideoFinished");
+
+                mDb.execSQL("UPDATE `records` SET money=money+100" );
+
+                Toast.makeText(MainActivity.this, "Вам начислено 100 монет", Toast.LENGTH_LONG).show();
+
+
+            }
+            @Override
+            public void onRewardedVideoClosed(boolean finished) {
+                Log.d("Appodeal", "onRewardedVideoClosed");
+            }
+            @Override
+            public void onRewardedVideoExpired() {
+                Log.d("Appodeal", "onRewardedVideoExpired");
+            }
+        });
+
+
+
+
+
+
+
+
+/*
+
         rewardedAd = new RewardedAd(this,
                 getString(R.string.voznagr_rekl_100m));
 
@@ -387,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
-
+*/
 
         customDialog1 = new dial_podgr_spis_pes(this);
         customDialog1.show();

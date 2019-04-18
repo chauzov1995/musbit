@@ -19,13 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appodeal.ads.Appodeal;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,7 +39,7 @@ public class CustomDialog_energy {
     TextView timer_view;
     Button  imageView5;
     int  sekdoplus1=10;
-    private RewardedAd rewardedAd;
+
 
     public CustomDialog_energy(Activity activity, long tek_energy  ){
         this.activity = activity;
@@ -109,10 +106,12 @@ public class CustomDialog_energy {
 
         dialogButton.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
-                dialog.dismiss();
+              //  dialog.dismiss();
 
 
 
+                Appodeal.show(activity, Appodeal.REWARDED_VIDEO);
+/*
                 if (rewardedAd.isLoaded()) {
                     Activity activityContext = activity;
                     RewardedAdCallback adCallback = new RewardedAdCallback() {
@@ -142,14 +141,14 @@ public class CustomDialog_energy {
                     Log.d("TAG", "The rewarded ad wasn't loaded yet.");
                 }
 
-
+*/
 
 
 
             }
         });
-
-
+        dialogButton.setVisibility(View.VISIBLE);
+/*
 
         rewardedAd = new RewardedAd(activity,
                activity.getString(R.string.voznagr_rekl_2energy));
@@ -171,7 +170,7 @@ public class CustomDialog_energy {
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
-
+*/
 
     }
 

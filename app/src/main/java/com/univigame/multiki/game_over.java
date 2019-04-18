@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.appodeal.ads.Appodeal;
+
 
 import static com.univigame.multiki.MainActivity.noads_bool;
 import static com.univigame.multiki.MainActivity.unlim_energy_bool;
@@ -28,7 +28,7 @@ public class game_over extends AppCompatActivity {
     int gameover_schore;
     private final String TAG = game_over.class.getSimpleName();
 
-    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +51,14 @@ public class game_over extends AppCompatActivity {
         total_score = (TextView) findViewById(R.id.total_score);
 
 
-        if(noads_bool==false) {
+        if(!noads_bool) {
+            Appodeal.setMrecViewId(R.id.appodealMrecView);
+            Appodeal.show(this, Appodeal.MREC);
+            /*
             mAdView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
+        */
         }
 
         total_score.setText(gameover_schore + "");
@@ -128,7 +132,6 @@ public class game_over extends AppCompatActivity {
                 startActivity(Intent.createChooser(sendIntent, "Поделиться"));
             }
         });
-
 
 
 
