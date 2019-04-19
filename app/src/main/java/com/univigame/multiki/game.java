@@ -22,20 +22,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.BannerCallbacks;
+import com.appodeal.ads.InterstitialCallbacks;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.games.Games;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -69,7 +60,7 @@ public class game extends AppCompatActivity {
     int money, level;
 
     boolean[] btn_enabl = {true, true, true, true};
-    private InterstitialAd mInterstitialAd;
+
     int rekl_n_otv = 0;
     Timer timer, timer3;
     // public class_spis_vsego varotv1, varotv2, varotv3, varotv4;
@@ -85,8 +76,7 @@ public class game extends AppCompatActivity {
     int[] varianti1, varianti2;
     boolean first_fifty = true, first_zanogo = true;
     dial_perehod customDialog1;
-    private AdView mAdView;
-    public RewardedAd rewardedAd;
+
     LinearLayout LL_money;
 
     boolean first_gameover = false;
@@ -120,15 +110,13 @@ public class game extends AppCompatActivity {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
 
-        Appodeal.show(game.this, Appodeal.BANNER_BOTTOM);
+        if (noads_bool == false) {
 
-    if (noads_bool == false) {
-
-
+            Appodeal.show(game.this, Appodeal.BANNER_BOTTOM);
 
 
             //всплывающяя реклама
-            mejstranrekl_first();
+            //    mejstranrekl_first();
             //всплывающяя реклама
 
 /*
@@ -140,6 +128,12 @@ public class game extends AppCompatActivity {
 
 
 
+
+
+
+
+
+/*
         rewardedAd = new RewardedAd(this,
                 getString(R.string.vozn_game_over));
 
@@ -155,7 +149,7 @@ public class game extends AppCompatActivity {
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
-
+*/
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();  // deprecated
@@ -178,52 +172,46 @@ public class game extends AppCompatActivity {
         });
 
         //завершение первого видео
-        videoView.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion() {
-                body.setVisibility(View.INVISIBLE);
-                progressBar2.setVisibility(View.VISIBLE);
+        videoView.setOnCompletionListener(() -> {
+            body.setVisibility(View.INVISIBLE);
+            progressBar2.setVisibility(View.VISIBLE);
 
 
-                if (prav1) {
-                    prodolj_dialog(spisokvsego.get(level));
-                } else {
-                    game_over();
-                }
-
-
-                if (level + 1 == lengtht) {
-                    level = 0;
-                } else {
-                    level++;
-                }
-
-
+            if (prav1) {
+                prodolj_dialog(spisokvsego.get(level));
+            } else {
+                game_over();
             }
+
+
+            if (level + 1 == lengtht) {
+                level = 0;
+            } else {
+                level++;
+            }
+
+
         });
 
 
-        videoView2.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion() {
-                body.setVisibility(View.INVISIBLE);
-                progressBar2.setVisibility(View.VISIBLE);
+        videoView2.setOnCompletionListener(() -> {
+            body.setVisibility(View.INVISIBLE);
+            progressBar2.setVisibility(View.VISIBLE);
 
 
-                if (prav2) {
-                    prodolj_dialog(spisokvsego.get(level));
-                } else {
-                    game_over();
-                }
-
-                if (level + 1 == lengtht) {
-                    level = 0;
-                } else {
-                    level++;
-                }
-
-
+            if (prav2) {
+                prodolj_dialog(spisokvsego.get(level));
+            } else {
+                game_over();
             }
+
+            if (level + 1 == lengtht) {
+                level = 0;
+            } else {
+                level++;
+            }
+
+
         });
 
 
@@ -826,77 +814,66 @@ public class game extends AppCompatActivity {
 
     }
 
-    void mejstranrekl() {
 
-        if (noads_bool == true) return;
+    public void prodolj_dialog(class_spis_vsego musik) {
+
 
         rekl_n_otv++;
         if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
 
-            if (mInterstitialAd.isLoaded()) {
-                customDialog1.setbutton_enabled(false);
+            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && !noads_bool) {
 
-                mInterstitialAd.show();
+                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+                    @Override
+                    public void onInterstitialLoaded(boolean isPrecache) {
+                        Log.d("Appodeal", "onInterstitialLoaded");
+                    }
+                    @Override
+                    public void onInterstitialFailedToLoad() {
+                        Log.d("Appodeal", "onInterstitialFailedToLoad");
+                        customDialog1 = new dial_perehod(game.this, money, musik);
+                        customDialog1.show();
+                    }
+                    @Override
+                    public void onInterstitialShown() {
+                        Log.d("Appodeal", "onInterstitialShown");
+                    }
+                    @Override
+                    public void onInterstitialClicked() {
+                        Log.d("Appodeal", "onInterstitialClicked");
+                    }
+                    @Override
+                    public void onInterstitialClosed() {
+                        Log.d("Appodeal", "onInterstitialClosed");
+                        customDialog1 = new dial_perehod(game.this, money, musik);
+                        customDialog1.show();
+                    }
+                    @Override
+                    public void onInterstitialExpired() {
+                        Log.d("Appodeal", "onInterstitialExpired");
+                    }
+                });
 
-
-            } else {
-                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                Appodeal.show(this, Appodeal.INTERSTITIAL);
+            }else{
+                customDialog1 = new dial_perehod(game.this, money, musik);
+                customDialog1.show();
             }
+
             rekl_n_otv = 0;
+        }else{
+            customDialog1 = new dial_perehod(game.this, money, musik);
+            customDialog1.show();
         }
 
-        //заагрузка новой рекламы
-        if (rekl_n_otv == 1)
-            mejstranrekl_first();
 
     }
 
-    void mejstranrekl_first() {
-
-
-        mInterstitialAd = new InterstitialAd(game.this);
-        mInterstitialAd.setAdUnitId(getString(R.string.perehod_rekl));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-                if (customDialog1 != null)
-                    customDialog1.setbutton_enabled(true);
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when the ad is displayed.
-
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the interstitial ad is closed.
-                if (customDialog1 != null)
-                    customDialog1.setbutton_enabled(true);
-            }
-        });
-
-    }
 
     public void game_over() {
-
-
         if (!first_gameover) {
             first_gameover = true;
-            if (rewardedAd.isLoaded()) {
+            if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
                 dial_prodoljvideo customDialog1 = new dial_prodoljvideo(game.this, money, spisokvsego.get(level));
                 customDialog1.show();
             } else {
@@ -906,30 +883,47 @@ public class game extends AppCompatActivity {
         } else {
 
 
-            if (rewardedAd.isLoaded() && !noads_bool) {
-                // Activity activityContext = ...;
-                RewardedAdCallback adCallback = new RewardedAdCallback() {
-                    public void onRewardedAdOpened() {
-                        // Ad opened.
+            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && !noads_bool) {
+
+
+                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+                    @Override
+                    public void onInterstitialLoaded(boolean isPrecache) {
+                        Log.d("Appodeal", "onInterstitialLoaded");
                     }
 
-                    public void onRewardedAdClosed() {
-                        // Ad closed.
-
+                    @Override
+                    public void onInterstitialFailedToLoad() {
+                        Log.d("Appodeal", "onInterstitialFailedToLoad");
                         game_over2();
                     }
 
-                    public void onUserEarnedReward(@NonNull RewardItem reward) {
-                        // User earned reward.
-
+                    @Override
+                    public void onInterstitialShown() {
+                        Log.d("Appodeal", "onInterstitialShown");
                     }
 
-                    public void onRewardedAdFailedToShow(int errorCode) {
-                        // Ad failed to display
+                    @Override
+                    public void onInterstitialClicked() {
+                        Log.d("Appodeal", "onInterstitialClicked");
+                    }
+
+                    @Override
+                    public void onInterstitialClosed() {
+                        Log.d("Appodeal", "onInterstitialClosed");
                         game_over2();
                     }
-                };
-                rewardedAd.show(game.this, adCallback);
+
+                    @Override
+                    public void onInterstitialExpired() {
+                        Log.d("Appodeal", "onInterstitialExpired");
+                    }
+                });
+
+
+                Appodeal.show(this, Appodeal.INTERSTITIAL);
+
+
             } else {
 
                 game_over2();
@@ -937,6 +931,8 @@ public class game extends AppCompatActivity {
 
 
         }
+
+
     }
 
     void game_over2() {
@@ -946,20 +942,6 @@ public class game extends AppCompatActivity {
         intent.putExtra("gameover_money", gameover_money);
         intent.putExtra("gameover_schore", gameover_schore);
         startActivity(intent);
-    }
-
-    public void prodolj_dialog(class_spis_vsego musik) {
-
-
-
-        customDialog1 = new dial_perehod(game.this, money, musik);
-        customDialog1.show();
-
-
-        //межстраничная реклма
-
-        mejstranrekl();
-        //межстраничная реклма
     }
 
 

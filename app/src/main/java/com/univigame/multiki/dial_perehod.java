@@ -33,11 +33,11 @@ public class dial_perehod {
         this.musik=musik;
         init();
     }
-
+/*
     public  void setbutton_enabled(boolean enabled){
         perehod_btn.setEnabled(enabled);
     }
-
+*/
     private void init() {
 
         dialog = new Dialog(activity, R.style.CustomDialog);

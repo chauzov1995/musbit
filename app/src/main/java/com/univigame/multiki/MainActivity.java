@@ -81,6 +81,17 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     public static boolean noads_bool = false;
     Button button6, button8;
 
+
+    public static int who_nagrada=0;//награда за просмотр
+     /*
+    0-ничего
+    1-100 монет
+    2- 2- энергии
+    3-
+
+    */
+
+
     @Override
     @AddTrace(name = "onCreateTrace", enabled = true /* optional */)
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +300,46 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             public void onClick(View r) {
 
 
+
+
+                Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+                    @Override
+                    public void onRewardedVideoLoaded(boolean isPrecache) {
+
+
+
+                        Log.d("Appodeal", "onRewardedVideoLoaded");
+                    }
+                    @Override
+                    public void onRewardedVideoFailedToLoad() {
+                        Log.d("Appodeal", "onRewardedVideoFailedToLoad");
+                    }
+                    @Override
+                    public void onRewardedVideoShown() {
+                        Log.d("Appodeal", "onRewardedVideoShown");
+                    }
+                    @Override
+                    public void onRewardedVideoFinished(double amount, String name) {
+                        Log.d("Appodeal", "onRewardedVideoFinished");
+
+                        mDb.execSQL("UPDATE `records` SET money=money+100" );
+
+                        Toast.makeText(MainActivity.this, "Вам начислено 100 монет", Toast.LENGTH_LONG).show();
+
+
+                    }
+                    @Override
+                    public void onRewardedVideoClosed(boolean finished) {
+                        Log.d("Appodeal", "onRewardedVideoClosed");
+                    }
+                    @Override
+                    public void onRewardedVideoExpired() {
+                        Log.d("Appodeal", "onRewardedVideoExpired");
+                    }
+                });
+
+
+
                 Appodeal.show(MainActivity.this, Appodeal.REWARDED_VIDEO);
 /*
 
@@ -384,12 +435,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             @Override
             public void onRewardedVideoFinished(double amount, String name) {
                 Log.d("Appodeal", "onRewardedVideoFinished");
-
-                mDb.execSQL("UPDATE `records` SET money=money+100" );
-
-                Toast.makeText(MainActivity.this, "Вам начислено 100 монет", Toast.LENGTH_LONG).show();
-
-
             }
             @Override
             public void onRewardedVideoClosed(boolean finished) {

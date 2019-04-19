@@ -1,12 +1,9 @@
 package com.univigame.multiki;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,13 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.RewardedVideoCallbacks;
+
 
 public class CustomDialog_money {
     private EditText dialogEditBox;
@@ -33,7 +26,7 @@ public class CustomDialog_money {
     private MainActivity activity;
     int money;
     ImageButton button4;
-    private RewardedAd rewardedAd;
+   // private RewardedAd rewardedAd;
 
     public CustomDialog_money(MainActivity activity, int money) {
         this.activity = activity;
@@ -57,8 +50,6 @@ public class CustomDialog_money {
         button4 = (ImageButton) dialog.findViewById(R.id.button4);
         dialogButton = (Button) dialog.findViewById(R.id.dialog_button);
 
-        dialogButton.setVisibility(View.INVISIBLE);
-
 
 
         DatabaseHelper   mDBHelper = new DatabaseHelper(activity);
@@ -75,10 +66,55 @@ public class CustomDialog_money {
 
         dialogButton.setOnClickListener(new OnClickListener() {
             public void onClick(View r) {
-                dialog.dismiss();
+           //     dialog.dismiss();
+                if(Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
+
+
+                Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+                    @Override
+                    public void onRewardedVideoLoaded(boolean isPrecache) {
 
 
 
+                        Log.d("Appodeal", "onRewardedVideoLoaded");
+                    }
+                    @Override
+                    public void onRewardedVideoFailedToLoad() {
+                        Log.d("Appodeal", "onRewardedVideoFailedToLoad");
+                    }
+                    @Override
+                    public void onRewardedVideoShown() {
+                        Log.d("Appodeal", "onRewardedVideoShown");
+                    }
+                    @Override
+                    public void onRewardedVideoFinished(double amount, String name) {
+                        Log.d("Appodeal", "onRewardedVideoFinished");
+
+                        mDb.execSQL("UPDATE `records` SET money=money+100" );
+
+                        Toast.makeText(activity, "Вам начислено 100 монет", Toast.LENGTH_LONG).show();
+
+
+                    }
+                    @Override
+                    public void onRewardedVideoClosed(boolean finished) {
+                        Log.d("Appodeal", "onRewardedVideoClosed");
+                        dialog.dismiss();
+                    }
+                    @Override
+                    public void onRewardedVideoExpired() {
+                        Log.d("Appodeal", "onRewardedVideoExpired");
+                    }
+                });
+
+
+
+                Appodeal.show(activity, Appodeal.REWARDED_VIDEO);
+
+            }else{
+                Toast.makeText(activity, "Реклама не готова, нажмите позже", Toast.LENGTH_LONG).show();
+            }
+/*
 
                 if (rewardedAd.isLoaded()) {
                     Activity activityContext = activity;
@@ -108,12 +144,12 @@ public class CustomDialog_money {
                 } else {
                     Log.d("TAG", "The rewarded ad wasn't loaded yet.");
                 }
-
+*/
 
             }
         });
 
-
+/*
 
         rewardedAd = new RewardedAd(activity,
                 activity.getString(R.string.voznagr_rekl_100m));
@@ -136,7 +172,7 @@ public class CustomDialog_money {
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
 
-
+*/
 
     }
 

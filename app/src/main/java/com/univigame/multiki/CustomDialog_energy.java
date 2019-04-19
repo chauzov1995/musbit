@@ -2,13 +2,10 @@ package com.univigame.multiki;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,9 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
-
+import com.appodeal.ads.RewardedVideoCallbacks;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -65,7 +60,7 @@ public class CustomDialog_energy {
         dialogButton = (Button) dialog.findViewById( R.id.dialog_button );
          timer_view = (TextView) dialog.findViewById( R.id.textView8 );
 
-        dialogButton.setVisibility(View.INVISIBLE);
+
 
 
         imageView5.setText("Энергия "+tek_energy+" / 12");
@@ -109,8 +104,53 @@ public class CustomDialog_energy {
               //  dialog.dismiss();
 
 
+if(Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
 
-                Appodeal.show(activity, Appodeal.REWARDED_VIDEO);
+
+    Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+        @Override
+        public void onRewardedVideoLoaded(boolean isPrecache) {
+            Log.d("Appodeal", "onRewardedVideoLoaded");
+        }
+
+        @Override
+        public void onRewardedVideoFailedToLoad() {
+            Log.d("Appodeal", "onRewardedVideoFailedToLoad");
+
+        }
+
+        @Override
+        public void onRewardedVideoShown() {
+            Log.d("Appodeal", "onRewardedVideoShown");
+        }
+
+        @Override
+        public void onRewardedVideoFinished(double amount, String name) {
+            Log.d("Appodeal", "onRewardedVideoFinished");
+
+
+            mDb.execSQL("UPDATE `records` SET energy=energy-1200");
+            Toast.makeText(activity, "Вам начислено 2 энергии", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onRewardedVideoClosed(boolean finished) {
+            Log.d("Appodeal", "onRewardedVideoClosed");
+            dialog.dismiss();
+
+        }
+
+        @Override
+        public void onRewardedVideoExpired() {
+            Log.d("Appodeal", "onRewardedVideoExpired");
+        }
+    });
+
+
+    Appodeal.show(activity, Appodeal.REWARDED_VIDEO);
+}else{
+    Toast.makeText(activity, "Реклама не готова, нажмите позже", Toast.LENGTH_LONG).show();
+}
 /*
                 if (rewardedAd.isLoaded()) {
                     Activity activityContext = activity;
@@ -147,7 +187,7 @@ public class CustomDialog_energy {
 
             }
         });
-        dialogButton.setVisibility(View.VISIBLE);
+
 /*
 
         rewardedAd = new RewardedAd(activity,

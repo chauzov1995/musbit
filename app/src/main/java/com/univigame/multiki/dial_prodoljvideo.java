@@ -2,22 +2,18 @@ package com.univigame.multiki;
 
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.RewardedVideoCallbacks;
+
 
 public class dial_prodoljvideo {
 
@@ -63,12 +59,31 @@ public class dial_prodoljvideo {
         perehod_btn.setOnClickListener(r -> {
             if (timer1 != null) timer1.cancel();
 
-            RewardedAdCallback adCallback = new RewardedAdCallback() {
-                public void onRewardedAdOpened() {
-                    // Ad opened.
-                }
 
-                public void onRewardedAdClosed() {
+
+            Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+                @Override
+                public void onRewardedVideoLoaded(boolean isPrecache) {
+                    Log.d("Appodeal", "onRewardedVideoLoaded");
+                }
+                @Override
+                public void onRewardedVideoFailedToLoad() {
+                    Log.d("Appodeal", "onRewardedVideoFailedToLoad");
+                    close_Ad_fail();
+                }
+                @Override
+                public void onRewardedVideoShown() {
+                    Log.d("Appodeal", "onRewardedVideoShown");
+                }
+                @Override
+                public void onRewardedVideoFinished(double amount, String name) {
+                    Log.d("Appodeal", "onRewardedVideoFinished");
+                    prosmotrel = true;
+                }
+                @Override
+                public void onRewardedVideoClosed(boolean finished) {
+                    Log.d("Appodeal", "onRewardedVideoClosed");
+
                     // Ad closed.
                     if (prosmotrel)//единственный успешный вход
                     {
@@ -77,38 +92,18 @@ public class dial_prodoljvideo {
                         }
                         activity.prodolj_dialog(musik);
 
-                        activity.rewardedAd = new RewardedAd(activity,
-                                activity.getString(R.string.vozn_game_over));
 
-                        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
-                            @Override
-                            public void onRewardedAdLoaded() {
-                                // Ad successfully loaded.
-                            }
-
-                            @Override
-                            public void onRewardedAdFailedToLoad(int errorCode) {
-                                // Ad failed to load.
-                            }
-                        };
-                        activity.rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
                     } else {
                         close_Ad_fail();
                     }
-                }
 
-                public void onUserEarnedReward(@NonNull RewardItem reward) {
-                    // User earned reward.
-                    prosmotrel = true;
                 }
-
-                public void onRewardedAdFailedToShow(int errorCode) {
-                    // Ad failed to display
-                    close_Ad_fail();
+                @Override
+                public void onRewardedVideoExpired() {
+                    Log.d("Appodeal", "onRewardedVideoExpired");
                 }
-            };
-            activity.rewardedAd.show(activity, adCallback);
-
+            });
+            Appodeal.show(activity, Appodeal.REWARDED_VIDEO);
 
         });
 
