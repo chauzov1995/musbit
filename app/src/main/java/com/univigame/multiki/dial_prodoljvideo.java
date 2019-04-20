@@ -90,7 +90,7 @@ public class dial_prodoljvideo {
                         if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
-                        activity.prodolj_dialog(musik);
+                        activity.prodolj_dialog(musik, true);
 
 
                     } else {

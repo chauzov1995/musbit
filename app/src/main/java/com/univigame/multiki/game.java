@@ -110,20 +110,12 @@ public class game extends AppCompatActivity {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
 
-        if (noads_bool == false) {
+        if (!noads_bool) {
 
-            Appodeal.show(game.this, Appodeal.BANNER_BOTTOM);
+            Appodeal.setBannerViewId(R.id.appodealBannerView);
+            Appodeal.show(this, Appodeal.BANNER_VIEW);
 
 
-            //всплывающяя реклама
-            //    mejstranrekl_first();
-            //всплывающяя реклама
-
-/*
-            mAdView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-*/
         }
 
 
@@ -178,7 +170,7 @@ public class game extends AppCompatActivity {
 
 
             if (prav1) {
-                prodolj_dialog(spisokvsego.get(level));
+                prodolj_dialog(spisokvsego.get(level), false);
             } else {
                 game_over();
             }
@@ -200,7 +192,7 @@ public class game extends AppCompatActivity {
 
 
             if (prav2) {
-                prodolj_dialog(spisokvsego.get(level));
+                prodolj_dialog(spisokvsego.get(level), false);
             } else {
                 game_over();
             }
@@ -815,13 +807,15 @@ public class game extends AppCompatActivity {
     }
 
 
-    public void prodolj_dialog(class_spis_vsego musik) {
+    public void prodolj_dialog(class_spis_vsego musik, boolean ujesmotre) {
+
+
 
 
         rekl_n_otv++;
         if (rekl_n_otv >= pokaz_rekl_kajd_n_otv) {
 
-            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && !noads_bool) {
+            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && !noads_bool && !ujesmotre) {
 
                 Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
                     @Override
@@ -883,66 +877,19 @@ public class game extends AppCompatActivity {
         } else {
 
 
-            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && !noads_bool) {
 
-
-                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
-                    @Override
-                    public void onInterstitialLoaded(boolean isPrecache) {
-                        Log.d("Appodeal", "onInterstitialLoaded");
-                    }
-
-                    @Override
-                    public void onInterstitialFailedToLoad() {
-                        Log.d("Appodeal", "onInterstitialFailedToLoad");
-                        game_over2();
-                    }
-
-                    @Override
-                    public void onInterstitialShown() {
-                        Log.d("Appodeal", "onInterstitialShown");
-                    }
-
-                    @Override
-                    public void onInterstitialClicked() {
-                        Log.d("Appodeal", "onInterstitialClicked");
-                    }
-
-                    @Override
-                    public void onInterstitialClosed() {
-                        Log.d("Appodeal", "onInterstitialClosed");
-                        game_over2();
-                    }
-
-                    @Override
-                    public void onInterstitialExpired() {
-                        Log.d("Appodeal", "onInterstitialExpired");
-                    }
-                });
-
-
-                Appodeal.show(this, Appodeal.INTERSTITIAL);
-
-
-            } else {
-
-                game_over2();
-            }
-
+            onBackPressed();
+            Intent intent = new Intent(tekactiviti, game_over.class);
+            intent.putExtra("gameover_money", gameover_money);
+            intent.putExtra("gameover_schore", gameover_schore);
+            startActivity(intent);
 
         }
 
 
     }
 
-    void game_over2() {
 
-        onBackPressed();
-        Intent intent = new Intent(tekactiviti, game_over.class);
-        intent.putExtra("gameover_money", gameover_money);
-        intent.putExtra("gameover_schore", gameover_schore);
-        startActivity(intent);
-    }
 
 
 }

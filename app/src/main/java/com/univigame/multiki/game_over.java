@@ -6,11 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.InterstitialCallbacks;
 
 
 import static com.univigame.multiki.MainActivity.noads_bool;
@@ -54,6 +56,55 @@ public class game_over extends AppCompatActivity {
         if(!noads_bool) {
             Appodeal.setMrecViewId(R.id.appodealMrecView);
             Appodeal.show(this, Appodeal.MREC);
+
+
+
+            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
+
+
+                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+                    @Override
+                    public void onInterstitialLoaded(boolean isPrecache) {
+                        Log.d("Appodeal", "onInterstitialLoaded");
+                    }
+
+                    @Override
+                    public void onInterstitialFailedToLoad() {
+                        Log.d("Appodeal", "onInterstitialFailedToLoad");
+
+                    }
+
+                    @Override
+                    public void onInterstitialShown() {
+                        Log.d("Appodeal", "onInterstitialShown");
+                    }
+
+                    @Override
+                    public void onInterstitialClicked() {
+                        Log.d("Appodeal", "onInterstitialClicked");
+                    }
+
+                    @Override
+                    public void onInterstitialClosed() {
+                        Log.d("Appodeal", "onInterstitialClosed");
+
+                    }
+
+                    @Override
+                    public void onInterstitialExpired() {
+                        Log.d("Appodeal", "onInterstitialExpired");
+                    }
+                });
+
+
+                Appodeal.show(this, Appodeal.INTERSTITIAL);
+
+
+            }
+
+
+
+
             /*
             mAdView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();

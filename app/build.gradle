@@ -13,8 +13,8 @@ android {
         applicationId "com.univigame.musbit"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 31
-        versionName "1.31"
+        versionCode 32
+        versionName "1.32"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             // Tells Gradle to build outputs for the following ABIs and package
@@ -26,6 +26,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
     packagingOptions {
@@ -39,6 +40,12 @@ android {
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 

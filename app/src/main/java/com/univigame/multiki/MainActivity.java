@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
 
         String appKey = "02470d91e42b82a305a900f8373490887b7660e64b19cbb8";
+        Appodeal.disableNetwork(this, "facebook");
         Appodeal.initialize(this, appKey, Appodeal.BANNER | Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC , true);
      //   Appodeal.show(this, Appodeal.BANNER_BOTTOM);
 
